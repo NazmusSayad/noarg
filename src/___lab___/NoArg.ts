@@ -38,14 +38,14 @@ const app = NoArg.create('app', {
   },
   globalFlags: { silent: NoArg.string() },
   config: {},
-  arguments: [
+  requiredArgs: [
     {
       name: 'root',
       type: NoArg.string().ask('who are you?').default('root'),
     },
   ],
-  // optionalArguments: [{ name: 'nope', type: NoArg.number() }],
-  // listArgument: { name: 'test', minLength: 2, maxLength: 3 },
+  // optionalArgs: [{ name: 'nope', type: NoArg.number() }],
+  // listArg: { name: 'test', minLength: 2, maxLength: 3 },
 
   system: { enableHelpBoxBorder: true },
 }).on(callback)
@@ -54,8 +54,8 @@ const inner = app
   .create('inner', {
     description: 'This is an inner for app',
     config: { help: false },
-    arguments: [{ name: 'testsdf', type: NoArg.number() }],
-    listArgument: { name: 'test', type: NoArg.number() },
+    requiredArgs: [{ name: 'testsdf', type: NoArg.number() }],
+    listArg: { name: 'test', type: NoArg.number() },
   })
   .on((result) => {
     console.log({ result })
@@ -64,20 +64,20 @@ const inner = app
 const inner2 = app
   .create('inner2', {
     config: { help: false },
-    arguments: [{ name: 'testsdf', type: NoArg.number() }],
-    listArgument: { name: 'test', type: NoArg.number() },
+    requiredArgs: [{ name: 'testsdf', type: NoArg.number() }],
+    listArg: { name: 'test', type: NoArg.number() },
   })
   .on(callback)
 
 const superInner = inner
   .create('superInner', {
-    arguments: [
+    requiredArgs: [
       // { name: 'joss1', type: NoArg.string().ask('who are you?') },
       // { name: 'joss2', type: NoArg.string(), askQuestion: 'who are you?' },
       // { name: 'joss3', type: NoArg.string(), askQuestion: 'who are you?' },
     ],
-    optionalArguments: [{ name: 'nope', type: NoArg.string() }],
-    listArgument: { name: 'test', type: NoArg.number() },
+    optionalArgs: [{ name: 'nope', type: NoArg.string() }],
+    listArg: { name: 'test', type: NoArg.number() },
     flags: {
       files: NoArg.array(NoArg.string()).aliases('f'),
       do: NoArg.boolean(),
@@ -93,7 +93,7 @@ const superInner = inner
 // app.start([''])
 
 const inputTest = NoArg.create('inputTest', {
-  arguments: [
+  requiredArgs: [
     {
       name: 'root',
       type: NoArg.string('main', 'master')

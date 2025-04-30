@@ -28,10 +28,10 @@ export class NoArgParser<
     const mainArgs = []
     const trailingArgs = []
 
-    if (this.options.trailingArguments) {
+    if (this.options.trailingArgs) {
       const [main, trailing] = splitTrailingArgs(
         args,
-        this.options.trailingArguments
+        this.options.trailingArgs
       )
 
       mainArgs.push(...main)
@@ -263,7 +263,7 @@ export class NoArgParser<
     type ArgsOutputType = (string | number | boolean)[]
 
     const resultArgs: ArgsOutputType = []
-    for (const config of this.options.arguments) {
+    for (const config of this.options.requiredArgs) {
       const input = args.shift()
 
       if (!input) {
@@ -288,7 +288,7 @@ export class NoArgParser<
       throw new NoArgError(`${error} for argument: ${colors.blue(config.name)}`)
     }
 
-    const resultOptArgs = this.options.optionalArguments.map((config) => {
+    const resultOptArgs = this.options.optionalArgs.map((config) => {
       const input = args.shift()
       if (!input) return
 
@@ -299,11 +299,11 @@ export class NoArgParser<
     })
 
     const resultListArg: any[] = []
-    if (this.options.listArgument) {
+    if (this.options.listArg) {
       const arraySchema = new TypeArray({
-        schema: this.options.listArgument.type,
-        minLength: this.options.listArgument.minLength,
-        maxLength: this.options.listArgument.maxLength,
+        schema: this.options.listArg.type,
+        minLength: this.options.listArg.minLength,
+        maxLength: this.options.listArg.maxLength,
       })
 
       const { value, error, valid } = arraySchema.parse(args)
@@ -314,7 +314,7 @@ export class NoArgParser<
       } else {
         throw new NoArgError(
           `${error} for list argument: ${colors.blue(
-            this.options.listArgument.name
+            this.options.listArg.name
           )}`
         )
       }

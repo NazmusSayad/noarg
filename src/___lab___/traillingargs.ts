@@ -1,14 +1,14 @@
 import NoArg from '..'
 
 const devAndBuild = NoArg.defineConfig({
-  arguments: [
+  requiredArgs: [
     {
       name: '@',
       type: NoArg.string().description('Root directory'),
     },
   ],
 
-  optionalArguments: [
+  optionalArgs: [
     {
       name: 'root',
       type: NoArg.string().description('Root directory'),
@@ -36,7 +36,7 @@ const devAndBuild = NoArg.defineConfig({
       .description('Enable __dirname and __filename in ES modules'),
   },
 
-  trailingArguments: '',
+  trailingArgs: '',
 
   config: {},
 })
@@ -48,11 +48,11 @@ const app = NoArg.create('app', {
     abc: NoArg.array(NoArg.string()).minLength(1),
   },
 
-  arguments: [
+  requiredArgs: [
     { name: 'arg1', description: 'Argument 1', type: NoArg.number() },
   ],
 
-  listArgument: {
+  listArg: {
     name: 'args to pass',
     description: 'List of items',
     type: NoArg.string(),
@@ -62,14 +62,14 @@ const app = NoArg.create('app', {
   system: {
     // enableHelpBoxBorder: true,
   },
-  trailingArguments: '--',
+  trailingArgs: '--',
   customRenderHelp: {
     helpUsageTrailingArgsLabel: '--[flags/args to pass]',
   },
 })
 
 const child = app.create('child', {
-  listArgument: {
+  listArg: {
     name: 'super',
     description: 'List of items',
     type: NoArg.string(),

@@ -78,22 +78,22 @@ const app = NoArg.create('app', {
   flags: {
     config: NoArg.string().ask('Where is the config?'),
   },
-  arguments: [
+  requiredArgs: [
     { name: 'arg-1', type: NoArg.number() },
     { name: 'arg-2', type: NoArg.boolean() },
     { name: 'arg-3', type: NoArg.string() },
   ],
-  optionalArguments: [
+  optionalArgs: [
     { name: 'arg-4', type: NoArg.string() },
     { name: 'arg-5', type: NoArg.boolean() },
   ],
-  listArgument: {
+  listArg: {
     name: 'args',
     type: NoArg.string(),
     minLength: 1,
     maxLength: 3,
   },
-  trailingArguments: '--',
+  trailingArgs: '--',
   config: {},
   system: {},
 }).on(([arg1, arg2, arg3, optArg4, optArg5, listArg, trailingArgs], flags) => {
@@ -129,8 +129,8 @@ const listArguments = {
 } as const
 
 const config = NoArg.defineConfig({
-  arguments: [{ name: 'arg1', type: NoArg.string() }],
-  optionalArguments: [{ name: 'optArg1', type: NoArg.string() }],
+  requiredArgs: [{ name: 'arg1', type: NoArg.string() }],
+  optionalArgs: [{ name: 'optArg1', type: NoArg.string() }],
   flags: { hobbies: NoArg.array(NoArg.string()) },
   listArguments,
 })

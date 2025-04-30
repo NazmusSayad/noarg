@@ -34,10 +34,10 @@ export class NoArgCore<
       )
     }
 
-    if (options.trailingArguments) {
+    if (options.trailingArgs) {
       this.validateNonEmptyString(
-        options.trailingArguments,
-        'options.trailingArguments'
+        options.trailingArgs,
+        'options.trailingArgs'
       )
     }
 
@@ -68,11 +68,11 @@ export namespace NoArgCoreHelper {
     readonly description?: string
     readonly notes?: string[]
 
-    readonly arguments: ArgumentsOptions[]
-    readonly optionalArguments: OptionalArgumentsOptions[]
+    readonly requiredArgs: ArgumentsOptions[]
+    readonly optionalArgs: OptionalArgumentsOptions[]
 
-    readonly listArgument?: ListArgumentsOption
-    readonly trailingArguments?: string
+    readonly listArg?: ListArgumentsOption
+    readonly trailingArgs?: string
 
     readonly flags: FlagOption
     readonly globalFlags: FlagOption
@@ -88,8 +88,8 @@ export namespace NoArgCoreHelper {
   } as const
 
   export const defaultOptions = {
-    arguments: [] as [],
-    optionalArguments: [] as [],
+    requiredArgs: [] as [],
+    optionalArgs: [] as [],
     flags: {},
     globalFlags: {},
   } as const

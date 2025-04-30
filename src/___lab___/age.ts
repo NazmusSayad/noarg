@@ -3,7 +3,7 @@ import NoArg from '..'
 NoArg.create('noarg', {
   description: 'NoArg is a simple library to create command line arguments',
 
-  // arguments: [
+  // requiredArgs: [
   //   {
   //     name: 'name',
   //     type: t

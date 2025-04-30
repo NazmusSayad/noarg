@@ -146,8 +146,8 @@ export class NoArgProgram<
         [
           ...result.args,
           ...result.optArgs,
-          ...(this.options.listArgument ? [result.listArgs] : []),
-          ...(this.options.trailingArguments ? [result.trailingArgs] : []),
+          ...(this.options.listArg ? [result.listArgs] : []),
+          ...(this.options.trailingArgs ? [result.trailingArgs] : []),
         ],
         { ...result.flags },
         { ...this.config },
@@ -220,17 +220,17 @@ export class NoArgProgram<
       commandItems.push(this.colors.programs('[' + 'program' + ']'))
     }
 
-    this.options.arguments.forEach((argument) => {
+    this.options.requiredArgs.forEach((argument) => {
       commandItems.push(this.colors.arguments(`<${argument.name}>`))
     })
 
-    this.options.optionalArguments.forEach((argument) => {
+    this.options.optionalArgs.forEach((argument) => {
       commandItems.push(this.colors.arguments(`<${argument.name}>`) + '?')
     })
 
-    if (this.options.listArgument) {
+    if (this.options.listArg) {
       commandItems.push(
-        this.colors.arguments('...[' + this.options.listArgument.name + ']')
+        this.colors.arguments('...[' + this.options.listArg.name + ']')
       )
     }
 
@@ -241,9 +241,9 @@ export class NoArgProgram<
       commandItems.push(this.colors.flags('--[flags]'))
     }
 
-    if (this.options.trailingArguments) {
+    if (this.options.trailingArgs) {
       commandItems.push(
-        this.colors.description(this.options.trailingArguments),
+        this.colors.description(this.options.trailingArgs),
         this.colors.description(
           this.options.customRenderHelp?.helpUsageTrailingArgsLabel ??
             `[...trailing-args]`
@@ -279,7 +279,7 @@ export class NoArgProgram<
     console.log(colors.bold('Arguments:'))
     const tables = [] as [CellValue, CellValue, CellValue][]
 
-    this.options.arguments.forEach((argument) => {
+    this.options.requiredArgs.forEach((argument) => {
       const { name, type } = argument
       tables.push([
         this.colors.arguments(name),
@@ -290,7 +290,7 @@ export class NoArgProgram<
       ])
     })
 
-    this.options.optionalArguments.forEach((argument) => {
+    this.options.optionalArgs.forEach((argument) => {
       const { name, type } = argument
       tables.push([
         this.colors.arguments(name),
@@ -301,9 +301,9 @@ export class NoArgProgram<
       ])
     })
 
-    if (this.options.listArgument) {
+    if (this.options.listArg) {
       const { name, type, minLength, maxLength, description } =
-        this.options.listArgument
+        this.options.listArg
 
       tables.push([
         this.colors.arguments(name),
@@ -431,9 +431,9 @@ export class NoArgProgram<
     }
 
     if (
-      this.options.arguments.length ||
-      this.options.optionalArguments.length ||
-      this.options.listArgument
+      this.options.requiredArgs.length ||
+      this.options.optionalArgs.length ||
+      this.options.listArg
     ) {
       this.renderHelpArguments()
       console.log('')
@@ -451,7 +451,7 @@ export class NoArgProgram<
       console.log('')
     }
 
-    if (this.options.trailingArguments) {
+    if (this.options.trailingArgs) {
       console.log(colors.bold('Trailing Arguments:'))
 
       console.log(
@@ -833,19 +833,19 @@ export namespace NoArgExtract {
   >
 
   export type ExtractCombinedArgs<TOptions extends NoArgCoreHelper.Options> = [
-    ...ExtractArguments<NonNullable<TOptions['arguments']>>,
-    ...ExtractOptionalArguments<NonNullable<TOptions['optionalArguments']>>,
-    ...(TOptions['listArgument'] extends {}
+    ...ExtractArguments<NonNullable<TOptions['requiredArgs']>>,
+    ...ExtractOptionalArguments<NonNullable<TOptions['optionalArgs']>>,
+    ...(TOptions['listArg'] extends {}
       ? [
           ListArguments: Prettify<
-            ExtractListArgument<NonNullable<TOptions['listArgument']>>
+            ExtractListArgument<NonNullable<TOptions['listArg']>>
           >
         ]
       : []),
-    ...(TOptions['trailingArguments'] extends NonNullable<
-      NoArgCoreHelper.Options['trailingArguments']
+    ...(TOptions['trailingArgs'] extends NonNullable<
+      NoArgCoreHelper.Options['trailingArgs']
     >
-      ? TOptions['trailingArguments'] extends ''
+      ? TOptions['trailingArgs'] extends ''
         ? []
         : [TrailingArguments: string[]]
       : [])

@@ -1,7 +1,7 @@
 import NoArg from '..'
 
 const app = NoArg.create('app', {
-  arguments: [
+  requiredArgs: [
     {
       name: 'name',
       type: NoArg.string(),
@@ -9,7 +9,7 @@ const app = NoArg.create('app', {
     },
   ],
 
-  optionalArguments: [
+  optionalArgs: [
     {
       name: 'age',
       type: NoArg.number(),
@@ -17,7 +17,7 @@ const app = NoArg.create('app', {
     },
   ],
 
-  listArgument: {
+  listArg: {
     name: 'names',
     type: NoArg.string(),
     description: 'The names of the users',
@@ -27,7 +27,7 @@ const app = NoArg.create('app', {
     age: NoArg.number(1, 18),
   },
 
-  trailingArguments: 'true',
+  trailingArgs: 'true',
 
   globalFlags: {
     silent: NoArg.string('TEST'),
@@ -35,7 +35,7 @@ const app = NoArg.create('app', {
 })
 
 const sub = app.create('sub', {
-  arguments: [
+  requiredArgs: [
     {
       name: 'name',
       type: NoArg.string(),

@@ -4,7 +4,7 @@ const app = NoArg.create('app', {
   flags: {
     known: NoArg.string(),
     do: NoArg.boolean(),
-    no: NoArg.boolean(),
+    no: NoArg.string('test', 'tester').ask('Do you want to continue?'),
   },
 
   system: {
@@ -28,7 +28,7 @@ app.start([
   'value',
   'value',
   'value',
-  '--no',
-  '12432134',
-  '-h',
+  // '--no',
+  // '12432134',
+  // '-h',
 ])

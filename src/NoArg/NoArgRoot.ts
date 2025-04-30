@@ -105,7 +105,7 @@ export class NoArgRoot<
    *  arguments: [
    *    { name: 'arg1', description: 'This is the first argument' }
    *  ],
-   *  optionalArguments: [
+   *  optionalArgs: [
    *    { name: 'opt1', description: 'This is the first optional argument' }
    *  ],
    *  flags: {
@@ -240,7 +240,7 @@ export namespace NoArgRoot {
     any,
     infer TOptions
   >
-    ? NoArgExtract.ExtractArguments<TOptions['arguments']>
+    ? NoArgExtract.ExtractArguments<TOptions['requiredArgs']>
     : never
 
   export type InferOptionalArguments<T> = T extends NoArgProgram<
@@ -249,7 +249,7 @@ export namespace NoArgRoot {
     any,
     infer TOptions
   >
-    ? NoArgExtract.ExtractOptionalArguments<TOptions['optionalArguments']>
+    ? NoArgExtract.ExtractOptionalArguments<TOptions['optionalArgs']>
     : never
 
   export type InferListArguments<T> = T extends NoArgProgram<
@@ -258,9 +258,9 @@ export namespace NoArgRoot {
     any,
     infer TOptions
   >
-    ? undefined extends TOptions['listArgument']
+    ? undefined extends TOptions['listArg']
       ? never
-      : NoArgExtract.ExtractListArgument<NonNullable<TOptions['listArgument']>>
+      : NoArgExtract.ExtractListArgument<NonNullable<TOptions['listArg']>>
     : never
 
   export type InferCombinedArgs<T> = T extends NoArgProgram<
