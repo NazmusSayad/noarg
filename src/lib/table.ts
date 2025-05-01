@@ -1,4 +1,4 @@
 import table from 'cli-table3'
 
-// @ts-ignore
+// @ts-expect-error Module Shit
 export default (table.default ?? table) as typeof table

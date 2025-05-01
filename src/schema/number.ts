@@ -1,9 +1,9 @@
-import { TypeCore, TypeCoreConfig } from './core'
 import { Prettify } from '../utils/utils.type'
+import { TypeCore, TypeCoreConfig } from './core'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeNumber<
-  const TConfig extends TypeNumberConfig
+  const TConfig extends TypeNumberConfig,
 > extends TypeCore<TConfig> {
   name = 'number' as const
 
@@ -34,31 +34,31 @@ export class TypeNumber<
     return new ResultOk(this.config.toInteger ? Math.floor(number) : number)
   }
 
-  /**
-   * Adds a minimum value to the number.
-   */
+  /** Adds a minimum value to the number. */
   min<TMin extends number>(
     min: TMin
   ): TypeNumber<Prettify<TConfig & { min: TMin }>> {
     this.config.min = min
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
-  /**
-   * Adds a maximum value to the number.
-   */
+  /** Adds a maximum value to the number. */
   max<TMax extends number>(
     max: TMax
   ): TypeNumber<Prettify<TConfig & { max: TMax }>> {
     this.config.max = max
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
-  /**
-   * Converts the number to an integer during parsing.
-   */
+  /** Converts the number to an integer during parsing. */
   toInteger(): TypeNumber<Prettify<TConfig & { toInteger: true }>> {
     this.config.toInteger = true
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 }

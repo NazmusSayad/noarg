@@ -1,10 +1,10 @@
-import { TypeCore, TypeCoreConfig } from './core'
-import { TypeString, TypeStringSample } from './string'
 import { TSchemaPrimitive } from '.'
+import { TypeCore, TypeCoreConfig } from './core'
 import { ResultErr, ResultOk } from './result'
+import { TypeStringSample } from './string'
 
 export class TypeTuple<
-  const TConfig extends TypeTupleConfig
+  const TConfig extends TypeTupleConfig,
 > extends TypeCore<TConfig> {
   name = 'tuple' as const
 
@@ -22,7 +22,7 @@ export class TypeTuple<
       return schema['checkType'](item)
     })
 
-    for (let item of result) {
+    for (const item of result) {
       if (item instanceof ResultErr) return item
     }
 

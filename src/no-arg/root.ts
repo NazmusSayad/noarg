@@ -1,34 +1,34 @@
-import colors from '../lib/colors'
-import { trustedSymbol, verifySymbol } from '../constants/admin-symbol'
-import {
-  RootSystemConfig,
-  ProgramConfig,
-  ProgramOptions,
-  DefaultSystem,
-  DefaultConfig,
-  DefaultOptions,
-} from '../types'
-import { TypeArray } from '../schema/array'
-import { TypeTuple } from '../schema/tuple'
-import { TypeNumber } from '../schema/number'
-import { TypeString } from '../schema/string'
-import { TypeBoolean } from '../schema/boolean'
-import { TSchemaPrimitive } from '../schema'
-import { NoArgProgram } from './program'
-import { MergeObject, MergeObjectPrettify, Prettify } from '../utils/utils.type'
+import { trustedSymbol } from '../constants/admin-symbol'
 import {
   defaultConfig,
   defaultOptions,
   defaultSystemConfig,
 } from '../constants/config'
+import colors from '../lib/colors'
+import { TSchemaPrimitive } from '../schema'
+import { TypeArray } from '../schema/array'
+import { TypeBoolean } from '../schema/boolean'
+import { TypeNumber } from '../schema/number'
+import { TypeString } from '../schema/string'
+import { TypeTuple } from '../schema/tuple'
+import {
+  DefaultConfig,
+  DefaultOptions,
+  DefaultSystem,
+  ProgramConfig,
+  ProgramOptions,
+  RootSystemConfig,
+} from '../types'
 import { ProgramCreateOptions } from '../types/global.type'
+import { MergeObject, MergeObjectPrettify, Prettify } from '../utils/utils.type'
 import { verifyNoArgSymbol } from './helpers'
+import { NoArgProgram } from './program'
 
 export class NoArgRoot<
   TName extends string,
   TSystem extends RootSystemConfig,
   TConfig extends ProgramConfig,
-  TOptions extends ProgramOptions
+  TOptions extends ProgramOptions,
 > extends NoArgProgram<TName, TSystem, TConfig, TOptions> {
   static colors = {
     disable() {
@@ -41,35 +41,42 @@ export class NoArgRoot<
 
   /**
    * Create a new string schema
-   * @param strings You can enter a fixed set of strings
+   *
    * @example
-   * NoArg.string('a', 'b', 'c') // Only 'a', 'b', 'c' are allowed
+   *   NoArg.string('a', 'b', 'c') // Only 'a', 'b', 'c' are allowed
+   *
+   * @param strings You can enter a fixed set of strings
    */
   static string<const T extends string[]>(...strings: T) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = {} as any
     if (strings.length) {
       config.enum = new Set(strings)
     }
 
     return new TypeString(
-      config as T extends [] ? {} : { enum: Set<T[number]> }
+      config as T extends [] ? object : { enum: Set<T[number]> }
     )
   }
 
   /**
    * Create a new number schema
-   * @param numbers You can enter a fixed set of numbers
+   *
    * @example
-   * NoArg.number(1, 2, 3) // Only 1, 2, 3 are allowed
+   *   NoArg.number(1, 2, 3) // Only 1, 2, 3 are allowed
+   *
+   * @param numbers You can enter a fixed set of numbers
    */
   static number<const T extends number[]>(...numbers: T) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = {} as any
+
     if (numbers.length) {
       config.enum = new Set(numbers)
     }
 
     return new TypeNumber(
-      config as T extends [] ? {} : { enum: Set<T[number]> }
+      config as T extends [] ? object : { enum: Set<T[number]> }
     )
   }
 
@@ -77,9 +84,7 @@ export class NoArgRoot<
     return new TypeBoolean({})
   }
 
-  /**
-   * ### ⚠️ Only available for flags.
-   */
+  /** ### ⚠️ Only available for flags. */
   static array<T extends TSchemaPrimitive>(schema: T) {
     delete schema.config.aliases
     delete schema.config.default
@@ -91,9 +96,7 @@ export class NoArgRoot<
     return new TypeArray(config)
   }
 
-  /**
-   * ### ⚠️ Only available for flags.
-   */
+  /** ### ⚠️ Only available for flags. */
   static tuple<T extends TSchemaPrimitive[]>(...schema: T) {
     const config = {
       schema: schema.map((s) => {
@@ -110,31 +113,36 @@ export class NoArgRoot<
 
   /**
    * Create a new NoArgRoot instance
+   *
+   * @example
+   *   const program = NoArgRoot.create('my-program', {
+   *     description: 'This is my program',
+   *     arguments: [
+   *       { name: 'arg1', description: 'This is the first argument' },
+   *     ],
+   *     optionalArgs: [
+   *       {
+   *         name: 'opt1',
+   *         description: 'This is the first optional argument',
+   *       },
+   *     ],
+   *     flags: {
+   *       flag1: t.string(),
+   *     },
+   *     globalFlags: {
+   *       globalFlag1: t.string(),
+   *     },
+   *   })
+   *
+   *   program.start()
+   *
    * @param name The name of the program
    * @param options The options for the program
    * @returns A new NoArgRoot instance
-   * @example
-   * const program = NoArgRoot.create('my-program', {
-   *  description: 'This is my program',
-   *  arguments: [
-   *    { name: 'arg1', description: 'This is the first argument' }
-   *  ],
-   *  optionalArgs: [
-   *    { name: 'opt1', description: 'This is the first optional argument' }
-   *  ],
-   *  flags: {
-   *    flag1: t.string()
-   *  },
-   *  globalFlags: {
-   *    globalFlag1: t.string()
-   *  }
-   * })
-   *
-   * program.start()
    */
   static create<
     const TName extends string,
-    const TCreateConfig extends ProgramCreateOptions
+    const TCreateConfig extends ProgramCreateOptions,
   >(name: TName, { config, system, ...options }: TCreateConfig) {
     type TSystem = MergeObjectPrettify<
       DefaultSystem,
@@ -172,8 +180,10 @@ export class NoArgRoot<
 
   /**
    * Define the configuration for the program
+   *
    * - This doesn't do anything except returning the config
    * - This is a helper function to make the type inference better
+   *
    * @param config The configuration for the program
    */
   static defineConfig<const T extends ProgramCreateOptions>(config: T) {
@@ -188,17 +198,20 @@ export class NoArgRoot<
     options: TOptions
   ) {
     verifyNoArgSymbol(symbol, 'NoArgRoot')
-    super(trustedSymbol, name, system, config, options as any)
+
+    super(trustedSymbol, name, system, config, options)
   }
 
   /**
    * Start the program
-   * @param args The arguments to start the program with
+   *
    * @example
-   * program.start()
-   * program.start(['--flag1', 'value1'])
-   * program.start(['arg1', '--flag1', 'value1'])
-   * program.start(['arg1', '--flag1', 'value1', '--globalFlag1', 'value2'])
+   *   program.start()
+   *   program.start(['--flag1', 'value1'])
+   *   program.start(['arg1', '--flag1', 'value1'])
+   *   program.start(['arg1', '--flag1', 'value1', '--globalFlag1', 'value2'])
+   *
+   * @param args The arguments to start the program with
    */
   public start(args: string[] = process.argv.slice(2)) {
     this.startCore(args)

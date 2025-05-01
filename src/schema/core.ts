@@ -1,11 +1,7 @@
-import { ResultErr, ResultOk } from './result'
-import { MergeObject, Prettify } from '../utils/utils.type'
+import { ExtractTypeOutput, InferAndUpdateConfig, ParsedResult } from '.'
 import validateFlagName from '../helpers/validate-flag-name'
-import {
-  ParsedResult,
-  ExtractTypeOutput,
-  InferAndUpdateConfig,
-} from '.'
+import { MergeObject, Prettify } from '../utils/utils.type'
+import { ResultErr, ResultOk } from './result'
 
 export class TypeCore<TConfig extends TypeCoreConfig> {
   name = 'core'
@@ -27,7 +23,9 @@ export class TypeCore<TConfig extends TypeCoreConfig> {
 
   /**
    * ### ⚠️ When using both `default` and `ask`, you will still be prompted for a value.
+   *
    * Sets a default value and marks the option as required.
+   *
    * @param value The default value to set.
    */
   default<TDefault extends ExtractTypeOutput<SELF>, SELF = typeof this>(
@@ -38,12 +36,16 @@ export class TypeCore<TConfig extends TypeCoreConfig> {
   > {
     this.config.required = true
     this.config.default = value
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
   /**
    * ### ⚠️ When using both `default` and `ask`, you will still be prompted for a value.
+   *
    * Asks the user for a value if one is not provided.
+   *
    * @param askQuestion The question to ask the user.
    */
   ask<TDefault extends string, SELF = typeof this>(
@@ -54,12 +56,16 @@ export class TypeCore<TConfig extends TypeCoreConfig> {
   > {
     this.config.required = true
     this.config.askQuestion = askQuestion ?? 'Enter a value:'
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
   /**
    * ### ⚠️ Only works for flags.
+   *
    * Sets the aliases for the option.
+   *
    * @param aliases The aliases to set.
    */
   aliases<TAliases extends string[], SELF = typeof this>(
@@ -76,11 +82,13 @@ export class TypeCore<TConfig extends TypeCoreConfig> {
       (a, b) => a.length - b.length
     )
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
   /**
    * ### ⚠️ Only works for flags.
+   *
    * Marks the option as required.
    */
   required<SELF = typeof this>(): InferAndUpdateConfig<
@@ -88,11 +96,14 @@ export class TypeCore<TConfig extends TypeCoreConfig> {
     Prettify<MergeObject<TConfig, { required: true }>>
   > {
     this.config.required = true
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
   /**
    * ### ⚠️ Only works for flags.
+   *
    * Sets the description for the option.
    */
   description<TDescription extends string, SELF = typeof this>(
@@ -102,6 +113,8 @@ export class TypeCore<TConfig extends TypeCoreConfig> {
     Prettify<MergeObject<TConfig, { description: TDescription }>>
   > {
     this.config.description = description
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 }
@@ -110,8 +123,10 @@ export type TypeCoreConfig = Partial<{
   aliases: string[]
   description: string
   required: boolean
-  default: any
   askQuestion: string
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: any
 }>
 
 export type TypeCoreSample = TypeCore<TypeCoreConfig>

@@ -1,5 +1,5 @@
-import Table from '../lib/table'
 import { CellValue } from 'cli-table3'
+import Table from '../lib/table'
 
 const MIN_WIDTH = 30
 const terminalWidth = process.stdout.columns - 3
@@ -43,8 +43,9 @@ export function CustomTable<const TWidths extends CustomTableSize[]>(
 
   const table = new Table!({
     style: config.border ? {} : { compact: true },
-    chars: config.border
-      ? {
+    chars:
+      config.border ?
+        {
           'top-left': '╭',
           'bottom-left': '╰',
           'top-right': '╮',

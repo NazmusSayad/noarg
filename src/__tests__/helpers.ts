@@ -4,7 +4,8 @@ import { ProgramCreateOptions } from '../types/global.type'
 export function testBaseProgram(
   config: ProgramCreateOptions,
   ...argv: string[]
-): Promise<any> {
+): // eslint-disable-next-line @typescript-eslint/no-explicit-any
+Promise<any> {
   return new Promise((resolve) => {
     NoArg.create('test', { ...config })
       .on((args) => resolve(args))

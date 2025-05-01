@@ -1,28 +1,27 @@
 import { CellValue } from 'cli-table3'
+import { CustomTable } from '../helpers/custom-table'
 import validateFlagName from '../helpers/validate-flag-name'
 import colors from '../lib/colors'
-import {
-  RootSystemConfig,
-  BaseConfig,
-  ProgramOptions,
-  NoArgProgramMap,
-  FlagOption,
-} from '../types'
-import { CustomTable } from '../helpers/custom-table'
-import { getArrayLengthStr } from '../utils'
 import { TypeArray } from '../schema/array'
-import { TypeTuple } from '../schema/tuple'
-import { TypeString } from '../schema/string'
 import { TypeNumber } from '../schema/number'
+import { TypeString } from '../schema/string'
+import { TypeTuple } from '../schema/tuple'
+import {
+  BaseConfig,
+  FlagOption,
+  NoArgProgramMap,
+  ProgramOptions,
+  RootSystemConfig,
+} from '../types'
+import { getArrayLengthStr } from '../utils'
 import { validateNonEmptyString } from '../utils/string'
-import { verifySymbol } from '../constants/admin-symbol'
 import { verifyNoArgSymbol } from './helpers'
 
 export class NoArgCore<
   TName extends string,
   TSystem extends RootSystemConfig,
   TConfig extends BaseConfig,
-  TOptions extends ProgramOptions
+  TOptions extends ProgramOptions,
 > {
   protected programs: NoArgProgramMap = new Map()
 
@@ -76,9 +75,9 @@ export class NoArgCore<
   private renderHelpIntro() {
     console.log(
       colors.cyan.bold(this.name),
-      this.options.description
-        ? this.colors.description(this.options.description)
-        : ''
+      this.options.description ?
+        this.colors.description(this.options.description)
+      : ''
     )
   }
 
@@ -94,6 +93,7 @@ export class NoArgCore<
 
     const commandItems: string[] = [colors.dim(this.name)]
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ;(function getParent(current: any) {
       if (!current.parent) return
       commandItems.unshift(current.parent.name)
@@ -230,12 +230,17 @@ export class NoArgCore<
           bSchema.config.default === undefined &&
           bSchema.config.askQuestion === undefined
 
-        return aIsMust === bIsMust ? 0 : aIsMust ? -1 : 1
+        return (
+          aIsMust === bIsMust ? 0
+          : aIsMust ? -1
+          : 1
+        )
       })
 
       .map<[CellValue, CellValue, CellValue]>(([name, schema]) => {
-        const aliasString = schema.config.aliases
-          ? `-${schema.config.aliases
+        const aliasString =
+          schema.config.aliases ?
+            `-${schema.config.aliases
               .map((alias) => this.colors.flags(alias))
               .join('\n -')}`
           : ''
@@ -246,33 +251,37 @@ export class NoArgCore<
           (aliasString ? '\n ' + aliasString : '')
 
         const optionType =
-          (schema instanceof TypeArray
-            ? this.colors.type(schema.config.schema.name) +
-              `[${getArrayLengthStr(
-                schema.config.minLength,
-                schema.config.maxLength
-              )}]`
-            : schema instanceof TypeTuple
-            ? '[' +
-              schema.config.schema
-                .map((schema) => this.colors.type(schema.name))
-                .join(', ') +
-              ']'
-            : this.colors.type(schema.name)) +
-          (schema.config.required &&
-          schema.config.default === undefined &&
-          schema.config.askQuestion === undefined
-            ? ''
-            : '?')
+          (schema instanceof TypeArray ?
+            this.colors.type(schema.config.schema.name) +
+            `[${getArrayLengthStr(
+              schema.config.minLength,
+              schema.config.maxLength
+            )}]`
+          : schema instanceof TypeTuple ?
+            '[' +
+            schema.config.schema
+              .map((schema) => this.colors.type(schema.name))
+              .join(', ') +
+            ']'
+          : this.colors.type(schema.name)) +
+          ((
+            schema.config.required &&
+            schema.config.default === undefined &&
+            schema.config.askQuestion === undefined
+          ) ?
+            ''
+          : '?')
 
         const enumValues =
-          (schema instanceof TypeString || schema instanceof TypeNumber) &&
-          schema.config.enum?.size
-            ? colors.blue('\nChoices: ') +
-              [...schema.config.enum.values()]
-                .map((item) => colors.green(String(item)))
-                .join(', ')
-            : ''
+          (
+            (schema instanceof TypeString || schema instanceof TypeNumber) &&
+            schema.config.enum?.size
+          ) ?
+            colors.blue('\nChoices: ') +
+            [...schema.config.enum.values()]
+              .map((item) => colors.green(String(item)))
+              .join(', ')
+          : ''
 
         return [
           optionName,
@@ -299,8 +308,9 @@ export class NoArgCore<
 
   /**
    * Render the help of the program
+   *
    * @example
-   * program.renderHelp()
+   *   program.renderHelp()
    */
   public renderHelp() {
     this.renderHelpIntro()
@@ -329,8 +339,8 @@ export class NoArgCore<
     if (hasFlags || hasGlobalFlags) {
       console.log(colors.bold('Flags:'))
 
-      hasFlags && this.renderHelpFlags(this.options.flags)
-      hasGlobalFlags && this.renderHelpFlags(this.options.globalFlags)
+      if (hasFlags) this.renderHelpFlags(this.options.flags)
+      if (hasGlobalFlags) this.renderHelpFlags(this.options.globalFlags)
 
       console.log('')
     }
@@ -386,6 +396,7 @@ export class NoArgCore<
     },
 
     tableGroup(name: string, result: string, ...args: string[]) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return [name, args.join('\n'), result] as any
     },
   }
@@ -666,8 +677,9 @@ export class NoArgCore<
 
   /**
    * Render the usage of the program
+   *
    * @example
-   * program.renderUsage()
+   *   program.renderUsage()
    */
   public renderUsage() {
     console.log(colors.bold(colors.cyan('📝 Structure:')))

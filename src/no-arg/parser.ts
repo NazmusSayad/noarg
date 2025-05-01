@@ -1,21 +1,21 @@
-import colors from '../lib/colors'
 import askCli from '../helpers/ask-cli'
-import { NoArgError } from './helpers'
-import { TypeTuple } from '../schema/tuple'
-import { TypeArray } from '../schema/array'
-import type { NoArgProgram } from './program'
-import { TypeBoolean } from '../schema/boolean'
-import { NoArgCore } from './core'
-import { TSchema, TSchemaPrimitive } from '../schema'
-import splitTrailingArgs from '../utils/split-trailing-args'
 import ThrowExit from '../helpers/ThrowExit'
-import { RootSystemConfig, BaseConfig, ProgramOptions } from '../types'
+import colors from '../lib/colors'
+import { TSchema, TSchemaPrimitive } from '../schema'
+import { TypeArray } from '../schema/array'
+import { TypeBoolean } from '../schema/boolean'
+import { TypeTuple } from '../schema/tuple'
+import { BaseConfig, ProgramOptions, RootSystemConfig } from '../types'
+import splitTrailingArgs from '../utils/split-trailing-args'
+import { NoArgCore } from './core'
+import { NoArgError } from './helpers'
+import type { NoArgProgram } from './program'
 
 export class NoArgParser<
   TName extends string,
   TSystem extends RootSystemConfig,
   TConfig extends BaseConfig,
-  TOptions extends ProgramOptions
+  TOptions extends ProgramOptions,
 > extends NoArgCore<TName, TSystem, TConfig, TOptions> {
   private browsePrograms([name, ...args]: string[]) {
     const program = this.programs.get(name)
@@ -45,7 +45,7 @@ export class NoArgParser<
     const argList: string[] = []
     const options: ParsedFlagRecord[] = []
 
-    for (let arg of mainArgs) {
+    for (const arg of mainArgs) {
       const result = this.getFlagMetadata(arg)
 
       if (
@@ -89,13 +89,15 @@ export class NoArgParser<
   private getFlagMetadata(rawArg: string): ParsedFlagRecord {
     const isFlag = flagRegex.test(rawArg)
     const isAlias = flagAliasRegex.test(rawArg)
-    const argType = isFlag
-      ? ('flag' as const)
-      : isAlias
-      ? ('alias' as const)
+    const argType =
+      isFlag ? ('flag' as const)
+      : isAlias ? ('alias' as const)
       : 'value'
 
-    let key = isFlag ? rawArg.slice(2) : isAlias ? rawArg.slice(1) : null
+    let key =
+      isFlag ? rawArg.slice(2)
+      : isAlias ? rawArg.slice(1)
+      : null
     let value = null
     let hasBooleanEndValue
 
@@ -297,7 +299,8 @@ export class NoArgParser<
       throw new NoArgError(`${error} for argument: ${colors.blue(config.name)}`)
     })
 
-    const resultListArg: any[] = []
+    const resultListArg: (string | number | boolean)[] = []
+
     if (this.options.listArg) {
       const arraySchema = new TypeArray({
         schema: this.options.listArg.type,
@@ -334,6 +337,8 @@ export class NoArgParser<
 
   private async parseFlags(records: ParsedFlagRecord[]) {
     const flagsRecordWithSchema = this.parseFlagsCore(records)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const output: Record<string, any> = {}
 
     for (const key in flagsRecordWithSchema) {
@@ -420,6 +425,7 @@ export class NoArgParser<
     const [argsList, optionsRecord, trailingArgs] = this.divideArguments(args)
 
     if (this.config.help) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const self = this as unknown as NoArgProgram<any, any, any, any>
 
       optionsRecord.forEach(({ arg }) => {
@@ -480,6 +486,6 @@ type ParsedFlagWithSchema = {
   argType: Exclude<ParsedFlagRecord['argType'], 'value'>
 }
 
-const flagRegex = /^(\-\-)([^\-])/
-const flagAliasRegex = /^(\-)([^\-])/
-const optionWithValueRegex = /^(?<key>[^\=]+)\=(?<value>.+)/
+const flagRegex = /^(--)([^-])/
+const flagAliasRegex = /^(-)([^-])/
+const optionWithValueRegex = /^(?<key>[^=]+)=(?<value>.+)/

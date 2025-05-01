@@ -1,11 +1,11 @@
+import * as inquirer from '@inquirer/prompts'
 import colors from '../lib/colors'
 import { TSchema } from '../schema'
-import * as inquirer from '@inquirer/prompts'
-import { TypeTupleSample } from '../schema/tuple'
 import { TypeArraySample } from '../schema/array'
+import { TypeBooleanSample } from '../schema/boolean'
 import { TypeNumberSample } from '../schema/number'
 import { TypeStringSample } from '../schema/string'
-import { TypeBooleanSample } from '../schema/boolean'
+import { TypeTupleSample } from '../schema/tuple'
 
 const typePrompter = {
   async string(schema: TypeStringSample, prefix = '') {
@@ -29,14 +29,13 @@ const typePrompter = {
         return error
       },
 
-      transformer: schema.config.toCase
-        ? (value, { isFinal }) => {
+      transformer:
+        schema.config.toCase ?
+          (value, { isFinal }) => {
             const transformed =
-              schema.config.toCase === 'upper'
-                ? value.toUpperCase()
-                : schema.config.toCase === 'lower'
-                ? value.toLowerCase()
-                : value
+              schema.config.toCase === 'upper' ? value.toUpperCase()
+              : schema.config.toCase === 'lower' ? value.toLowerCase()
+              : value
 
             return isFinal ? colors.reset.cyan(transformed) : transformed
           }
@@ -58,6 +57,7 @@ const typePrompter = {
       required: schema.config.required,
       default: schema.config.default,
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       validate(input: any) {
         const { value, error, valid } = schema.parse(input)
         result = value
@@ -83,6 +83,7 @@ const typePrompter = {
     while (true) {
       const fn = typePrompter[schema.config.schema.name]
       const result = await fn(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         schema.config.schema as any,
         colors.reset.yellow(String(output.length + 1)) + '. '
       )
@@ -109,6 +110,7 @@ const typePrompter = {
     for (const childSchema of schema.config.schema) {
       const fn = typePrompter[childSchema.name]
       const result = await fn(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         childSchema as any,
         colors.reset.yellow(String(output.length + 1)) + '. '
       )
@@ -141,6 +143,7 @@ export default function (schema: TSchema, prefix?: string) {
         .join(' ')
     )
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return typePrompter[schema.name](schema as any)
   }
 

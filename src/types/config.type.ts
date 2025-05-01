@@ -1,10 +1,10 @@
-import { NoArgProgram } from '../no-arg/program'
-import { TSchema, TSchemaPrimitive } from '../schema'
 import {
   defaultConfig,
   defaultOptions,
   defaultSystemConfig,
 } from '../constants/config'
+import { NoArgProgram } from '../no-arg/program'
+import { TSchema, TSchemaPrimitive } from '../schema'
 
 export type ArgsOption = {
   name: string

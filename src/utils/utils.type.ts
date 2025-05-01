@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Prettify<T extends Record<string, any>> = {
   [Key in keyof T]: T[Key]
 } & {}

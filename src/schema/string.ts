@@ -1,9 +1,9 @@
-import { TypeCore, TypeCoreConfig } from './core'
 import { Prettify } from '../utils/utils.type'
+import { TypeCore, TypeCoreConfig } from './core'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeString<
-  const TConfig extends TypeStringConfig
+  const TConfig extends TypeStringConfig,
 > extends TypeCore<TConfig> {
   name = 'string' as const
 
@@ -42,42 +42,45 @@ export class TypeString<
 
   /**
    * Adds a regex to the string.
+   *
    * @param regex The regex to add.
    */
   regex<TRegex extends RegExp>(
     regex: TRegex
   ): TypeString<Prettify<TConfig & { regex: TRegex }>> {
     this.config.regex = regex
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
-  /**
-   * Sets the minimum length for the string.
-   */
+  /** Sets the minimum length for the string. */
   minLength<TMinLength extends number>(
     minLength: TMinLength
   ): TypeString<Prettify<TConfig & { minLength: TMinLength }>> {
     this.config.minLength = minLength
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
-  /**
-   * Sets the maximum length for the string.
-   */
+  /** Sets the maximum length for the string. */
   maxLength<TMaxLength extends number>(
     maxLength: TMaxLength
   ): TypeString<Prettify<TConfig & { maxLength: TMaxLength }>> {
     this.config.maxLength = maxLength
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 
-  /**
-   * Convert to lower or upper case during parsing.
-   */
+  /** Convert to lower or upper case during parsing. */
   toCase<TToCase extends 'lower' | 'upper'>(
     toCase: TToCase
   ): TypeString<Prettify<TConfig & { toCase: TToCase }>> {
     this.config.toCase = toCase
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this as any
   }
 }

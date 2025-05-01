@@ -1,25 +1,27 @@
-import colors from '../lib/colors'
-import { NoArgError, verifyNoArgSymbol } from './helpers'
-import { NoArgParser } from './parser'
+import { trustedSymbol } from '../constants/admin-symbol'
+import { defaultOptions } from '../constants/config'
 import ThrowExit from '../helpers/ThrowExit'
+import colors from '../lib/colors'
 import {
+  DefaultOptions,
   ProgramConfig,
   ProgramOptions,
-  DefaultOptions,
   RootSystemConfig,
 } from '../types'
-import { defaultOptions } from '../constants/config'
-import { Prettify, MergeObject } from '../utils/utils.type'
 import { ExtractActionCallback } from '../types/extract.type'
-import { trustedSymbol, verifySymbol } from '../constants/admin-symbol'
+import { MergeObject, Prettify } from '../utils/utils.type'
+import { NoArgError, verifyNoArgSymbol } from './helpers'
+import { NoArgParser } from './parser'
 
 export class NoArgProgram<
   TName extends string,
   TSystem extends RootSystemConfig,
   TConfig extends ProgramConfig,
-  TOptions extends ProgramOptions
+  TOptions extends ProgramOptions,
 > extends NoArgParser<TName, TSystem, TConfig, TOptions> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected parent?: NoArgProgram<any, any, any, any>
+
   protected onActionCallback?: ExtractActionCallback<TSystem, TConfig, TOptions>
 
   constructor(
@@ -28,6 +30,8 @@ export class NoArgProgram<
     system: TSystem,
     config: TConfig,
     options: TOptions,
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parent?: NoArgProgram<any, any, any, any>
   ) {
     verifyNoArgSymbol(symbol, 'NoArgRoot')
@@ -37,43 +41,38 @@ export class NoArgProgram<
 
   /**
    * Create a new NoArgProgramHelper instance
+   *
+   * @example
+   *   const program = app.create('my-program', {
+   *   ...
+   *   })
+   *
    * @param name The name of the program
    * @param options The options for the program
    * @returns A new NoArgProgramHelper instance
-   * @example
-   * const program = app.create('my-program', {
-   *   ...
-   * })
-   *
    */
   public create<
     const TName extends string,
     const TCreateOptionsWithConfig extends Partial<ProgramOptions> & {
       config?: Partial<ProgramConfig>
-    }
+    },
   >(name: TName, { config, ...options }: TCreateOptionsWithConfig) {
     type TInnerConfig = NonNullable<TCreateOptionsWithConfig['config']>
-    type TInnerOptions = Omit<
-      TCreateOptionsWithConfig,
-      'config'
-    > extends Partial<ProgramOptions>
-      ? MergeObject<DefaultOptions, Omit<TCreateOptionsWithConfig, 'config'>>
+    type TInnerOptions =
+      Omit<TCreateOptionsWithConfig, 'config'> extends Partial<ProgramOptions> ?
+        MergeObject<DefaultOptions, Omit<TCreateOptionsWithConfig, 'config'>>
       : never
 
     type TInnerOptionsWithGlobalFlags =
-      TInnerConfig['skipGlobalFlags'] extends true
-        ? TInnerOptions
-        : MergeObject<
-            TInnerOptions,
-            {
-              globalFlags: Prettify<
-                MergeObject<
-                  TOptions['globalFlags'],
-                  TInnerOptions['globalFlags']
-                >
-              >
-            }
-          >
+      TInnerConfig['skipGlobalFlags'] extends true ? TInnerOptions
+      : MergeObject<
+          TInnerOptions,
+          {
+            globalFlags: Prettify<
+              MergeObject<TOptions['globalFlags'], TInnerOptions['globalFlags']>
+            >
+          }
+        >
 
     type TChildConfig = Prettify<Required<MergeObject<TConfig, TInnerConfig>>>
     type TChildOptions = Prettify<Required<TInnerOptionsWithGlobalFlags>>
@@ -87,8 +86,9 @@ export class NoArgProgram<
       ...defaultOptions,
       ...{
         ...options,
-        globalFlags: newConfig.skipGlobalFlags
-          ? options.globalFlags ?? defaultOptions.globalFlags
+        globalFlags:
+          newConfig.skipGlobalFlags ?
+            (options.globalFlags ?? defaultOptions.globalFlags)
           : {
               ...this.options.globalFlags,
               ...options.globalFlags,
@@ -105,18 +105,22 @@ export class NoArgProgram<
       this
     )
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.programs.set(name, child as any)
+
     return child
   }
 
   /**
    * Set the action of the program
+   *
    * @example
-   * program.on((options, config, system) => {
-   *  console.log(options)
-   * })
+   *   program.on((options, config, system) => {
+   *     console.log(options)
+   *   })
    */
   public on(callback: NonNullable<typeof this.onActionCallback>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.onActionCallback = callback as any
     return this
   }
