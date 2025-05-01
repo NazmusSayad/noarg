@@ -14,13 +14,16 @@
   "dependencies": {
     "@inquirer/prompts": "^7.5.0",
     "ansi-colors": "^4.1.3",
-    "cli-table3": "^0.6.5"
+    "cli-table3": "^0.6.5",
+    "eslint-plugin-check-file": "^3.2.0"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2.8",
     "@types/bun": "^1.2.11",
     "@types/node": "^22.15.3",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.6",
     "jiti": "^2.4.2",
     "npmize": "^1.1.11",

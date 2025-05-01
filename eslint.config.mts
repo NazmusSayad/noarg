@@ -1,16 +1,74 @@
-import eslint from '@eslint/js'
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
-import tseslint from 'typescript-eslint'
+import { fixupConfigRules, fixupPluginRules } from '@eslint/compat'
+import { FlatCompat } from '@eslint/eslintrc'
+import pluginJs from '@eslint/js'
+import checkFile from 'eslint-plugin-check-file'
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  tseslint.configs.recommended,
+// @ts-expect-error
+import _import from 'eslint-plugin-import'
+import prettier from 'eslint-plugin-prettier'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { configs, parser } from 'typescript-eslint'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: pluginJs.configs.recommended,
+  allConfig: pluginJs.configs.all,
+})
+
+export default [
   {
+    ignores: [
+      '**/.next',
+      '**/node_modules',
+      '**/dist',
+      '**/__tests__',
+      './*.{js,cjs,mjs,cts,mts}',
+    ],
+  },
+
+  ...configs.recommended,
+
+  ...fixupConfigRules(
+    compat.extends('plugin:import/typescript', 'plugin:prettier/recommended')
+  ),
+
+  {
+    plugins: {
+      'check-file': checkFile,
+      import: fixupPluginRules(_import),
+      prettier: fixupPluginRules(prettier),
+    },
+
+    languageOptions: {
+      parser: parser,
+      ecmaVersion: 5,
+      sourceType: 'module',
+
+      parserOptions: {
+        project: path.join(__dirname, './tsconfig.json'),
+        ecmaFeatures: { jsx: true },
+      },
+    },
+
     rules: {
+      'no-void': 0,
+      'no-plusplus': 0,
+      'no-useless-escape': 0,
+      'consistent-return': 0,
+      'symbol-description': 0,
+      'no-underscore-dangle': 0,
+      'import/prefer-default-export': 0,
+      '@typescript-eslint/explicit-module-boundary-types': 0,
+
+      'prettier/prettier': 1,
+
       '@typescript-eslint/no-unused-vars': [
-        'warn',
+        1,
         {
-          args: 'all',
           argsIgnorePattern: '^_',
           caughtErrors: 'all',
           caughtErrorsIgnorePattern: '^_',
@@ -19,12 +77,63 @@ export default tseslint.config(
           ignoreRestSiblings: true,
         },
       ],
+
+      'no-param-reassign': 2,
+      '@typescript-eslint/no-floating-promises': 2,
+      'prefer-arrow-callback': [2, { allowNamedFunctions: false }],
+      'func-style': [2, 'declaration', { allowArrowFunctions: false }],
+
+      '@typescript-eslint/explicit-member-accessibility': [
+        2,
+        {
+          accessibility: 'explicit',
+          overrides: { constructors: 'no-public' },
+        },
+      ],
+      '@typescript-eslint/naming-convention': [
+        2,
+        {
+          selector: ['typeLike', 'interface'],
+          leadingUnderscore: 'allowSingleOrDouble',
+          trailingUnderscore: 'allowSingleOrDouble',
+          format: ['PascalCase'],
+        },
+        {
+          selector: 'parameter',
+          leadingUnderscore: 'allowSingleOrDouble',
+          trailingUnderscore: 'allowSingleOrDouble',
+          format: ['camelCase'],
+        },
+        {
+          selector: 'variable',
+          leadingUnderscore: 'allowSingleOrDouble',
+          trailingUnderscore: 'allowSingleOrDouble',
+          format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+        },
+      ],
+
+      'max-lines': [2, { max: 200, skipBlankLines: true, skipComments: true }],
+
+      'check-file/folder-naming-convention': [2, { '*/**': 'KEBAB_CASE' }],
+      'check-file/filename-naming-convention': [
+        2,
+        { '**/*.*': 'KEBAB_CASE' },
+        { ignoreMiddleExtensions: true },
+      ],
+
+      'import/no-default-export': 2,
     },
   },
 
-  eslintPluginPrettierRecommended,
-
   {
-    rules: { 'prettier/prettier': 1 },
-  }
-)
+    files: ['**/*.test.ts', 'prisma/seed.ts'],
+
+    rules: {
+      'max-lines': 0,
+      'import/no-extraneous-dependencies': 0,
+      '@typescript-eslint/no-unsafe-call': 0,
+      '@typescript-eslint/no-unsafe-assignment': 0,
+      '@typescript-eslint/no-unsafe-member-access': 0,
+    },
+  },
+]
