@@ -1,181 +1,66 @@
-import {
-  Prettify,
-  MergeObject,
-  WritableObject,
-  MakeObjectOptional,
-} from '../types/util.t'
-import {
-  FlagOption,
-  ArgumentsOptions,
-  ListArgumentsOption,
-  OptionalArgumentsOptions,
-} from './types.t'
-import colors from '../lib/colors'
 import { CellValue } from 'cli-table3'
-import { NoArgError } from './NoArgError'
-import { NoArgParser } from './NoArgParser'
-import ThrowExit from '../helpers/ThrowExit'
-import { getArrayLengthStr } from '../utils'
-import { NoArgCoreHelper } from './NoArgCore'
-import { TypeArray } from '../schema/TypeArray'
-import { TypeTuple } from '../schema/TypeTuple'
-import { TypeString } from '../schema/TypeString'
-import { TypeNumber } from '../schema/TypeNumber'
-import { ExtractTypeOutput } from '../schema/type.t'
+import validateFlagName from '../helpers/validate-flag-name'
+import colors from '../lib/colors'
+import {
+  RootSystemConfig,
+  BaseConfig,
+  ProgramOptions,
+  NoArgProgramMap,
+  FlagOption,
+} from '../types'
 import { CustomTable } from '../helpers/custom-table'
+import { getArrayLengthStr } from '../utils'
+import { TypeArray } from '../schema/array'
+import { TypeTuple } from '../schema/tuple'
+import { TypeString } from '../schema/string'
+import { TypeNumber } from '../schema/number'
+import { validateNonEmptyString } from '../utils/string'
+import { verifySymbol } from '../constants/admin-symbol'
+import { verifyNoArgSymbol } from './helpers'
 
-export class NoArgProgram<
+export class NoArgCore<
   TName extends string,
-  TSystem extends NoArgCoreHelper.System,
-  TConfig extends NoArgProgramHelper.Config,
-  TOptions extends NoArgCoreHelper.Options
-> extends NoArgParser<TName, TSystem, TConfig, TOptions> {
-  protected parent?: NoArgProgram<any, any, any, any>
+  TSystem extends RootSystemConfig,
+  TConfig extends BaseConfig,
+  TOptions extends ProgramOptions
+> {
+  protected programs: NoArgProgramMap = new Map()
 
   constructor(
-    name: TName,
-    system: TSystem,
-    config: TConfig,
-    options: TOptions,
-    parent?: NoArgProgram<any, any, any, any>
+    symbol: symbol,
+    protected name: TName,
+    protected system: TSystem,
+    protected config: TConfig,
+    protected options: TOptions
   ) {
-    super(name, system, config, options)
-    this.parent = parent
-  }
+    verifyNoArgSymbol(symbol, 'NoArgCore')
 
-  /**
-   * Create a new NoArgProgramHelper instance
-   * @param name The name of the program
-   * @param options The options for the program
-   * @returns A new NoArgProgramHelper instance
-   * @example
-   * const program = app.create('my-program', {
-   *   ...
-   * })
-   *
-   */
-  public create<
-    const TName extends string,
-    const TCreateOptionsWithConfig extends Partial<NoArgCoreHelper.Options> & {
-      config?: Partial<NoArgProgramHelper.Config>
+    if (typeof system.booleanNotSyntaxEnding === 'string') {
+      validateNonEmptyString(
+        system.booleanNotSyntaxEnding,
+        'system.booleanNotSyntaxEnding'
+      )
     }
-  >(name: TName, { config, ...options }: TCreateOptionsWithConfig) {
-    type TInnerConfig = NonNullable<TCreateOptionsWithConfig['config']>
-    type TInnerOptions = Omit<
-      TCreateOptionsWithConfig,
-      'config'
-    > extends Partial<NoArgCoreHelper.Options>
-      ? MergeObject<
-          NoArgCoreHelper.DefaultOptions,
-          Omit<TCreateOptionsWithConfig, 'config'>
-        >
-      : never
 
-    type TInnerOptionsWithGlobalFlags =
-      TInnerConfig['skipGlobalFlags'] extends true
-        ? TInnerOptions
-        : MergeObject<
-            TInnerOptions,
-            {
-              globalFlags: Prettify<
-                MergeObject<
-                  TOptions['globalFlags'],
-                  TInnerOptions['globalFlags']
-                >
-              >
-            }
-          >
-
-    type TChildConfig = Prettify<Required<MergeObject<TConfig, TInnerConfig>>>
-    type TChildOptions = Prettify<Required<TInnerOptionsWithGlobalFlags>>
-
-    const newConfig = {
-      ...this.config,
-      ...config,
-    } as unknown as TChildConfig
-
-    const newOptions: TChildOptions = {
-      ...NoArgCoreHelper.defaultOptions,
-      ...{
-        ...options,
-        globalFlags: newConfig.skipGlobalFlags
-          ? options.globalFlags ?? NoArgCoreHelper.defaultOptions.globalFlags
-          : {
-              ...this.options.globalFlags,
-              ...options.globalFlags,
-            },
-      },
-    } as unknown as TChildOptions
-
-    const child = new NoArgProgram<TName, TSystem, TChildConfig, TChildOptions>(
-      name,
-      this.system,
-      newConfig,
-      newOptions as TChildOptions,
-      this
-    )
-
-    this.programs.set(name, child as any)
-    return child
-  }
-
-  protected onActionCallback?: NoArgExtract.ExtractAction<
-    TSystem,
-    TConfig,
-    TOptions
-  >
-
-  /**
-   * Set the action of the program
-   * @example
-   * program.on((args, flags, config, system) => {
-   *  console.log(args)
-   * })
-   */
-  public on(callback: NonNullable<typeof this.onActionCallback>) {
-    this.onActionCallback = callback as any
-    return this
-  }
-
-  protected async startCore(args: string[]) {
-    try {
-      const result = await this.parseStart(args)
-      if (!result) return
-
-      const output = [
-        [
-          ...result.args,
-          ...result.optArgs,
-          ...(this.options.listArg ? [result.listArgs] : []),
-          ...(this.options.trailingArgs ? [result.trailingArgs] : []),
-        ],
-        { ...result.flags },
-        { ...this.config },
-        { ...this.system },
-      ] as Parameters<NonNullable<typeof this.onActionCallback>>
-
-      this.onActionCallback?.(...output)
-    } catch (error) {
-      const canExit = !this.system.doNotExitOnError
-
-      if (error instanceof ThrowExit) {
-        if (error.message) {
-          console.error(colors.red('Error:'), `${error.message}`)
-        }
-
-        if (!canExit) return
-        return process.exit(error.code)
-      }
-
-      if (error instanceof NoArgError) {
-        console.error(colors.red('Error:'), `${error.message}`)
-
-        if (!canExit) return
-        return process.exit(1)
-      }
-
-      throw error
+    if (options.trailingArgs) {
+      validateNonEmptyString(options.trailingArgs, 'options.trailingArgs')
     }
+
+    if (options.flags) {
+      Object.keys(options.flags).forEach((name) => {
+        validateFlagName(name, system.booleanNotSyntaxEnding || undefined)
+      })
+    }
+
+    if (options.globalFlags) {
+      Object.keys(options.globalFlags).forEach((name) => {
+        validateFlagName(name, system.booleanNotSyntaxEnding || undefined)
+      })
+    }
+
+    this.system = Object.freeze({ ...system })
+    this.config = Object.freeze({ ...config })
+    this.options = Object.freeze({ ...options })
   }
 
   private colors = {
@@ -188,7 +73,6 @@ export class NoArgProgram<
     emptyString: colors.dim('┈'),
   }
 
-  // HELP METHOD
   private renderHelpIntro() {
     console.log(
       colors.cyan.bold(this.name),
@@ -210,7 +94,7 @@ export class NoArgProgram<
 
     const commandItems: string[] = [colors.dim(this.name)]
 
-    ;(function getParent(current: NoArgProgram<any, any, any, any>) {
+    ;(function getParent(current: any) {
       if (!current.parent) return
       commandItems.unshift(current.parent.name)
       getParent(current.parent)
@@ -802,75 +686,4 @@ export class NoArgProgram<
     this.renderUsageSystemConfiguration()
     console.log('')
   }
-}
-
-export namespace NoArgProgramHelper {
-  export type Config = NoArgCoreHelper.Config & {
-    readonly skipGlobalFlags?: boolean
-  }
-}
-
-export namespace NoArgExtract {
-  export type ExtractArguments<T extends ArgumentsOptions[]> = {
-    [K in keyof T]: ExtractTypeOutput<T[K]['type']>
-  }
-
-  export type ExtractOptionalArguments<T extends OptionalArgumentsOptions[]> = {
-    [K in keyof ExtractArguments<T>]: ExtractArguments<T>[K] | undefined
-  }
-
-  export type ExtractListArgument<T extends ListArgumentsOption> =
-    ExtractTypeOutput<T['type']>[]
-
-  export type ExtractFlags<T extends FlagOption> = Prettify<
-    MakeObjectOptional<
-      WritableObject<{
-        [K in keyof T]:
-          | ExtractTypeOutput<T[K]>
-          | (T[K]['config']['required'] extends true ? never : undefined)
-      }>
-    >
-  >
-
-  export type ExtractCombinedArgs<TOptions extends NoArgCoreHelper.Options> = [
-    ...ExtractArguments<NonNullable<TOptions['requiredArgs']>>,
-    ...ExtractOptionalArguments<NonNullable<TOptions['optionalArgs']>>,
-    ...(TOptions['listArg'] extends {}
-      ? [
-          ListArguments: Prettify<
-            ExtractListArgument<NonNullable<TOptions['listArg']>>
-          >
-        ]
-      : []),
-    ...(TOptions['trailingArgs'] extends NonNullable<
-      NoArgCoreHelper.Options['trailingArgs']
-    >
-      ? TOptions['trailingArgs'] extends ''
-        ? []
-        : [TrailingArguments: string[]]
-      : [])
-  ]
-
-  export type ExtractCombinedFlags<TOptions extends NoArgCoreHelper.Options> =
-    Prettify<
-      MakeObjectOptional<
-        ExtractFlags<
-          MergeObject<
-            NonNullable<TOptions['globalFlags']>,
-            NonNullable<TOptions['flags']>
-          >
-        >
-      >
-    >
-
-  export type ExtractAction<
-    TSystem extends NoArgCoreHelper.System,
-    TConfig extends NoArgProgramHelper.Config,
-    TOptions extends NoArgCoreHelper.Options
-  > = (
-    args: ExtractCombinedArgs<TOptions>,
-    flags: ExtractCombinedFlags<TOptions>,
-    config: TConfig,
-    system: TSystem
-  ) => void
 }

@@ -1,5 +1,5 @@
-import { NoArgRoot as NoArg } from './NoArg/NoArgRoot'
-import type { NoArgExtract } from './NoArg/NoArgProgram'
+import { NoArgRoot as NoArg } from './no-arg/root'
+import type {} from './no-arg/program'
 
 export default NoArg
-export { NoArg, NoArgExtract }
+export { NoArg }

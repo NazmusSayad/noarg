@@ -1,20 +1,34 @@
 import colors from '../lib/colors'
-import adminSymbol from './admin-symbol'
-import { NoArgCoreHelper } from './NoArgCore'
-import { TypeArray } from '../schema/TypeArray'
-import { TypeTuple } from '../schema/TypeTuple'
-import { TypeNumber } from '../schema/TypeNumber'
-import { TypeString } from '../schema/TypeString'
-import { TypeBoolean } from '../schema/TypeBoolean'
-import { TSchemaPrimitive } from '../schema/type.t'
-import { MergeObject, MergeObjectPrettify, Prettify } from '../types/util.t'
-import { NoArgProgram, NoArgExtract, NoArgProgramHelper } from './NoArgProgram'
+import { trustedSymbol, verifySymbol } from '../constants/admin-symbol'
+import {
+  RootSystemConfig,
+  ProgramConfig,
+  ProgramOptions,
+  DefaultSystem,
+  DefaultConfig,
+  DefaultOptions,
+} from '../types'
+import { TypeArray } from '../schema/array'
+import { TypeTuple } from '../schema/tuple'
+import { TypeNumber } from '../schema/number'
+import { TypeString } from '../schema/string'
+import { TypeBoolean } from '../schema/boolean'
+import { TSchemaPrimitive } from '../schema'
+import { NoArgProgram } from './program'
+import { MergeObject, MergeObjectPrettify, Prettify } from '../utils/utils.type'
+import {
+  defaultConfig,
+  defaultOptions,
+  defaultSystemConfig,
+} from '../constants/config'
+import { ProgramCreateOptions } from '../types/global.type'
+import { verifyNoArgSymbol } from './helpers'
 
 export class NoArgRoot<
   TName extends string,
-  TSystem extends NoArgCoreHelper.System,
-  TConfig extends NoArgProgramHelper.Config,
-  TOptions extends NoArgCoreHelper.Options
+  TSystem extends RootSystemConfig,
+  TConfig extends ProgramConfig,
+  TOptions extends ProgramOptions
 > extends NoArgProgram<TName, TSystem, TConfig, TOptions> {
   static colors = {
     disable() {
@@ -120,40 +134,37 @@ export class NoArgRoot<
    */
   static create<
     const TName extends string,
-    const TCreateConfig extends NoArgRoot.CreateConfig
+    const TCreateConfig extends ProgramCreateOptions
   >(name: TName, { config, system, ...options }: TCreateConfig) {
     type TSystem = MergeObjectPrettify<
-      NoArgCoreHelper.DefaultSystem,
+      DefaultSystem,
       Required<NonNullable<TCreateConfig['system']>>
     >
 
     type TConfig = MergeObjectPrettify<
-      NoArgCoreHelper.DefaultConfig,
+      DefaultConfig,
       Required<NonNullable<TCreateConfig['config']>>
     >
 
     type TOptions = Prettify<
       Required<
-        MergeObject<
-          NoArgCoreHelper.DefaultOptions,
-          Omit<TCreateConfig, 'config' | 'system'>
-        >
+        MergeObject<DefaultOptions, Omit<TCreateConfig, 'config' | 'system'>>
       >
     >
 
     return new NoArgRoot<TName, TSystem, TConfig, TOptions>(
-      adminSymbol,
+      trustedSymbol,
       name,
       {
-        ...NoArgCoreHelper.defaultSystem,
+        ...defaultSystemConfig,
         ...system,
       } as TSystem,
       {
-        ...NoArgCoreHelper.defaultConfig,
+        ...defaultConfig,
         ...config,
       } as TConfig,
       {
-        ...NoArgCoreHelper.defaultOptions,
+        ...defaultOptions,
         ...options,
       } as unknown as TOptions
     )
@@ -165,7 +176,7 @@ export class NoArgRoot<
    * - This is a helper function to make the type inference better
    * @param config The configuration for the program
    */
-  static defineConfig<const T extends NoArgRoot.CreateConfig>(config: T) {
+  static defineConfig<const T extends ProgramCreateOptions>(config: T) {
     return config as Prettify<T>
   }
 
@@ -176,13 +187,8 @@ export class NoArgRoot<
     config: TConfig,
     options: TOptions
   ) {
-    if (symbol !== adminSymbol) {
-      throw new Error(
-        'NoArg is not meant to be instantiated directly. Use NoArgProgramHelper.create() instead. But if really need this contact the developer. This is disabled just for safety.'
-      )
-    }
-
-    super(name, system, config, options as any)
+    verifyNoArgSymbol(symbol, 'NoArgRoot')
+    super(trustedSymbol, name, system, config, options as any)
   }
 
   /**
@@ -197,78 +203,4 @@ export class NoArgRoot<
   public start(args: string[] = process.argv.slice(2)) {
     this.startCore(args)
   }
-}
-
-export namespace NoArgRoot {
-  export type CreateConfig = Prettify<
-    Partial<NoArgCoreHelper.Options> & {
-      config?: Partial<NoArgCoreHelper.Config>
-      system?: Partial<NoArgCoreHelper.System>
-    }
-  >
-
-  export type InferFlags<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? NoArgExtract.ExtractFlags<TOptions['flags']>
-    : never
-
-  export type InferGlobalFlags<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? NoArgExtract.ExtractFlags<TOptions['globalFlags']>
-    : never
-
-  export type InferCombinedFlags<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? NoArgExtract.ExtractCombinedFlags<TOptions>
-    : never
-
-  export type InferArguments<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? NoArgExtract.ExtractArguments<TOptions['requiredArgs']>
-    : never
-
-  export type InferOptionalArguments<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? NoArgExtract.ExtractOptionalArguments<TOptions['optionalArgs']>
-    : never
-
-  export type InferListArguments<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? undefined extends TOptions['listArg']
-      ? never
-      : NoArgExtract.ExtractListArgument<NonNullable<TOptions['listArg']>>
-    : never
-
-  export type InferCombinedArgs<T> = T extends NoArgProgram<
-    string,
-    any,
-    any,
-    infer TOptions
-  >
-    ? NoArgExtract.ExtractCombinedArgs<TOptions>
-    : never
 }

@@ -1,10 +1,10 @@
-import { TypeCore } from './TypeCore'
-import { TypeString } from './TypeString'
-import { TSchemaPrimitive } from './type.t'
+import { TypeCore, TypeCoreConfig } from './core'
+import { TypeString, TypeStringSample } from './string'
+import { TSchemaPrimitive } from '.'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeTuple<
-  const TConfig extends TypeTuple.Config
+  const TConfig extends TypeTupleConfig
 > extends TypeCore<TConfig> {
   name = 'tuple' as const
 
@@ -18,7 +18,7 @@ export class TypeTuple<
     }
 
     const result = value.map((item, i) => {
-      const schema = this.config.schema[i] as TypeString.Sample
+      const schema = this.config.schema[i] as TypeStringSample
       return schema['checkType'](item)
     })
 
@@ -30,7 +30,5 @@ export class TypeTuple<
   }
 }
 
-export namespace TypeTuple {
-  export type Config = TypeCore.Config & { schema: TSchemaPrimitive[] }
-  export type Sample = TypeTuple<Config>
-}
+export type TypeTupleConfig = TypeCoreConfig & { schema: TSchemaPrimitive[] }
+export type TypeTupleSample = TypeTuple<TypeTupleConfig>

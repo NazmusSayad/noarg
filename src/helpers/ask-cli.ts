@@ -1,14 +1,14 @@
 import colors from '../lib/colors'
-import { TSchema } from '../schema/type.t'
+import { TSchema } from '../schema'
 import * as inquirer from '@inquirer/prompts'
-import { TypeTuple } from '../schema/TypeTuple'
-import { TypeArray } from '../schema/TypeArray'
-import { TypeNumber } from '../schema/TypeNumber'
-import { TypeString } from '../schema/TypeString'
-import { TypeBoolean } from '../schema/TypeBoolean'
+import { TypeTupleSample } from '../schema/tuple'
+import { TypeArraySample } from '../schema/array'
+import { TypeNumberSample } from '../schema/number'
+import { TypeStringSample } from '../schema/string'
+import { TypeBooleanSample } from '../schema/boolean'
 
 const typePrompter = {
-  async string(schema: TypeString.Sample, prefix = '') {
+  async string(schema: TypeStringSample, prefix = '') {
     if (schema.config.enum) {
       return this.select('string:', Array.from(schema.config.enum))
     }
@@ -46,7 +46,7 @@ const typePrompter = {
     return result
   },
 
-  async number(schema: TypeNumber.Sample, prefix = '') {
+  async number(schema: TypeNumberSample, prefix = '') {
     if (schema.config.enum) {
       return this.select('number:', Array.from(schema.config.enum))
     }
@@ -69,7 +69,7 @@ const typePrompter = {
     return Number(result)
   },
 
-  async boolean(schema: TypeBoolean.Sample, prefix = '') {
+  async boolean(schema: TypeBooleanSample, prefix = '') {
     return inquirer.confirm({
       theme: { prefix: '' },
       default: schema.config.default,
@@ -77,7 +77,7 @@ const typePrompter = {
     })
   },
 
-  async array(schema: TypeArray.Sample) {
+  async array(schema: TypeArraySample) {
     const output: unknown[] = []
 
     while (true) {
@@ -103,7 +103,7 @@ const typePrompter = {
     return output
   },
 
-  async tuple(schema: TypeTuple.Sample) {
+  async tuple(schema: TypeTupleSample) {
     const output: unknown[] = []
 
     for (const childSchema of schema.config.schema) {

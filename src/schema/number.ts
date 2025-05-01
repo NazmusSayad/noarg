@@ -1,9 +1,9 @@
-import { TypeCore } from './TypeCore'
-import { Prettify } from '../types/util.t'
+import { TypeCore, TypeCoreConfig } from './core'
+import { Prettify } from '../utils/utils.type'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeNumber<
-  const TConfig extends TypeNumber.Config
+  const TConfig extends TypeNumberConfig
 > extends TypeCore<TConfig> {
   name = 'number' as const
 
@@ -63,13 +63,11 @@ export class TypeNumber<
   }
 }
 
-export namespace TypeNumber {
-  export type Config = TypeCore.Config &
-    Partial<{
-      min: number
-      max: number
-      enum: Set<number>
-      toInteger: boolean
-    }>
-  export type Sample = TypeNumber<Config>
-}
+export type TypeNumberConfig = TypeCoreConfig &
+  Partial<{
+    min: number
+    max: number
+    enum: Set<number>
+    toInteger: boolean
+  }>
+export type TypeNumberSample = TypeNumber<TypeNumberConfig>

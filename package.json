@@ -2,12 +2,13 @@
   "name": "noarg",
   "version": "4.0.0",
   "scripts": {
+    "test": "bun test",
     "dev": "npmize dev",
     "build": "npmize build",
     "tsc": "tsc --watch --noEmit",
-    "lab": "tsx --watch ./src/___lab___/index.ts",
-    "cjs": "node --watch ./dist/___lab___/index.cjs",
-    "mjs": "node --watch ./dist/___lab___/index.mjs"
+    "lab": "tsx --watch ./src/___test___/index.ts",
+    "cjs": "node --watch ./dist/___test___/index.cjs",
+    "mjs": "node --watch ./dist/___test___/index.mjs"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.5.0",
@@ -15,9 +16,10 @@
     "cli-table3": "^0.6.5"
   },
   "devDependencies": {
-    "@types/node": "^22.7.4",
+    "@types/bun": "^1.2.11",
+    "@types/node": "^22.15.3",
     "npmize": "^1.1.11",
-    "typescript": "^5.6.2"
+    "typescript": "^5.8.3"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

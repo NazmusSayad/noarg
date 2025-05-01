@@ -1,9 +1,13 @@
 import { ResultErr, ResultOk } from './result'
-import { MergeObject, Prettify } from '../types/util.t'
+import { MergeObject, Prettify } from '../utils/utils.type'
 import validateFlagName from '../helpers/validate-flag-name'
-import { ParsedResult, ExtractTypeOutput, InferAndUpdateConfig } from './type.t'
+import {
+  ParsedResult,
+  ExtractTypeOutput,
+  InferAndUpdateConfig,
+} from '.'
 
-export class TypeCore<TConfig extends TypeCore.Config> {
+export class TypeCore<TConfig extends TypeCoreConfig> {
   name = 'core'
   constructor(public config: TConfig) {}
 
@@ -102,14 +106,12 @@ export class TypeCore<TConfig extends TypeCore.Config> {
   }
 }
 
-export namespace TypeCore {
-  export type Config = Partial<{
-    aliases: string[]
-    description: string
-    required: boolean
-    default: any
-    askQuestion: string
-  }>
+export type TypeCoreConfig = Partial<{
+  aliases: string[]
+  description: string
+  required: boolean
+  default: any
+  askQuestion: string
+}>
 
-  export type Sample = TypeCore<Config>
-}
+export type TypeCoreSample = TypeCore<TypeCoreConfig>

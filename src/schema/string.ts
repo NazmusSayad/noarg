@@ -1,9 +1,9 @@
-import { TypeCore } from './TypeCore'
-import { Prettify } from '../types/util.t'
+import { TypeCore, TypeCoreConfig } from './core'
+import { Prettify } from '../utils/utils.type'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeString<
-  const TConfig extends TypeString.Config
+  const TConfig extends TypeStringConfig
 > extends TypeCore<TConfig> {
   name = 'string' as const
 
@@ -82,14 +82,12 @@ export class TypeString<
   }
 }
 
-export namespace TypeString {
-  export type Config = TypeCore.Config &
-    Partial<{
-      regex: RegExp
-      minLength: number
-      maxLength: number
-      toCase: 'lower' | 'upper'
-      enum: Set<string>
-    }>
-  export type Sample = TypeString<Config>
-}
+export type TypeStringConfig = TypeCoreConfig &
+  Partial<{
+    regex: RegExp
+    minLength: number
+    maxLength: number
+    toCase: 'lower' | 'upper'
+    enum: Set<string>
+  }>
+export type TypeStringSample = TypeString<TypeStringConfig>

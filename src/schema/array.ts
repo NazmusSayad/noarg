@@ -1,11 +1,11 @@
-import { TypeCore } from './TypeCore'
-import { TypeString } from './TypeString'
-import { Prettify } from '../types/util.t'
-import { TSchemaPrimitive } from './type.t'
+import { TypeCore, TypeCoreConfig } from './core'
+import { TypeString, TypeStringSample } from './string'
+import { Prettify } from '../utils/utils.type'
+import { TSchemaPrimitive } from '.'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeArray<
-  const TConfig extends TypeArray.Config
+  const TConfig extends TypeArrayConfig
 > extends TypeCore<TConfig> {
   name = 'array' as const
 
@@ -21,7 +21,7 @@ export class TypeArray<
     }
 
     const result = value.map((item) => {
-      const schema = this.config.schema as TypeString.Sample
+      const schema = this.config.schema as TypeStringSample
       return schema['checkType'](item)
     })
 
@@ -53,12 +53,10 @@ export class TypeArray<
   }
 }
 
-export namespace TypeArray {
-  export type Config = TypeCore.Config &
-    Partial<{
-      minLength: number
-      maxLength: number
-    }> & { schema: TSchemaPrimitive }
+export type TypeArrayConfig = TypeCoreConfig &
+  Partial<{
+    minLength: number
+    maxLength: number
+  }> & { schema: TSchemaPrimitive }
 
-  export type Sample = TypeArray<Config>
-}
+export type TypeArraySample = TypeArray<TypeArrayConfig>

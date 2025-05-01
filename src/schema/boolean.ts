@@ -1,8 +1,8 @@
-import { TypeCore } from './TypeCore'
+import { TypeCore, TypeCoreConfig } from './core'
 import { ResultErr, ResultOk } from './result'
 
 export class TypeBoolean<
-  const TConfig extends TypeBoolean.Config
+  const TConfig extends TypeBooleanConfig
 > extends TypeCore<TConfig> {
   name = 'boolean' as const
 
@@ -15,7 +15,5 @@ export class TypeBoolean<
   }
 }
 
-export namespace TypeBoolean {
-  export type Config = TypeCore.Config & Partial<{}>
-  export type Sample = TypeBoolean<Config>
-}
+export type TypeBooleanConfig = TypeCoreConfig & Partial<{}>
+export type TypeBooleanSample = TypeBoolean<TypeBooleanConfig>
