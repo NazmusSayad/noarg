@@ -2,6 +2,7 @@ import { CellValue } from 'cli-table3'
 import { CustomTable } from '../helpers/custom-table'
 import validateFlagName from '../helpers/validate-flag-name'
 import colors from '../lib/colors'
+import { getTypeName } from '../runtime-type'
 import { TypeArray } from '../schema/array'
 import { TypeNumber } from '../schema/number'
 import { TypeString } from '../schema/string'
@@ -164,10 +165,10 @@ export class NoArgCore<
     const tables = [] as [CellValue, CellValue, CellValue][]
 
     this.options.requiredArgs.forEach((argument) => {
-      const { name, type } = argument
+      const { name, typeV2 } = argument
       tables.push([
         this.colors.arguments(name),
-        this.colors.type(type.name),
+        this.colors.type(getTypeName(typeV2)),
         this.colors.description(
           argument.description ?? this.colors.emptyString
         ),
@@ -175,10 +176,10 @@ export class NoArgCore<
     })
 
     this.options.optionalArgs.forEach((argument) => {
-      const { name, type } = argument
+      const { name, typeV2 } = argument
       tables.push([
         this.colors.arguments(name),
-        this.colors.type(type.name) + '?',
+        this.colors.type(getTypeName(typeV2)) + '?',
         this.colors.description(
           argument.description ?? this.colors.emptyString
         ),
@@ -186,12 +187,12 @@ export class NoArgCore<
     })
 
     if (this.options.listArg) {
-      const { name, type, minLength, maxLength, description } =
+      const { name, typeV2, minLength, maxLength, description } =
         this.options.listArg
 
       tables.push([
         this.colors.arguments(name),
-        this.colors.type(type.name) +
+        this.colors.type(getTypeName(typeV2)) +
           `[${getArrayLengthStr(minLength, maxLength)}]` +
           (minLength && minLength > 0 ? '' : '?'),
 

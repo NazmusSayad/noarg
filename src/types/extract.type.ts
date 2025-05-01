@@ -6,24 +6,24 @@ import {
   WritableObject,
 } from '../utils/utils.type'
 import {
-  ArgsOption,
+  ArgOption,
   FlagOption,
-  ListArgsOption,
-  OptionalArgsOption,
+  ListArgOption,
+  OptionalArgOption,
   ProgramConfig,
   ProgramOptions,
   RootSystemConfig,
 } from './config.type'
 
-export type ExtractArguments<T extends ArgsOption[]> = {
+export type ExtractArguments<T extends ArgOption[]> = {
   [K in keyof T]: ExtractTypeOutput<T[K]['type']>
 }
 
-export type ExtractOptionalArguments<T extends OptionalArgsOption[]> = {
+export type ExtractOptionalArguments<T extends OptionalArgOption[]> = {
   [K in keyof ExtractArguments<T>]: ExtractArguments<T>[K] | undefined
 }
 
-export type ExtractListArgument<T extends ListArgsOption> = ExtractTypeOutput<
+export type ExtractListArgument<T extends ListArgOption> = ExtractTypeOutput<
   T['type']
 >[]
 

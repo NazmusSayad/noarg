@@ -4,17 +4,26 @@ import {
   defaultSystemConfig,
 } from '../constants/config'
 import { NoArgProgram } from '../no-arg/program'
+import {
+  SimpleBooleanConfig,
+  SimpleNumberConfig,
+  SimpleStringConfig,
+} from '../runtime-type'
 import { TSchema, TSchemaPrimitive } from '../schema'
 
-export type ArgsOption = {
+export type BaseArgOption = {
   name: string
   type: TSchemaPrimitive
   description?: string
+} & (SimpleStringConfig | SimpleNumberConfig | SimpleBooleanConfig)
+
+export type ArgOption = BaseArgOption & {
+  askQuestion?: string
 }
 
-export type OptionalArgsOption = ArgsOption & {}
+export type OptionalArgOption = BaseArgOption & {}
 
-export type ListArgsOption = ArgsOption & {
+export type ListArgOption = BaseArgOption & {
   minLength?: number
   maxLength?: number
 }
@@ -38,10 +47,10 @@ export type ProgramOptions = {
   readonly notes?: string[]
   readonly description?: string
 
-  readonly requiredArgs: ArgsOption[]
-  readonly optionalArgs: OptionalArgsOption[]
+  readonly requiredArgs: ArgOption[]
+  readonly optionalArgs: OptionalArgOption[]
 
-  readonly listArg?: ListArgsOption
+  readonly listArg?: ListArgOption
   readonly trailingArgs?: string
 
   readonly flags: FlagOption

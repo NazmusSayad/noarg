@@ -268,7 +268,7 @@ export class NoArgParser<
       const input = args.shift()
 
       if (!input) {
-        if (config.type.config.askQuestion === undefined) {
+        if (config.askQuestion === undefined) {
           throw new NoArgError(
             `No value provided for argument: ${colors.blue(config.name)}`
           )
