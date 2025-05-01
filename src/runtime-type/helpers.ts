@@ -3,24 +3,24 @@ import {
   SimpleArrayConfig,
   SimpleTupleConfig,
 } from './config.type'
-import { TupleConstructor } from './tuple'
+import { TupleConstructor } from './data-types'
 
 export function getTypeName(
-  typeV2: (
+  type: (
     | PrimitiveTypeConfigs
     | SimpleArrayConfig
     | SimpleTupleConfig
-  )['typeV2']
+  )['type']
 ): string {
-  if (typeV2 === String) {
+  if (type === String) {
     return 'String'
-  } else if (typeV2 === Number) {
+  } else if (type === Number) {
     return 'Number'
-  } else if (typeV2 === Boolean) {
+  } else if (type === Boolean) {
     return 'Boolean'
-  } else if (Array.isArray(typeV2)) {
+  } else if (Array.isArray(type)) {
     return 'Array'
-  } else if (typeV2 instanceof TupleConstructor) {
+  } else if (type instanceof TupleConstructor) {
     return 'Tuple'
   }
 

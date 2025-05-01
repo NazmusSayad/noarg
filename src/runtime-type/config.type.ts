@@ -1,7 +1,7 @@
-import { TupleConstructor } from './tuple'
+import { TupleConstructor } from './data-types'
 
 export type SimpleStringConfig = {
-  typeV2: StringConstructor
+  type: StringConstructor
 
   regex?: RegExp
   enum?: Array<string>
@@ -12,7 +12,7 @@ export type SimpleStringConfig = {
 }
 
 export type SimpleNumberConfig = {
-  typeV2: NumberConstructor
+  type: NumberConstructor
 
   min?: number
   max?: number
@@ -22,18 +22,18 @@ export type SimpleNumberConfig = {
 }
 
 export type SimpleBooleanConfig = {
-  typeV2: BooleanConstructor
+  type: BooleanConstructor
 }
 
 export type SimpleArrayConfig = {
-  typeV2: PrimitiveTypeConfigs[]
+  type: PrimitiveTypeConfigs[]
 
   minLength?: number
   maxLength?: number
 }
 
 export type SimpleTupleConfig = {
-  typeV2: TupleConstructor<PrimitiveTypeConfigs[]>
+  type: TupleConstructor<PrimitiveTypeConfigs[]>
 }
 
 export type PrimitiveTypeConfigs =
@@ -42,6 +42,8 @@ export type PrimitiveTypeConfigs =
   | SimpleBooleanConfig
 
 export type AllTypeConfigs =
-  | PrimitiveTypeConfigs
+  | SimpleStringConfig
+  | SimpleNumberConfig
+  | SimpleBooleanConfig
   | SimpleArrayConfig
   | SimpleTupleConfig

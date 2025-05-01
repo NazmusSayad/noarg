@@ -7,7 +7,7 @@ type ParsedResponse<T> =
 export function runtimeTypeCheck<TConfig extends AllTypeConfigs>(
   config: TConfig
 ) {
-  if (config.typeV2 === String) {
+  if (config.type === String) {
     console.log(config)
   }
 

@@ -7,7 +7,7 @@ export function Tuple<const T extends [...PrimitiveTypeConfigs[]]>(
 }
 
 export class TupleConstructor<const T extends [...PrimitiveTypeConfigs[]]> {
-  name = 'Tuple'
+  public name = 'Tuple'
   private elements: T
 
   constructor(elements: T) {
