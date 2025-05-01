@@ -44,13 +44,13 @@ export type ExtractTypeTupleCore<T extends TSchemaPrimitive[]> = {
 export type ExtractTypeOutput<T> =
   // Extract String
   T extends TypeString<infer Config> ?
-    Config['enum'] extends Set<infer TStrEnum> ?
-      TStrEnum
+    Config['enum'] extends Array<infer EnumStr> ?
+      EnumStr
     : string
   : // Extract Number
   T extends TypeNumber<infer Config> ?
-    Config['enum'] extends Set<infer TStrNum> ?
-      TStrNum
+    Config['enum'] extends Array<infer EnumNum> ?
+      EnumNum
     : number
   : // Extract Boolean
   T extends TypeBoolean<infer _Config> ? boolean

@@ -130,18 +130,12 @@ export class NoArgProgram<
       const result = await this.parseStart(args)
       if (!result) return
 
-      const output = [
-        {
-          requiredArgs: result.requiredArgs,
-          optionalArgs: result.optionalArgs,
-          listArg: result.listArg,
-          trailingArgs: result.trailingArgs,
-          flags: result.flags,
-        },
+      const [output, config] = [
+        { ...result },
         { config: this.config, system: this.system },
       ] as Parameters<NonNullable<typeof this.onActionCallback>>
 
-      this.onActionCallback?.(...output)
+      this.onActionCallback?.(Object.freeze(output), Object.freeze(config))
     } catch (error) {
       const canExit = !this.system.doNotExitOnError
 

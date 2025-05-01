@@ -25,8 +25,8 @@ export class TypeNumber<
 
     if (
       this.config.enum &&
-      this.config.enum.size &&
-      !this.config.enum.has(number)
+      this.config.enum.length &&
+      !this.config.enum.includes(number)
     ) {
       return new ResultErr(`\`${number}\` is not in enum`)
     }
@@ -34,40 +34,25 @@ export class TypeNumber<
     return new ResultOk(this.config.toInteger ? Math.floor(number) : number)
   }
 
-  /** Adds a minimum value to the number. */
-  min<TMin extends number>(
-    min: TMin
-  ): TypeNumber<Prettify<TConfig & { min: TMin }>> {
-    this.config.min = min
+  public configure<const T extends Omit<NumberConfig, 'enum'>>(
+    config: T
+  ): TypeNumber<Prettify<TConfig & T>> {
+    const newInstance = new TypeNumber({
+      ...this.config,
+      ...config,
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
-  }
-
-  /** Adds a maximum value to the number. */
-  max<TMax extends number>(
-    max: TMax
-  ): TypeNumber<Prettify<TConfig & { max: TMax }>> {
-    this.config.max = max
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
-  }
-
-  /** Converts the number to an integer during parsing. */
-  toInteger(): TypeNumber<Prettify<TConfig & { toInteger: true }>> {
-    this.config.toInteger = true
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
+    return newInstance as any
   }
 }
 
-export type TypeNumberConfig = TypeCoreConfig &
-  Partial<{
-    min: number
-    max: number
-    enum: Set<number>
-    toInteger: boolean
-  }>
+type NumberConfig = Partial<{
+  min: number
+  max: number
+  toInteger: boolean
+
+  enum: Array<number>
+}>
+export type TypeNumberConfig = TypeCoreConfig & NumberConfig
 export type TypeNumberSample = TypeNumber<TypeNumberConfig>

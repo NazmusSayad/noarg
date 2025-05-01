@@ -39,6 +39,10 @@ export class NoArgRoot<
     },
   }
 
+  static boolean() {
+    return new TypeBoolean({})
+  }
+
   /**
    * Create a new string schema
    *
@@ -51,12 +55,10 @@ export class NoArgRoot<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = {} as any
     if (strings.length) {
-      config.enum = new Set(strings)
+      config.enum = strings
     }
 
-    return new TypeString(
-      config as T extends [] ? object : { enum: Set<T[number]> }
-    )
+    return new TypeString(config as T extends [] ? object : { enum: T })
   }
 
   /**
@@ -72,34 +74,28 @@ export class NoArgRoot<
     const config = {} as any
 
     if (numbers.length) {
-      config.enum = new Set(numbers)
+      config.enum = numbers
     }
 
-    return new TypeNumber(
-      config as T extends [] ? object : { enum: Set<T[number]> }
-    )
-  }
-
-  static boolean() {
-    return new TypeBoolean({})
+    return new TypeNumber(config as T extends [] ? object : { enum: T })
   }
 
   /** ### ⚠️ Only available for flags. */
-  static array<T extends TSchemaPrimitive>(schema: T) {
-    delete schema.config.aliases
-    delete schema.config.default
-    delete schema.config.required
-    delete schema.config.askQuestion
-    delete schema.config.description
+  static array<const T extends TSchemaPrimitive>(type: T) {
+    delete type.config.aliases
+    delete type.config.default
+    delete type.config.required
+    delete type.config.askQuestion
+    delete type.config.description
 
-    const config = { schema }
+    const config = { schema: type }
     return new TypeArray(config)
   }
 
   /** ### ⚠️ Only available for flags. */
-  static tuple<T extends TSchemaPrimitive[]>(...schema: T) {
+  static tuple<const T extends TSchemaPrimitive[]>(...types: T) {
     const config = {
-      schema: schema.map((s) => {
+      schema: types.map((s) => {
         s.config.required = true
         delete s.config.aliases
         delete s.config.askQuestion

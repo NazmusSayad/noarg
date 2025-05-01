@@ -7,9 +7,9 @@
     "dev": "npmize dev",
     "build": "npmize build",
     "tsc": "tsc --watch --noEmit",
-    "lab": "tsx --watch ./src/___test___/index.ts",
-    "cjs": "node --watch ./dist/___test___/index.cjs",
-    "mjs": "node --watch ./dist/___test___/index.mjs"
+    "lab": "tsx --watch ./src/__tests__/index.ts",
+    "cjs": "node --watch ./dist/__tests__/index.cjs",
+    "mjs": "node --watch ./dist/__tests__/index.mjs"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.5.0",

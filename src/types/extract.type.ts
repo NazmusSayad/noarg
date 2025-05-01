@@ -27,22 +27,26 @@ export type ExtractListArgument<T extends ListArgsOption> = ExtractTypeOutput<
   T['type']
 >[]
 
-export type ExtractFlags<T extends FlagOption> = Prettify<
-  MakeObjectOptional<
-    WritableObject<{
-      [K in keyof T]:
-        | ExtractTypeOutput<T[K]>
-        | (T[K]['config']['required'] extends true ? never : undefined)
-    }>
-  >
+export type ExtractFlags<T extends FlagOption> = MakeObjectOptional<
+  WritableObject<{
+    [K in keyof T]:
+      | ExtractTypeOutput<T[K]>
+      | (T[K]['config'] extends { required: true } ? never
+        : T[K]['config'] extends { default: unknown } ? never
+        : undefined)
+  }>
 >
 
 export type ExtractCombinedArgs<TOptions extends ProgramOptions> = {
-  requiredArgs: ExtractArguments<NonNullable<TOptions['requiredArgs']>>
+  readonly flags: Prettify<ExtractCombinedFlags<TOptions>>
 
-  optionalArgs: ExtractOptionalArguments<NonNullable<TOptions['optionalArgs']>>
+  readonly requiredArgs: ExtractArguments<NonNullable<TOptions['requiredArgs']>>
 
-  listArg: TOptions['listArg'] extends object ?
+  readonly optionalArgs: ExtractOptionalArguments<
+    NonNullable<TOptions['optionalArgs']>
+  >
+
+  readonly listArg: TOptions['listArg'] extends object ?
     [
       ListArguments: Prettify<
         ExtractListArgument<NonNullable<TOptions['listArg']>>
@@ -50,45 +54,31 @@ export type ExtractCombinedArgs<TOptions extends ProgramOptions> = {
     ]
   : []
 
-  trailingArgs: TOptions['trailingArgs'] extends (
+  readonly trailingArgs: TOptions['trailingArgs'] extends (
     NonNullable<ProgramOptions['trailingArgs']>
   ) ?
     TOptions['trailingArgs'] extends '' ?
       []
     : [TrailingArguments: string[]]
   : []
-
-  flags: Prettify<
-    MakeObjectOptional<
-      ExtractFlags<
-        MergeObject<
-          NonNullable<TOptions['globalFlags']>,
-          NonNullable<TOptions['flags']>
-        >
-      >
-    >
-  >
 }
 
-export type ExtractCombinedFlags<TOptions extends ProgramOptions> = Prettify<
-  MakeObjectOptional<
-    ExtractFlags<
-      MergeObject<
-        NonNullable<TOptions['globalFlags']>,
-        NonNullable<TOptions['flags']>
-      >
+export type ExtractCombinedFlags<TOptions extends ProgramOptions> =
+  ExtractFlags<
+    MergeObject<
+      NonNullable<TOptions['globalFlags']>,
+      NonNullable<TOptions['flags']>
     >
   >
->
 
 export type ExtractActionCallback<
   TSystem extends RootSystemConfig,
   TConfig extends ProgramConfig,
   TOptions extends ProgramOptions,
 > = (
-  options: ExtractCombinedArgs<TOptions>,
+  options: Prettify<ExtractCombinedArgs<TOptions>>,
   config: {
-    config: TConfig
-    system: TSystem
+    readonly config: TConfig
+    readonly system: TSystem
   }
 ) => void

@@ -31,8 +31,8 @@ export class TypeString<
 
     if (
       this.config.enum &&
-      this.config.enum.size &&
-      !this.config.enum.has(value)
+      this.config.enum.length &&
+      !this.config.enum.includes(value)
     ) {
       return new ResultErr(`\`${value}\` is not in enum`)
     }
@@ -40,57 +40,25 @@ export class TypeString<
     return new ResultOk(value)
   }
 
-  /**
-   * Adds a regex to the string.
-   *
-   * @param regex The regex to add.
-   */
-  regex<TRegex extends RegExp>(
-    regex: TRegex
-  ): TypeString<Prettify<TConfig & { regex: TRegex }>> {
-    this.config.regex = regex
+  public configure<const T extends Omit<StringConfig, 'enum'>>(
+    config: T
+  ): TypeString<Prettify<TConfig & T>> {
+    const newInstance = new TypeString({
+      ...this.config,
+      ...config,
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
-  }
-
-  /** Sets the minimum length for the string. */
-  minLength<TMinLength extends number>(
-    minLength: TMinLength
-  ): TypeString<Prettify<TConfig & { minLength: TMinLength }>> {
-    this.config.minLength = minLength
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
-  }
-
-  /** Sets the maximum length for the string. */
-  maxLength<TMaxLength extends number>(
-    maxLength: TMaxLength
-  ): TypeString<Prettify<TConfig & { maxLength: TMaxLength }>> {
-    this.config.maxLength = maxLength
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
-  }
-
-  /** Convert to lower or upper case during parsing. */
-  toCase<TToCase extends 'lower' | 'upper'>(
-    toCase: TToCase
-  ): TypeString<Prettify<TConfig & { toCase: TToCase }>> {
-    this.config.toCase = toCase
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this as any
+    return newInstance as any
   }
 }
 
-export type TypeStringConfig = TypeCoreConfig &
-  Partial<{
-    regex: RegExp
-    minLength: number
-    maxLength: number
-    toCase: 'lower' | 'upper'
-    enum: Set<string>
-  }>
+type StringConfig = Partial<{
+  regex: RegExp
+  minLength: number
+  maxLength: number
+  toCase: 'lower' | 'upper'
+  enum: Array<string>
+}>
+export type TypeStringConfig = TypeCoreConfig & StringConfig
 export type TypeStringSample = TypeString<TypeStringConfig>

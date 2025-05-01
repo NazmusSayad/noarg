@@ -275,7 +275,7 @@ export class NoArgCore<
         const enumValues =
           (
             (schema instanceof TypeString || schema instanceof TypeNumber) &&
-            schema.config.enum?.size
+            schema.config.enum?.length
           ) ?
             colors.blue('\nChoices: ') +
             [...schema.config.enum.values()]

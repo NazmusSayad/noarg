@@ -8,7 +8,7 @@ export default tseslint.config(
   {
     rules: {
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         {
           args: 'all',
           argsIgnorePattern: '^_',
@@ -22,5 +22,9 @@ export default tseslint.config(
     },
   },
 
-  eslintPluginPrettierRecommended
+  eslintPluginPrettierRecommended,
+
+  {
+    rules: { 'prettier/prettier': 1 },
+  }
 )
