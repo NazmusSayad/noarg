@@ -13,3 +13,10 @@ export type MakeObjectOptional<T> = {
 } & {
   [Key in keyof T as undefined extends T[Key] ? Key : never]?: T[Key]
 }
+
+export type EnforceType<T, U, V = never> = U extends T ? U : V
+export type EnforceTypeStrict<T, U, V = never> = T extends U ? T : V
+
+export type UnReadonly<T> = {
+  -readonly [K in keyof T]: T[K]
+} & {}

@@ -1,12 +1,12 @@
-import { RequiredProgramOptions, RequiredSystemConfig } from '@/types'
+import { ResolvedProgramOptions, ResolvedSystemConfig } from '@/types'
 
 export class NoArgCore<
-  TOptions extends RequiredProgramOptions,
-  TConfig extends RequiredSystemConfig,
+  TOptions extends ResolvedProgramOptions,
+  TConfig extends ResolvedSystemConfig,
 > {
   protected programs: Map<
     string,
-    NoArgCore<RequiredProgramOptions, RequiredSystemConfig>
+    NoArgCore<ResolvedProgramOptions, ResolvedSystemConfig>
   > = new Map()
 
   constructor(

@@ -1,8 +1,8 @@
 import {
   ProgramHandler,
   ProgramOptions,
-  RequiredProgramOptions,
-  RequiredSystemConfig,
+  ResolvedProgramOptions,
+  ResolvedSystemConfig,
   SystemConfig,
 } from '@/types'
 import { NoArgCore } from './noarg-core'
@@ -11,15 +11,15 @@ export class NoArgProgram<
   TOptions extends ProgramOptions,
   TConfig extends SystemConfig,
 > extends NoArgCore<
-  RequiredProgramOptions & TOptions,
-  RequiredSystemConfig & TConfig
+  ResolvedProgramOptions & TOptions,
+  ResolvedSystemConfig & TConfig
 > {
   protected handler
 
   constructor(
     options: TOptions,
     config: TConfig,
-    handler?: ProgramHandler<RequiredProgramOptions, RequiredSystemConfig>
+    handler?: ProgramHandler<ResolvedProgramOptions, ResolvedSystemConfig>
   ) {
     super(
       {
@@ -70,22 +70,18 @@ export class NoArgProgram<
   }
 
   public setHandler(
-    handler: ProgramHandler<RequiredProgramOptions, RequiredSystemConfig>
+    handler: ProgramHandler<ResolvedProgramOptions, ResolvedSystemConfig>
   ) {
     this.handler = handler
   }
 
   public setProgram(
-    program: NoArgProgram<RequiredProgramOptions, RequiredSystemConfig>
+    program: NoArgProgram<ResolvedProgramOptions, ResolvedSystemConfig>
   ) {
     this.programs.set(program.getName(), program)
   }
 
   public hasProgram(name: string) {
     return this.programs.has(name)
-  }
-
-  public run(args: string[]) {
-    console.log(args)
   }
 }

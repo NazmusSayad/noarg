@@ -13,7 +13,9 @@
     "pretty": true,
 
     "paths": { "@/*": ["./*"] },
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    "disableSizeLimit": true
   },
   "include": ["./src"]
 }

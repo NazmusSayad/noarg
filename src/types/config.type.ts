@@ -19,4 +19,4 @@ export type SystemConfig = Partial<{
 
 export type ProgramConfig = Pick<SystemConfig, 'help'>
 
-export type RequiredSystemConfig = Required<SystemConfig>
+export type ResolvedSystemConfig = Required<SystemConfig>

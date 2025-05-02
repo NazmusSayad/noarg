@@ -1,11 +1,29 @@
-import { BuilderProgram } from '@/builder'
-import { NoArgProgram } from '@/noarg/noarg-program'
+import { BuilderApp } from '@/builder/builder-app'
 
-const program = new NoArgProgram({ name: 'App' }, {})
+const app = new BuilderApp({ name: 'App' }, { help: true })
+  .arg('path', String)
+  .arg('path', String)
+  .flag('silent', Boolean)
+  .configure({
+    allowDuplicateFlagForList: true,
+    help: false,
+  })
+  .flag('config', String, { global: true })
 
-const core = new BuilderProgram(program, { name: 'child' }, {})
-  .flag('testFlag - 1', String, { askQuestion: 'test question', type1: 'test' })
-  .flag('testFlag - 2', ['my string', true, 234234])
-  .handler((args) => {})
+const program1 = app.program('test1').configure({ help: true })
 
-console.log(core)
+const program2 = app
+  .program('test2')
+  .arg('path', String)
+  .arg('path', String)
+  .arg('path', String)
+  .arg('path', String)
+  .arg('path', String)
+  .arg('path', String)
+  .arg('path', String)
+
+const grandProgram = program1
+  .program('test3', { notes: [] })
+  .handle((options, config) => {})
+
+console.dir(app, { depth: null })
