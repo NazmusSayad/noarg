@@ -2,17 +2,18 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "outDir": "./dist",
-    "target": "ES2020",
+
+    "target": "ES6",
     "moduleResolution": "Node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "declaration": true,
-    "inlineSourceMap": false,
+    "esModuleInterop": true,
+
     "strict": true,
     "pretty": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": { "@/*": ["./*"] }
+
+    "paths": { "@/*": ["./*"] },
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["./src"]
 }

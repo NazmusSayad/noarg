@@ -1,4 +1,4 @@
-import { AllTypeConfigs } from '@/runtime-type'
+import { MergeObject, Prettify } from '@/utils/utils.type'
 
 export type ProgramArgConfig = {
   name: string
@@ -23,27 +23,37 @@ export type ProgramListArgConfig = {
   maxLength?: number
 }
 
-export type ProgramFlagConfig = Record<
-  string,
-  {
-    global?: boolean
-    description?: string
-    askQuestion?: string
-    defaultValue?: string | boolean
-  } & AllTypeConfigs
->
+export type ProgramFlagOptions = Partial<{
+  global: boolean
+  description: string
+  askQuestion: string
+  defaultValue: string | boolean
+}>
 
 export type ProgramOptions = {
-  notes: string[]
-  description: string | null
+  name: string
+  description?: string
 
-  flags: ProgramFlagConfig
+  notes?: string[]
 
-  args: ProgramArgConfig[]
-  optionalArgs: ProgramArgConfig[]
-  listArg: ProgramListArgConfig
-  trailingArgs: string
+  flags?: Record<string, ProgramFlagOptions>
+
+  args?: ProgramArgConfig[]
+  optArgs?: ProgramArgConfig[]
+  listArg?: ProgramListArgConfig
+
+  trailingArgs?: string | false
 
   helpUsageStructure?: string
   helpUsageTrailingArgsLabel?: string
 }
+
+export type RequiredProgramOptions = Prettify<
+  MergeObject<
+    Required<ProgramOptions>,
+    Pick<
+      ProgramOptions,
+      'listArg' | 'helpUsageStructure' | 'helpUsageTrailingArgsLabel'
+    >
+  >
+>

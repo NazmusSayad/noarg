@@ -1,51 +1,11 @@
-import { createApp } from '@/noarg/create-app'
-import { Tuple } from '@/runtime-type'
+import { BuilderProgram } from '@/builder'
+import { NoArgProgram } from '@/noarg/noarg-program'
 
-const app = createApp(
-  {
-    args: [],
-    description: 'My app description',
-    flags: {},
-    listArg: {
-      name: 'list',
-      description: 'List of items',
-    },
-    notes: [],
-    optionalArgs: [],
-    trailingArgs: '--',
-    helpUsageStructure: '',
-    helpUsageTrailingArgsLabel: '',
-  },
-  (options, config) => {},
-  {
-    help: true,
-    skipGlobalFlags: true,
-  }
-)
+const program = new NoArgProgram({ name: 'App' }, {})
 
-const child = app.createProgram(
-  {
-    args: [],
-    description: 'My child app description',
-    flags: {
-      name: {
-        type: Tuple({ type: String, minLength: 3 }),
-      },
-    },
-    listArg: {
-      name: 'list',
-      description: 'List of items',
-    },
-    notes: [],
-    optionalArgs: [],
-    trailingArgs: '--',
-    helpUsageStructure: '',
-    helpUsageTrailingArgsLabel: '',
-  },
-  (options, config) => {},
-  {
-    help: false,
-  }
-)
+const core = new BuilderProgram(program, { name: 'child' }, {})
+  .flag('testFlag - 1', String, { askQuestion: 'test question', type1: 'test' })
+  .flag('testFlag - 2', ['my string', true, 234234])
+  .handler((args) => {})
 
-app()
+console.log(core)

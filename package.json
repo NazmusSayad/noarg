@@ -12,11 +12,13 @@
   "dependencies": {
     "@inquirer/prompts": "^7.5.0",
     "ansi-colors": "^4.1.3",
-    "cli-table3": "^0.6.5"
+    "cli-table3": "^0.6.5",
+    "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.8",
     "@types/bun": "^1.2.11",
+    "@types/lodash.clonedeep": "^4.5.9",
     "@types/node": "^22.15.3",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",

@@ -1,20 +1,91 @@
-import { ProgramHandler, ProgramOptions, SystemConfig } from '@/types'
+import {
+  ProgramHandler,
+  ProgramOptions,
+  RequiredProgramOptions,
+  RequiredSystemConfig,
+  SystemConfig,
+} from '@/types'
+import { NoArgCore } from './noarg-core'
 
 export class NoArgProgram<
   TOptions extends ProgramOptions,
   TConfig extends SystemConfig,
+> extends NoArgCore<
+  RequiredProgramOptions & TOptions,
+  RequiredSystemConfig & TConfig
 > {
-  private programs: NoArgProgram<ProgramOptions, SystemConfig>[] = []
+  protected handler
 
   constructor(
-    public options: TOptions,
-    public config: TConfig,
-    public handler: ProgramHandler<TOptions, TConfig>
-  ) {}
+    options: TOptions,
+    config: TConfig,
+    handler?: ProgramHandler<RequiredProgramOptions, RequiredSystemConfig>
+  ) {
+    super(
+      {
+        flags: {},
 
-  public addProgram(program: NoArgProgram<ProgramOptions, SystemConfig>) {
-    this.programs.push(program)
+        args: [],
+        optArgs: [],
+
+        listArg: '',
+        trailingArgs: '',
+
+        notes: [],
+
+        helpUsageStructure: '',
+        helpUsageTrailingArgsLabel: '',
+
+        description: '',
+
+        ...options,
+      },
+
+      {
+        help: true,
+        skipGlobalFlags: false,
+
+        skipUnknownFlag: false,
+        allowEqualAssign: false,
+        allowMultipleValuesForPrimitive: true,
+
+        splitListByComma: false,
+        allowDuplicateFlagForList: true,
+        allowDuplicateFlagForPrimitive: false,
+        overwriteDuplicateFlagForList: false,
+
+        booleanNotSyntaxEnding: '!',
+        enableHelpBoxBorder: false,
+
+        doNotExitOnError: true,
+        ...config,
+      }
+    )
+
+    this.handler = handler
   }
 
-  public run(args: string[]) {}
+  public getConfig() {
+    return Object.freeze(this.config)
+  }
+
+  public setHandler(
+    handler: ProgramHandler<RequiredProgramOptions, RequiredSystemConfig>
+  ) {
+    this.handler = handler
+  }
+
+  public setProgram(
+    program: NoArgProgram<RequiredProgramOptions, RequiredSystemConfig>
+  ) {
+    this.programs.set(program.getName(), program)
+  }
+
+  public hasProgram(name: string) {
+    return this.programs.has(name)
+  }
+
+  public run(args: string[]) {
+    console.log(args)
+  }
 }

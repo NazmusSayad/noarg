@@ -5,7 +5,8 @@ export type Prettify<T extends object> = {
 export type WritableObject<T> = { -readonly [P in keyof T]: T[P] }
 
 export type MergeObject<T, U> = Omit<T, keyof U> & U
-export type MergeObjectPrettify<T, U> = Prettify<MergeObject<T, U>>
+export type MergeStrictObject<S, T, U> =
+  MergeObject<T, U> extends S ? MergeObject<T, U> & S : never
 
 export type MakeObjectOptional<T> = {
   [Key in keyof T as undefined extends T[Key] ? never : Key]: T[Key]
