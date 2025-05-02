@@ -40,7 +40,7 @@ export type ProgramFlagsRecord = {
   [key: string]: ProgramFlagOptions
 }
 
-export type ProgramOptions = {
+export type PartialProgramOptions = {
   name: string
   description?: string
 
@@ -59,9 +59,9 @@ export type ProgramOptions = {
 
 export type ResolvedProgramOptions = Prettify<
   MergeObject<
-    Required<ProgramOptions>,
+    Required<PartialProgramOptions>,
     Pick<
-      ProgramOptions,
+      PartialProgramOptions,
       | 'description'
       | 'listArg'
       | 'helpUsageStructure'

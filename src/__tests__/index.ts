@@ -1,29 +1,41 @@
-import { BuilderApp } from '@/builder/builder-app'
+import { createApp } from '@/builder/app-builder'
 
-const app = new BuilderApp({ name: 'App' }, { help: true })
-  .arg('path', String)
-  .arg('path', String)
-  .flag('silent', Boolean)
-  .configure({
-    allowDuplicateFlagForList: true,
+const app = createApp(
+  {
+    name: 'App',
+    description: 'App description',
+    flags: {
+      main: {
+        type: Number,
+      },
+    },
+  },
+
+  (options, config) => {},
+
+  {
     help: false,
-  })
-  .flag('config', String, { global: true })
+    allowDuplicateFlagForList: true,
+    allowDuplicateFlagForPrimitive: true,
+  }
+)
 
-const program1 = app.program('test1').configure({ help: true })
+const child1 = app.program(
+  {
+    name: 'Program 1',
+    flags: {
+      test: {
+        type: String,
+      },
+    },
+  },
 
-const program2 = app
-  .program('test2')
-  .arg('path', String)
-  .arg('path', String)
-  .arg('path', String)
-  .arg('path', String)
-  .arg('path', String)
-  .arg('path', String)
-  .arg('path', String)
+  (options, config) => {},
 
-const grandProgram = program1
-  .program('test3', { notes: [] })
-  .handle((options, config) => {})
+  {
+    help: true,
+    skipGlobalFlags: true,
+  }
+)
 
-console.dir(app, { depth: null })
+console.dir(app.getProgram(), { depth: null })

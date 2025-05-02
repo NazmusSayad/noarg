@@ -1,4 +1,4 @@
-export type SystemConfig = Partial<{
+export type PartialProgramConfig = Partial<{
   help: boolean
   skipGlobalFlags: boolean
 
@@ -17,6 +17,9 @@ export type SystemConfig = Partial<{
   doNotExitOnError: boolean
 }>
 
-export type ProgramConfig = Pick<SystemConfig, 'help'>
+export type ResolvedProgramConfig = Required<PartialProgramConfig>
 
-export type ResolvedSystemConfig = Required<SystemConfig>
+export type PartialSubProgramConfig = Pick<
+  PartialProgramConfig,
+  'help' | 'skipGlobalFlags'
+>

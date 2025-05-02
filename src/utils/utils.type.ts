@@ -2,6 +2,12 @@ export type Prettify<T extends object> = {
   [Key in keyof T]: T[Key]
 } & {}
 
+export type UnReadonly<T> = {
+  -readonly [K in keyof T]: T[K]
+} & {}
+
+export type ReadonlyPretty<T extends object> = Readonly<Prettify<T>>
+
 export type WritableObject<T> = { -readonly [P in keyof T]: T[P] }
 
 export type MergeObject<T, U> = Omit<T, keyof U> & U
@@ -16,7 +22,3 @@ export type MakeObjectOptional<T> = {
 
 export type EnforceType<T, U, V = never> = U extends T ? U : V
 export type EnforceTypeStrict<T, U, V = never> = T extends U ? T : V
-
-export type UnReadonly<T> = {
-  -readonly [K in keyof T]: T[K]
-} & {}

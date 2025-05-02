@@ -1,2 +1,2 @@
-export * from './noarg-core'
 export * from './noarg-program'
+export * from './noarg-wrapper'

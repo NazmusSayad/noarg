@@ -1,10 +1,10 @@
-import { ProgramOptions, SystemConfig } from '@/types'
-import { MergeObject, Prettify } from '@/utils/utils.type'
+import { PartialProgramConfig, PartialProgramOptions } from '@/types'
+import { MergeObject, Prettify, UnReadonly } from '@/utils/utils.type'
 
 export type ProgramHandler<
-  TOptions extends ProgramOptions,
-  TConfig extends SystemConfig,
+  TOptions extends PartialProgramOptions,
+  TConfig extends PartialProgramConfig,
 > = (
-  options: Readonly<Prettify<MergeObject<{}, TOptions>>>,
-  config: Readonly<Prettify<MergeObject<{}, TConfig>>>
+  options: Prettify<Readonly<MergeObject<{}, UnReadonly<TOptions>>>>,
+  config: Prettify<Readonly<MergeObject<{}, UnReadonly<TConfig>>>>
 ) => void
