@@ -7,7 +7,8 @@
     "dev": "npmize dev",
     "build": "npmize build",
     "tsc": "tsc --watch --noEmit",
-    "lab": "tsx --watch ./src/__tests__/index.ts"
+    "lab": "tsx --watch ./src/__tests__/index.ts",
+    "bun": "bun --watch --hot ./src/__tests__/index.ts"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.5.0",
