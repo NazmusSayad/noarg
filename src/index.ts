@@ -1,5 +1,3 @@
-import type {} from './no-arg/program'
-import { NoArgRoot as NoArg } from './no-arg/root'
-
-export default NoArg
-export { NoArg }
+export default 'Hello World'
+export const foo = 'bar'
+export const baz = 42

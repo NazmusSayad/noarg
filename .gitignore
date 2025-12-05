@@ -1,4 +1,2 @@
-# npmize
-node_modules
 dist
-.npmize
+node_modules

@@ -1,47 +1,53 @@
 {
-  "name": "noarg",
+  "name": "npm",
   "version": "4.0.0",
-  "scripts": {
-    "lint": "eslint .",
-    "test": "bun test",
-    "dev": "npmize dev",
-    "build": "npmize build",
-    "tsc": "tsc --watch --noEmit",
-    "lab": "tsx --watch ./src/__tests__/index.ts",
-    "cjs": "node --watch ./dist/__tests__/index.cjs",
-    "mjs": "node --watch ./dist/__tests__/index.mjs"
-  },
-  "dependencies": {
-    "@inquirer/prompts": "^7.5.0",
-    "ansi-colors": "^4.1.3",
-    "cli-table3": "^0.6.5"
-  },
-  "devDependencies": {
-    "@types/bun": "^1.2.11",
-    "@types/node": "^22.15.3",
-    "eslint": "^9.25.1",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-prettier": "^5.2.6",
-    "jiti": "^2.4.2",
-    "npmize": "^1.1.11",
-    "prettier-plugin-jsdoc": "^1.3.2",
-    "prettier-plugin-organize-imports": "^4.1.0",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.31.1"
-  },
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/NazmusSayad/noarg.git"
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   },
-  "keywords": [
-    "noarg",
-    "noargs",
-    "no-arg",
-    "no-args",
-    "node arg",
-    "node args",
-    "node argv"
-  ]
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/index.d.mts",
+        "./dist/index.d.cts"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
+    "tc": "tsc --noEmit --watch",
+    "build": "tsx ./write-exports.ts && tsdown --config ./tsdown.config.ts",
+    "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
+    "start": "tsx --watch ./src/index.ts"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.4.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.38.0",
+    "@types/bun": "^1.3.0",
+    "@types/node": "^24.9.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-check-file": "^3.3.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "tsdown": "^0.15.9",
+    "tslib": "^2.8.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
+  }
 }
