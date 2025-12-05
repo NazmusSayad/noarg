@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+Do not write files using terminal commands, scripts, or automation.
