@@ -15,3 +15,9 @@ export class NoArgDuplicateFlagForPrimitiveError extends Error {
     super(`Flag ${flag} is already defined for primitive`)
   }
 }
+
+export class NoArgSyntaxError extends Error {
+  constructor(message: string) {
+    super(message)
+  }
+}

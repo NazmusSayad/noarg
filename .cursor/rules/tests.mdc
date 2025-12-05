@@ -1,0 +1,8 @@
+---
+description: Whenever you have to run tests must follow this
+alwaysApply: false
+---
+- When asked to run tests, execute `npx vitest run <file-path>` from repo root; do not `cd`.
+- Report the command you run and summarize results/errors.
+- If no file is specified, ask which test file to run instead of guessing.
+- Never add extra flags.
