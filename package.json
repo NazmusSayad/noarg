@@ -27,7 +27,7 @@
     "tc": "tsc --noEmit --watch",
     "build": "tsx ./write-exports.ts && tsdown --config ./tsdown.config.ts",
     "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
-    "start": "tsx --watch ./src/index.ts"
+    "start": "tsx --watch ./src/__tests__/index.ts"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.0",

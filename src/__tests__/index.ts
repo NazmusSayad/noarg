@@ -1,41 +1,14 @@
-import { createApp } from '@/builder/app-builder'
+import { ProgramParser } from '@/parser/program-parser'
 
-const app = createApp(
-  {
-    name: 'App',
-    description: 'App description',
-    flags: {
-      main: {
-        type: Number,
-      },
-    },
-  },
+const programParser = new ProgramParser(['npm', 'run', 'build'], {
+  name: 'npm',
+  description: 'npm is a package manager for Node.js',
+  trailingArguments: true,
+  subPrograms: [],
+  primaryArguments: [],
+  optionalArguments: [],
+  listArguments: [],
+  flags: [],
+})
 
-  (options, config) => {},
-
-  {
-    help: false,
-    allowDuplicateFlagForList: true,
-    allowDuplicateFlagForPrimitive: true,
-  }
-)
-
-const child1 = app.program(
-  {
-    name: 'Program 1',
-    flags: {
-      test: {
-        type: String,
-      },
-    },
-  },
-
-  (options, config) => {},
-
-  {
-    help: true,
-    skipGlobalFlags: true,
-  }
-)
-
-console.dir(app.getProgram(), { depth: null })
+console.log(programParser)
