@@ -1,5 +1,6 @@
 import { NoArgUnknownFlagError } from '@/constants/errors'
 import {
+  PrimitiveUnionSchema,
   TypeArraySchema,
   TypeBooleanSchema,
   TypeNoValueSchema,
@@ -46,24 +47,28 @@ export class ProgramParser {
   protected async parse(
     args: InternalASTNode[]
   ): Promise<InternalProgramParserResult> {
-    const flagsSchemaRecord = Object.fromEntries(
-      this.options.flags.map((flag) => [flag.name, flag])
-    )
-
     const argumentsList: InternalASTArgumentNode[] = []
-    const flagsList: Record<string, { id: string; value: string }[]> = {}
+    const flagsRecord = Object.fromEntries(
+      this.options.flags.map((flag) => [
+        flag.name,
+        {
+          schema: flag,
+          arguments: [] as { id: string; value: string }[],
+        },
+      ])
+    )
 
     let currentNode: InternalASTOptionNode | null = null
     args.forEach((node) => {
       if (node.type === 'option') {
-        if (!flagsSchemaRecord[node.key]) {
+        const flag = flagsRecord[node.key]
+
+        if (!flag) {
           throw new NoArgUnknownFlagError(node.id, node.arg)
         }
 
-        flagsList[node.key] ??= []
-
         if (node.value) {
-          flagsList[node.key].push({
+          flag.arguments.push({
             id: node.id,
             value: node.value,
           })
@@ -75,20 +80,19 @@ export class ProgramParser {
       }
 
       if (currentNode) {
-        const flag = flagsList[currentNode.key]
-        const flagSchema = flagsSchemaRecord[currentNode.key]
+        const flag = flagsRecord[currentNode.key]
 
-        if (flag && flagSchema) {
-          const flagValue = this.detectFlag(flagSchema, node)
+        if (flag) {
+          const flagValue = this.detectFlag(flag.schema, node)
 
-          if (flagValue && flagValue !== true) {
+          if (flagValue === 'no-value') {
             currentNode = null
-            return flag.push({ id: node.id, value: flagValue.arg })
+            flag.arguments.push({ id: '', value: '' })
           }
 
-          if (flagValue === true) {
+          if (flagValue && flagValue !== 'no-value') {
             currentNode = null
-            flag.push({ id: '', value: '' })
+            return flag.arguments.push({ id: node.id, value: flagValue.arg })
           }
         }
       }
@@ -96,7 +100,7 @@ export class ProgramParser {
       argumentsList.push(node)
     })
 
-    console.log(flagsList)
+    console.log(flagsRecord)
     console.log(argumentsList)
 
     return {
@@ -110,12 +114,13 @@ export class ProgramParser {
   private detectFlag(
     flag: InternalProgramParserFlagEntry,
     arg: InternalASTArgumentNode
-  ): InternalASTArgumentNode | null | true {
+  ): InternalASTArgumentNode | null | 'no-value' {
     if (flag.type instanceof TypeNoValueSchema) {
-      return true
+      return 'no-value'
     }
 
     if (
+      flag.type instanceof PrimitiveUnionSchema ||
       flag.type instanceof TypeBooleanSchema ||
       flag.type instanceof TypeStringSchema ||
       flag.type instanceof TypeNumberSchema ||

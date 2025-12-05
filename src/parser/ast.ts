@@ -1,7 +1,7 @@
 import { NoArgSyntaxError } from '@/constants/errors'
 import { InternalASTNode } from './ast.type'
 
-const FLAG_REGEX = /^(--?)(?<k>[^=]+)(=(?<v>.+)?)?$/
+const FLAG_REGEX = /^(?<i>--?)(?<k>[^=]+)(=(?<v>.+)?)?$/
 const VALID_KEY_REGEX = /^([a-zA-Z0-9-]+)?[a-zA-Z0-9]$/
 
 export function parseProgramArguments(args: string[]): InternalASTNode[] {
@@ -12,7 +12,7 @@ export function parseProgramArguments(args: string[]): InternalASTNode[] {
         throw new NoArgSyntaxError(`Invalid argument: ${arg}`)
       }
 
-      const { k, v } = match?.groups ?? {}
+      const { i, k, v } = match?.groups ?? {}
       if (!k) {
         throw new NoArgSyntaxError(`Invalid argument: ${arg}`)
       }
@@ -27,7 +27,9 @@ export function parseProgramArguments(args: string[]): InternalASTNode[] {
 
       return {
         id: index.toString(),
+        isAlias: i === '-',
         type: 'option',
+
         arg,
         key: k,
         value: v ?? null,

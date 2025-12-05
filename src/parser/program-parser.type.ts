@@ -1,4 +1,5 @@
 import {
+  PrimitiveUnionSchema,
   TypeArraySchema,
   TypeBooleanSchema,
   TypeNoValueSchema,
@@ -9,6 +10,7 @@ import {
 import { ProgramParser } from './program-parser'
 
 export type InternalFlagSchemaType =
+  | PrimitiveUnionSchema
   | TypeNoValueSchema
   | TypeBooleanSchema
   | TypeStringSchema
@@ -49,6 +51,7 @@ export type InternalProgramParserListArgumentEntry = {
 export type InternalProgramParserFlagEntry = {
   name: string
   type: InternalFlagSchemaType
+  aliases?: string[]
 
   global?: boolean
   description?: string

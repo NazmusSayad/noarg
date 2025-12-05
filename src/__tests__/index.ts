@@ -39,10 +39,12 @@ const parsedArguments = parseProgramArguments([
 
 programParser
   .run(parsedArguments)
+
   .then(([id, result]) => {
-    console.log(`Program ${id} parsed successfully`)
-    console.log(result)
+    // console.log(`Program ${id} parsed successfully`)
+    // console.log(result)
   })
+
   .catch((err) => {
     if (err instanceof NoArgValidationError) {
       const colorizedArgs = parsedArguments.map((arg) => {
