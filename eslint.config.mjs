@@ -55,6 +55,7 @@ export default [
       'no-useless-escape': 0,
       'jsx-a11y/click-events-have-key-events': 0,
       'jsx-a11y/label-has-associated-control': 0,
+      '@typescript-eslint/no-empty-object-type': 0,
       '@typescript-eslint/explicit-module-boundary-types': 0,
       'no-void': 0,
       'symbol-description': 0,
@@ -101,7 +102,11 @@ export default [
         },
       ],
 
-      'check-file/folder-naming-convention': [2, { '*/**': 'KEBAB_CASE' }],
+      'check-file/folder-naming-convention': [
+        2,
+        { '*/**': 'KEBAB_CASE' },
+        { ignoreWords: ['__tests__'] },
+      ],
       'check-file/filename-naming-convention': [
         2,
         { '**/*.*': 'KEBAB_CASE' },
@@ -111,8 +116,9 @@ export default [
   },
 
   {
-    files: ['**/*.test.ts'],
+    files: ['**/*.test.ts', '**/__tests__/*.ts'],
     rules: {
+      '@typescript-eslint/no-unused-vars': 0, 
       '@typescript-eslint/no-unsafe-call': 0,
       '@typescript-eslint/no-unsafe-assignment': 0,
       '@typescript-eslint/no-unsafe-member-access': 0,
