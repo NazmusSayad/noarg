@@ -1,8 +1,6 @@
-import {
-  ProgramHandler,
-  ResolvedProgramConfig,
-  ResolvedProgramOptions,
-} from '@/types'
+import { ResolvedProgramConfig } from '@/types/config.type'
+import { ResolvedProgramOptions } from '@/types/options.type'
+import { ProgramHandler } from '@/types/parser.type'
 
 export class NoArgProgram<
   TOptions extends ResolvedProgramOptions,

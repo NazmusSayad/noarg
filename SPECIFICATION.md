@@ -1,5 +1,12 @@
 # CLI Argument Structure (POSIX + GNU)
 
+## Core Concepts
+
+- Subcommands
+- Arguments
+- List arguments
+- Flags
+
 This CLI supports:
 
 - Subcommands (nested)

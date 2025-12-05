@@ -1,10 +1,10 @@
 import { NoArgWrapper } from '@/noarg'
 import {
   PartialProgramConfig,
-  PartialProgramOptions,
   PartialSubProgramConfig,
-  ProgramHandler,
-} from '@/types'
+} from '@/types/config.type'
+import { PartialProgramOptions } from '@/types/options.type'
+import { ProgramHandler } from '@/types/parser.type'
 import { MergeObject, Prettify } from '@/utils/utils.type'
 
 export interface ProgramBuilder<

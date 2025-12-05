@@ -1,4 +1,5 @@
-import { PartialProgramConfig, PartialProgramOptions } from '@/types'
+import { PartialProgramConfig } from '@/types/config.type'
+import { PartialProgramOptions } from '@/types/options.type'
 import { MergeObject, Prettify, UnReadonly } from '@/utils/utils.type'
 
 export type ProgramHandler<

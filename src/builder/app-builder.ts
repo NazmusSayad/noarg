@@ -4,11 +4,9 @@
  */
 
 import { NoArgWrapper } from '@/noarg'
-import {
-  PartialProgramConfig,
-  PartialProgramOptions,
-  ProgramHandler,
-} from '@/types'
+import { PartialProgramConfig } from '@/types/config.type'
+import { PartialProgramOptions } from '@/types/options.type'
+import { ProgramHandler } from '@/types/parser.type'
 import { AppBuilder } from './types'
 
 function programBuilderFactory(

@@ -1,10 +1,12 @@
 import {
   PartialProgramConfig,
-  PartialProgramOptions,
-  ProgramHandler,
   ResolvedProgramConfig,
+} from '@/types/config.type'
+import {
+  PartialProgramOptions,
   ResolvedProgramOptions,
-} from '@/types'
+} from '@/types/options.type'
+import { ProgramHandler } from '@/types/parser.type'
 import { NoArgProgram } from './noarg-program'
 
 export class NoArgWrapper<
