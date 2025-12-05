@@ -9,7 +9,7 @@ import {
 } from '@/schema'
 import { ProgramParser } from './program-parser'
 
-export type InternalFlagSchemaType =
+export type InternalOptionSchemaType =
   | PrimitiveUnionSchema
   | TypeNoValueSchema
   | TypeBooleanSchema
@@ -48,9 +48,9 @@ export type InternalProgramParserListArgumentEntry = {
   maxLength?: number
 }
 
-export type InternalProgramParserFlagEntry = {
+export type InternalProgramParserOptionEntry = {
   name: string
-  type: InternalFlagSchemaType
+  type: InternalOptionSchemaType
   aliases: string[]
 
   global?: boolean
@@ -68,7 +68,7 @@ export type InternalProgramParserOptions = {
   primaryArguments: InternalProgramParserArgumentEntry[]
   optionalArguments: InternalProgramParserOptionalArgumentEntry[]
   listArguments: InternalProgramParserListArgumentEntry | null
-  flags: InternalProgramParserFlagEntry[]
+  options: InternalProgramParserOptionEntry[]
 
   config: {
     trailingArguments: boolean
@@ -79,5 +79,5 @@ export type InternalProgramParserResult = {
   primaryArguments: string[]
   optionalArguments: string[]
   listArguments: string[]
-  flags: Record<string, unknown>
+  options: Record<string, unknown>
 }

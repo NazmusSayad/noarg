@@ -15,7 +15,7 @@ const programParser = new ProgramParser({
 
   listArguments: null,
 
-  flags: [
+  options: [
     {
       name: 'a',
       type: new TypeStringSchema(),
@@ -50,7 +50,7 @@ const parsedArguments = parseProgramArguments([
   '<b-value>',
   '--c',
   'arg-1',
-  '-cd',
+  '-cddddddd',
 ])
 
 programParser

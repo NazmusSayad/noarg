@@ -18,7 +18,7 @@ import {
   InternalASTOptionNode,
 } from './ast.type'
 import {
-  InternalProgramParserFlagEntry,
+  InternalProgramParserOptionEntry,
   InternalProgramParserOptions,
   InternalProgramParserResult,
 } from './program-parser.type'
@@ -53,18 +53,18 @@ export class ProgramParser {
   ): Promise<InternalProgramParserResult> {
     const argumentsList: InternalASTArgumentNode[] = []
     const optionsRecord = Object.fromEntries(
-      this.options.flags.map((flag) => [
-        flag.name,
+      this.options.options.map((option) => [
+        option.name,
         {
-          schema: flag,
+          schema: option,
           presences: 0,
           arguments: [] as { id: string; value: string }[],
         },
       ])
     )
 
-    type CurrentOption = (typeof optionsRecord)[keyof typeof optionsRecord]
-    let currentOption: CurrentOption | null = null
+    type OptionRecordEntry = (typeof optionsRecord)[keyof typeof optionsRecord]
+    let currentOption: OptionRecordEntry | null = null
 
     args.forEach((node) => {
       if (node.type === 'option') {
@@ -78,28 +78,44 @@ export class ProgramParser {
           throw new NoArgExpectedOptionValueError(node.id, node.arg)
         }
 
-        const aliasParsed = node.isAlias ? this.detectAliases(node) : null
-        const flag =
-          optionsRecord[
-            node.isAlias && typeof aliasParsed === 'string'
-              ? aliasParsed
-              : node.key
-          ]
+        let option: OptionRecordEntry | null = null
 
-        if (!flag) {
+        if (!node.isAlias) {
+          option = optionsRecord[node.key]
+        } else {
+          const aliasParsed = this.detectAliases(node)
+
+          if (typeof aliasParsed === 'string') {
+            option = optionsRecord[aliasParsed]
+          } else {
+            for (const alias of aliasParsed) {
+              option = optionsRecord[alias]
+              if (!option) {
+                throw new NoArgUnknownFlagError(node.id, node.arg)
+              }
+
+              option.presences++
+            }
+
+            currentOption = null
+            return
+          }
+        }
+
+        if (!option) {
           throw new NoArgUnknownFlagError(node.id, node.arg)
         }
 
-        if (flag.schema.type instanceof TypeNoValueSchema) {
-          flag.presences++
+        if (option.schema.type instanceof TypeNoValueSchema) {
+          option.presences++
           currentOption = null
           return
         }
 
         if (node.value === null) {
-          currentOption = flag
+          currentOption = option
         } else {
-          flag.arguments.push({
+          option.arguments.push({
             id: node.id,
             value: node.value,
           })
@@ -109,15 +125,16 @@ export class ProgramParser {
       }
 
       if (currentOption) {
-        const flagValue = this.detectFlag(currentOption.schema, node)
-        if (flagValue) {
-          if (flagValue === 'no-value') {
+        const optionValue = this.detectOption(currentOption.schema, node)
+
+        if (optionValue) {
+          if (optionValue === 'no-value') {
             currentOption.presences++
             currentOption = null
           } else {
             currentOption.arguments.push({
               id: node.id,
-              value: flagValue.arg,
+              value: optionValue.arg,
             })
 
             currentOption = null
@@ -130,7 +147,7 @@ export class ProgramParser {
     })
 
     if (currentOption) {
-      const co = currentOption as CurrentOption
+      const co = currentOption as OptionRecordEntry
       currentOption = null
 
       if (co.schema.type instanceof TypeNoValueSchema) {
@@ -149,18 +166,15 @@ export class ProgramParser {
       primaryArguments: [],
       optionalArguments: [],
       listArguments: [],
-      flags: {},
+      options: {},
     }
   }
 
   private detectAliases(node: InternalASTOptionNode): string | string[] {
-    // 1. Check if there is a flag schema with the exact key, if yes return that
-    // 2. If no then split the string into chars, check if they are valid aliases, if yes then also confirm they are all no-value flags, if yes return them
-
-    for (const flag of this.options.flags) {
-      for (const alias of flag.aliases) {
+    for (const option of this.options.options) {
+      for (const alias of option.aliases) {
         if (alias === node.key) {
-          return flag.name
+          return option.name
         }
       }
     }
@@ -169,10 +183,12 @@ export class ProgramParser {
     const splittedOptions: string[] = []
 
     for (const key of splitted) {
-      const flag = this.options.flags.find((flag) => flag.aliases.includes(key))
+      const option = this.options.options.find((option) =>
+        option.aliases.includes(key)
+      )
 
-      if (flag?.type instanceof TypeNoValueSchema) {
-        splittedOptions.push(flag.name)
+      if (option?.type instanceof TypeNoValueSchema) {
+        splittedOptions.push(option.name)
       }
     }
 
@@ -183,21 +199,21 @@ export class ProgramParser {
     throw new NoArgUnknownFlagError(node.id, node.arg)
   }
 
-  private detectFlag(
-    flag: InternalProgramParserFlagEntry,
+  private detectOption(
+    option: InternalProgramParserOptionEntry,
     arg: InternalASTArgumentNode
   ): InternalASTArgumentNode | null | 'no-value' {
-    if (flag.type instanceof TypeNoValueSchema) {
+    if (option.type instanceof TypeNoValueSchema) {
       return 'no-value'
     }
 
     if (
-      flag.type instanceof PrimitiveUnionSchema ||
-      flag.type instanceof TypeBooleanSchema ||
-      flag.type instanceof TypeStringSchema ||
-      flag.type instanceof TypeNumberSchema ||
-      flag.type instanceof TypeArraySchema ||
-      flag.type instanceof TypeTupleSchema
+      option.type instanceof PrimitiveUnionSchema ||
+      option.type instanceof TypeBooleanSchema ||
+      option.type instanceof TypeStringSchema ||
+      option.type instanceof TypeNumberSchema ||
+      option.type instanceof TypeArraySchema ||
+      option.type instanceof TypeTupleSchema
     ) {
       return arg
     }
