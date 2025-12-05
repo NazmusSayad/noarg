@@ -1,8 +1,29 @@
-import { TypeSchemaBase } from '@/schema/base'
+import {
+  TypeArraySchema,
+  TypeBooleanSchema,
+  TypeNoValueSchema,
+  TypeNumberSchema,
+  TypeStringSchema,
+  TypeTupleSchema,
+} from '@/schema'
+import { ProgramParser } from './program-parser'
+
+export type InternalFlagSchemaType =
+  | TypeNoValueSchema
+  | TypeBooleanSchema
+  | TypeStringSchema
+  | TypeNumberSchema
+  | TypeArraySchema
+  | TypeTupleSchema
+
+export type InternalArgumentSchemaType =
+  | TypeBooleanSchema
+  | TypeStringSchema
+  | TypeNumberSchema
 
 export type InternalProgramParserArgumentEntry = {
   name: string
-  type: TypeSchemaBase
+  type: InternalArgumentSchemaType
 
   defaultValue?: unknown
   description?: string
@@ -11,14 +32,14 @@ export type InternalProgramParserArgumentEntry = {
 
 export type InternalProgramParserOptionalArgumentEntry = {
   name: string
-  type: TypeSchemaBase
+  type: InternalArgumentSchemaType
 
   description?: string
 }
 
 export type InternalProgramParserListArgumentEntry = {
   name: string
-  type: TypeSchemaBase
+  type: InternalArgumentSchemaType
 
   description?: string
   minLength?: number
@@ -27,7 +48,7 @@ export type InternalProgramParserListArgumentEntry = {
 
 export type InternalProgramParserFlagEntry = {
   name: string
-  type: TypeSchemaBase
+  type: InternalFlagSchemaType
 
   global?: boolean
   description?: string
@@ -36,13 +57,24 @@ export type InternalProgramParserFlagEntry = {
 }
 
 export type InternalProgramParserOptions = {
-  name: string
+  id: string
+  command: string
   description: string | undefined
-  trailingArguments: boolean
 
-  subPrograms: InternalProgramParserOptions[]
+  subPrograms: ProgramParser[]
   primaryArguments: InternalProgramParserArgumentEntry[]
   optionalArguments: InternalProgramParserOptionalArgumentEntry[]
-  listArguments: InternalProgramParserListArgumentEntry[]
+  listArguments: InternalProgramParserListArgumentEntry | null
   flags: InternalProgramParserFlagEntry[]
+
+  config: {
+    trailingArguments: boolean
+  }
+}
+
+export type InternalProgramParserResult = {
+  primaryArguments: string[]
+  optionalArguments: string[]
+  listArguments: string[]
+  flags: Record<string, unknown>
 }

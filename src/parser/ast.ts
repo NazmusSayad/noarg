@@ -5,7 +5,7 @@ const FLAG_REGEX = /^(--?)(?<k>[^=]+)(=(?<v>.+)?)?$/
 const VALID_KEY_REGEX = /^([a-zA-Z0-9-]+)?[a-zA-Z0-9]$/
 
 export function parseProgramArguments(args: string[]): InternalASTNode[] {
-  return args.map((arg) => {
+  return args.map((arg, index) => {
     if (arg.startsWith('-')) {
       const match = arg.match(FLAG_REGEX)
       if (!match) {
@@ -26,6 +26,7 @@ export function parseProgramArguments(args: string[]): InternalASTNode[] {
       }
 
       return {
+        id: index.toString(),
         type: 'option',
         arg,
         key: k,
@@ -34,6 +35,7 @@ export function parseProgramArguments(args: string[]): InternalASTNode[] {
     }
 
     return {
+      id: index.toString(),
       type: 'argument',
       arg,
     }

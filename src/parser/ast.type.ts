@@ -1,15 +1,25 @@
-type InternalASTOptionNode = {
-  type: 'option'
+import { Prettify } from '@/utils/utils.type'
 
-  arg: string
-  key: string
-  value: string | null
+type AstBaseNode = {
+  id: string
 }
 
-type InternalASTArgumentNode = {
-  type: 'argument'
+export type InternalASTOptionNode = Prettify<
+  AstBaseNode & {
+    type: 'option'
 
-  arg: string
-}
+    arg: string
+    key: string
+    value: string | null
+  }
+>
+
+export type InternalASTArgumentNode = Prettify<
+  AstBaseNode & {
+    type: 'argument'
+
+    arg: string
+  }
+>
 
 export type InternalASTNode = InternalASTOptionNode | InternalASTArgumentNode

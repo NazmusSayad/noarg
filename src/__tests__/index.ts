@@ -1,14 +1,59 @@
-import { ProgramParser } from '@/parser/program-parser'
+import { NoArgValidationError } from '@/constants/errors'
+import { parseProgramArguments, ProgramParser } from '@/parser'
+import { TypeNoValueSchema } from '@/schema'
 
-const programParser = new ProgramParser(['npm', 'run', 'build'], {
-  name: 'npm',
+const programParser = new ProgramParser({
+  id: '0',
+  command: '#',
   description: 'npm is a package manager for Node.js',
-  trailingArguments: true,
+
   subPrograms: [],
+
   primaryArguments: [],
+
   optionalArguments: [],
-  listArguments: [],
-  flags: [],
+
+  listArguments: null,
+
+  flags: [
+    {
+      name: 'verbose',
+      type: new TypeNoValueSchema(),
+    },
+  ],
+
+  config: {
+    trailingArguments: true,
+  },
 })
 
-console.log(programParser)
+const parsedArguments = parseProgramArguments([
+  'run',
+  'build',
+  '--verbose',
+  'file.txt',
+  'notes',
+  '--verbose',
+  'output.txt',
+])
+
+programParser
+  .run(parsedArguments)
+  .then(([id, result]) => {
+    console.log(`Program ${id} parsed successfully`)
+    console.log(result)
+  })
+  .catch((err) => {
+    if (err instanceof NoArgValidationError) {
+      const colorizedArgs = parsedArguments.map((arg) => {
+        if (arg.id === err.id) {
+          return `\x1b[31m${arg.arg}\x1b[0m`
+        }
+
+        return arg.arg
+      })
+
+      console.error(`${colorizedArgs.join(' ')}`)
+      console.error(`\x1b[31m${err.message}\x1b[0m`)
+    }
+  })
