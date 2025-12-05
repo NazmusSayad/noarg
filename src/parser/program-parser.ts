@@ -1,4 +1,8 @@
-import { NoArgUnknownFlagError } from '@/constants/errors'
+import {
+  NoArgExpectedOptionValueError,
+  NoArgUnexpectedError,
+  NoArgUnknownFlagError,
+} from '@/constants/errors'
 import {
   PrimitiveUnionSchema,
   TypeArraySchema,
@@ -48,51 +52,76 @@ export class ProgramParser {
     args: InternalASTNode[]
   ): Promise<InternalProgramParserResult> {
     const argumentsList: InternalASTArgumentNode[] = []
-    const flagsRecord = Object.fromEntries(
+    const optionsRecord = Object.fromEntries(
       this.options.flags.map((flag) => [
         flag.name,
         {
           schema: flag,
+          presences: 0,
           arguments: [] as { id: string; value: string }[],
         },
       ])
     )
 
-    let currentNode: InternalASTOptionNode | null = null
+    type CurrentOption = (typeof optionsRecord)[keyof typeof optionsRecord]
+    let currentOption: CurrentOption | null = null
+
     args.forEach((node) => {
       if (node.type === 'option') {
-        const flag = flagsRecord[node.key]
+        if (currentOption) {
+          if (currentOption.schema.type instanceof TypeNoValueSchema) {
+            currentOption.presences++
+            currentOption = null
+            return
+          }
+
+          throw new NoArgExpectedOptionValueError(node.id, node.arg)
+        }
+
+        const aliasParsed = node.isAlias ? this.detectAliases(node) : null
+        const flag =
+          optionsRecord[
+            node.isAlias && typeof aliasParsed === 'string'
+              ? aliasParsed
+              : node.key
+          ]
 
         if (!flag) {
           throw new NoArgUnknownFlagError(node.id, node.arg)
         }
 
-        if (node.value) {
+        if (flag.schema.type instanceof TypeNoValueSchema) {
+          flag.presences++
+          currentOption = null
+          return
+        }
+
+        if (node.value === null) {
+          currentOption = flag
+        } else {
           flag.arguments.push({
             id: node.id,
             value: node.value,
           })
-        } else {
-          currentNode = node
         }
 
         return
       }
 
-      if (currentNode) {
-        const flag = flagsRecord[currentNode.key]
-
-        if (flag) {
-          const flagValue = this.detectFlag(flag.schema, node)
-
+      if (currentOption) {
+        const flagValue = this.detectFlag(currentOption.schema, node)
+        if (flagValue) {
           if (flagValue === 'no-value') {
-            currentNode = null
-            flag.arguments.push({ id: '', value: '' })
-          }
+            currentOption.presences++
+            currentOption = null
+          } else {
+            currentOption.arguments.push({
+              id: node.id,
+              value: flagValue.arg,
+            })
 
-          if (flagValue && flagValue !== 'no-value') {
-            currentNode = null
-            return flag.arguments.push({ id: node.id, value: flagValue.arg })
+            currentOption = null
+            return
           }
         }
       }
@@ -100,8 +129,21 @@ export class ProgramParser {
       argumentsList.push(node)
     })
 
-    console.log(flagsRecord)
-    console.log(argumentsList)
+    if (currentOption) {
+      const co = currentOption as CurrentOption
+      currentOption = null
+
+      if (co.schema.type instanceof TypeNoValueSchema) {
+        co.presences++
+      } else {
+        throw new NoArgUnexpectedError(
+          `Expected value at end for ${co.schema.name} but ended`
+        )
+      }
+    }
+
+    console.dir(optionsRecord, { depth: null })
+    console.dir(argumentsList, { depth: null })
 
     return {
       primaryArguments: [],
@@ -109,6 +151,36 @@ export class ProgramParser {
       listArguments: [],
       flags: {},
     }
+  }
+
+  private detectAliases(node: InternalASTOptionNode): string | string[] {
+    // 1. Check if there is a flag schema with the exact key, if yes return that
+    // 2. If no then split the string into chars, check if they are valid aliases, if yes then also confirm they are all no-value flags, if yes return them
+
+    for (const flag of this.options.flags) {
+      for (const alias of flag.aliases) {
+        if (alias === node.key) {
+          return flag.name
+        }
+      }
+    }
+
+    const splitted = node.key.split('')
+    const splittedOptions: string[] = []
+
+    for (const key of splitted) {
+      const flag = this.options.flags.find((flag) => flag.aliases.includes(key))
+
+      if (flag?.type instanceof TypeNoValueSchema) {
+        splittedOptions.push(flag.name)
+      }
+    }
+
+    if (splittedOptions.length === splitted.length) {
+      return splittedOptions
+    }
+
+    throw new NoArgUnknownFlagError(node.id, node.arg)
   }
 
   private detectFlag(

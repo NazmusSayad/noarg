@@ -51,7 +51,7 @@ export type InternalProgramParserListArgumentEntry = {
 export type InternalProgramParserFlagEntry = {
   name: string
   type: InternalFlagSchemaType
-  aliases?: string[]
+  aliases: string[]
 
   global?: boolean
   description?: string

@@ -1,6 +1,6 @@
 import { NoArgValidationError } from '@/constants/errors'
 import { parseProgramArguments, ProgramParser } from '@/parser'
-import { TypeNoValueSchema } from '@/schema'
+import { TypeNoValueSchema, TypeStringSchema } from '@/schema'
 
 const programParser = new ProgramParser({
   id: '0',
@@ -17,8 +17,24 @@ const programParser = new ProgramParser({
 
   flags: [
     {
-      name: 'verbose',
+      name: 'a',
+      type: new TypeStringSchema(),
+      aliases: ['a'],
+    },
+    {
+      name: 'b',
+      type: new TypeStringSchema(),
+      aliases: ['b'],
+    },
+    {
+      name: 'c',
       type: new TypeNoValueSchema(),
+      aliases: ['c'],
+    },
+    {
+      name: 'd',
+      type: new TypeNoValueSchema(),
+      aliases: ['d'],
     },
   ],
 
@@ -28,13 +44,13 @@ const programParser = new ProgramParser({
 })
 
 const parsedArguments = parseProgramArguments([
-  'run',
-  'build',
-  '--verbose',
-  'file.txt',
-  'notes',
-  '--verbose',
-  'output.txt',
+  '--a',
+  '<a-value>',
+  '--b',
+  '<b-value>',
+  '--c',
+  'arg-1',
+  '-cd',
 ])
 
 programParser
@@ -57,5 +73,7 @@ programParser
 
       console.error(`${colorizedArgs.join(' ')}`)
       console.error(`\x1b[31m${err.message}\x1b[0m`)
+    } else {
+      console.error(err)
     }
   })
