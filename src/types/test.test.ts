@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test'
+import { describe, expect, it } from 'vitest'
 
 describe('Test Sum', () => {
   it('1 + 1  ===  2', () => {
