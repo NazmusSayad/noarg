@@ -31,11 +31,6 @@ const programParser = new ProgramParser({
       type: new TypeNoValueSchema(),
       aliases: ['c'],
     },
-    {
-      name: 'd',
-      type: new TypeNoValueSchema(),
-      aliases: ['d'],
-    },
   ],
 
   config: {
@@ -47,9 +42,10 @@ const parsedArguments = parseProgramArguments([
   '--a=<a-value>',
   '--b',
   '<b-value1>',
+  '--a',
+  '<a-value2>',
   '--c',
   'arg-1',
-  '-ddd',
 ])
 
 programParser

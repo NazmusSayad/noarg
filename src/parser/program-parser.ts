@@ -50,9 +50,9 @@ export class ProgramParser {
       this.config.options.map((option) => [
         option.name,
         {
+          keys: [],
+          values: [],
           schema: option,
-          operandKeys: [],
-          operandValues: [],
         } satisfies OptionRecordEntry,
       ])
     )
@@ -66,7 +66,7 @@ export class ProgramParser {
         // Handle if there already a option in queue
         if (currentOption) {
           if (currentOption.schema.type instanceof TypeNoValueSchema) {
-            currentOption.operandKeys.push(node)
+            currentOption.keys.push(node)
             currentOption = null
             return
           }
@@ -91,7 +91,7 @@ export class ProgramParser {
                 throw new NoArgUnknownOptionError(node.id, node.arg)
               }
 
-              tempOption.operandKeys.push(node)
+              tempOption.keys.push(node)
             }
 
             currentOption = null
@@ -104,31 +104,29 @@ export class ProgramParser {
         }
 
         if (tempOption.schema.type instanceof TypeNoValueSchema) {
-          tempOption.operandKeys.push(node)
+          tempOption.keys.push(node)
           currentOption = null
           return
         }
 
-        if (node.value === null) {
-          tempOption.operandKeys.push(node)
-          currentOption = { ...tempOption, node }
-        } else {
-          tempOption.operandKeys.push(node)
-          tempOption.operandValues.push({
-            id: node.id,
-            value: node.value,
-            source: node,
+        if (node.value !== null) {
+          tempOption.keys.push(node)
+          tempOption.values.push({
+            valueNode: node,
+            valueKeyNode: node,
           })
+        } else {
+          tempOption.keys.push(node)
+          currentOption = { ...tempOption, node }
         }
 
         return
       }
 
       if (currentOption) {
-        currentOption.operandValues.push({
-          id: node.id,
-          value: node.arg,
-          source: currentOption.node,
+        currentOption.values.push({
+          valueNode: node,
+          valueKeyNode: currentOption.node,
         })
 
         currentOption = null
@@ -150,7 +148,7 @@ export class ProgramParser {
           )
         }
 
-        currentOptionEnd.operandKeys.push(lastNode)
+        currentOptionEnd.keys.push(lastNode)
       } else {
         throw new NoArgClientError(
           `Expected value at end for ${currentOptionEnd.schema.name} but ended`
@@ -231,11 +229,11 @@ export class ProgramParser {
 
 type OptionRecordEntry = {
   schema: InternalProgramParserOptionEntry
-  operandKeys: InternalASTOptionNode[]
-  operandValues: {
-    id: string
-    value: string
-    source: InternalASTOptionNode
+
+  keys: InternalASTOptionNode[]
+  values: {
+    valueNode: InternalASTNode
+    valueKeyNode: InternalASTOptionNode
   }[]
 }
 
