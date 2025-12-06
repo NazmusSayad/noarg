@@ -1,24 +1,15 @@
 import {
-  NoArgExpectedOptionValueError,
+  NoArgEmptyOptionValueError,
   NoArgUnexpectedError,
-  NoArgUnknownFlagError,
+  NoArgUnknownOptionError,
 } from '@/constants/errors'
-import {
-  PrimitiveUnionSchema,
-  TypeArraySchema,
-  TypeBooleanSchema,
-  TypeNoValueSchema,
-  TypeNumberSchema,
-  TypeStringSchema,
-  TypeTupleSchema,
-} from '@/schema'
+import { TypeNoValueSchema } from '@/schema'
 import {
   InternalASTArgumentNode,
   InternalASTNode,
   InternalASTOptionNode,
 } from './ast.type'
 import {
-  InternalProgramParserOptionEntry,
   InternalProgramParserOptions,
   InternalProgramParserResult,
 } from './program-parser.type'
@@ -75,7 +66,7 @@ export class ProgramParser {
             return
           }
 
-          throw new NoArgExpectedOptionValueError(node.id, node.arg)
+          throw new NoArgEmptyOptionValueError(node.id, node.arg)
         }
 
         let option: OptionRecordEntry | null = null
@@ -91,7 +82,7 @@ export class ProgramParser {
             for (const alias of aliasParsed) {
               option = optionsRecord[alias]
               if (!option) {
-                throw new NoArgUnknownFlagError(node.id, node.arg)
+                throw new NoArgUnknownOptionError(node.id, node.arg)
               }
 
               option.presences++
@@ -103,7 +94,7 @@ export class ProgramParser {
         }
 
         if (!option) {
-          throw new NoArgUnknownFlagError(node.id, node.arg)
+          throw new NoArgUnknownOptionError(node.id, node.arg)
         }
 
         if (option.schema.type instanceof TypeNoValueSchema) {
@@ -125,22 +116,13 @@ export class ProgramParser {
       }
 
       if (currentOption) {
-        const optionValue = this.detectOption(currentOption.schema, node)
+        currentOption.arguments.push({
+          id: node.id,
+          value: node.arg,
+        })
 
-        if (optionValue) {
-          if (optionValue === 'no-value') {
-            currentOption.presences++
-            currentOption = null
-          } else {
-            currentOption.arguments.push({
-              id: node.id,
-              value: optionValue.arg,
-            })
-
-            currentOption = null
-            return
-          }
-        }
+        currentOption = null
+        return
       }
 
       argumentsList.push(node)
@@ -196,28 +178,6 @@ export class ProgramParser {
       return splittedOptions
     }
 
-    throw new NoArgUnknownFlagError(node.id, node.arg)
-  }
-
-  private detectOption(
-    option: InternalProgramParserOptionEntry,
-    arg: InternalASTArgumentNode
-  ): InternalASTArgumentNode | null | 'no-value' {
-    if (option.type instanceof TypeNoValueSchema) {
-      return 'no-value'
-    }
-
-    if (
-      option.type instanceof PrimitiveUnionSchema ||
-      option.type instanceof TypeBooleanSchema ||
-      option.type instanceof TypeStringSchema ||
-      option.type instanceof TypeNumberSchema ||
-      option.type instanceof TypeArraySchema ||
-      option.type instanceof TypeTupleSchema
-    ) {
-      return arg
-    }
-
-    return null
+    throw new NoArgUnknownOptionError(node.id, node.arg)
   }
 }

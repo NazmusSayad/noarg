@@ -1,4 +1,4 @@
-import { NoArgValidationError } from '@/constants/errors'
+import { NoArgNodeError } from '@/constants/errors'
 import { parseProgramArguments, ProgramParser } from '@/parser'
 import { TypeNoValueSchema, TypeStringSchema } from '@/schema'
 
@@ -50,7 +50,7 @@ const parsedArguments = parseProgramArguments([
   '<b-value>',
   '--c',
   'arg-1',
-  '-cddddddd',
+  '-dddf',
 ])
 
 programParser
@@ -62,7 +62,7 @@ programParser
   })
 
   .catch((err) => {
-    if (err instanceof NoArgValidationError) {
+    if (err instanceof NoArgNodeError) {
       const colorizedArgs = parsedArguments.map((arg) => {
         if (arg.id === err.id) {
           return `\x1b[31m${arg.arg}\x1b[0m`

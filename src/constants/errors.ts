@@ -16,7 +16,7 @@ export class NoArgSyntaxError extends NoArgUnexpectedError {
   }
 }
 
-export class NoArgValidationError extends Error {
+export class NoArgNodeError extends Error {
   constructor(
     public id: string,
     message: string
@@ -25,14 +25,14 @@ export class NoArgValidationError extends Error {
   }
 }
 
-export class NoArgUnknownFlagError extends NoArgValidationError {
-  constructor(id: string, flag: string) {
-    super(id, `Flag ${flag} is unknown`)
+export class NoArgUnknownOptionError extends NoArgNodeError {
+  constructor(id: string, option: string) {
+    super(id, `Option ${option} is unknown`)
   }
 }
 
-export class NoArgExpectedOptionValueError extends NoArgValidationError {
-  constructor(id: string, flag: string) {
-    super(id, `Expected option value bug received option ${flag}`)
+export class NoArgEmptyOptionValueError extends NoArgNodeError {
+  constructor(id: string, option: string) {
+    super(id, `Expected option value bug received option ${option}`)
   }
 }
