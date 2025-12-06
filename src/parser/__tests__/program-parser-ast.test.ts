@@ -135,6 +135,68 @@ describe('ProgramParserAST', () => {
     })
   })
 
+  describe('value heavy mixes with alias bursts', () => {
+    const parser = new FakeProgramParserAST({
+      id: '3',
+      command: '&',
+      description: undefined,
+      subPrograms: [],
+      primaryArguments: [],
+      optionalArguments: [],
+      listArguments: null,
+      options: [
+        { name: 'path', type: new TypeStringSchema(), aliases: ['p'] },
+        { name: 'mode', type: new TypeStringSchema(), aliases: ['m'] },
+        { name: 'verbose', type: new TypeNoValueSchema(), aliases: ['v'] },
+        { name: 'silent', type: new TypeNoValueSchema(), aliases: ['s'] },
+        { name: 'force', type: new TypeNoValueSchema(), aliases: ['f'] },
+      ],
+      config: {
+        trailingArguments: true,
+      },
+    })
+
+    it('collects multiple value options with scattered flags and arguments', async () => {
+      const nodes = parseArgsToAST([
+        '--path=/tmp',
+        'loose',
+        '--mode',
+        'dev',
+        '--verbose',
+        '--path=./rel',
+        'tail',
+      ])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.path.keys).toEqual([nodes[0], nodes[5]])
+      expect(result.optionsRecord.path.values).toEqual([
+        { valueNode: nodes[0], valueKeyNode: nodes[0] },
+        { valueNode: nodes[5], valueKeyNode: nodes[5] },
+      ])
+      expect(result.optionsRecord.mode.keys).toEqual([nodes[2]])
+      expect(result.optionsRecord.mode.values).toEqual([
+        { valueNode: nodes[3], valueKeyNode: nodes[2] },
+      ])
+      expect(result.optionsRecord.verbose.keys).toEqual([nodes[4]])
+      expect(result.argumentsList).toEqual([nodes[1], nodes[6]])
+    })
+
+    it('accumulates repeated no-value aliases across bursts', async () => {
+      const nodes = parseArgsToAST(['-vs', '--silent', '-svf'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.silent.keys).toEqual(nodes)
+      expect(result.optionsRecord.force.keys).toEqual([nodes[2]])
+      expect(result.optionsRecord.verbose.keys).toEqual([nodes[0], nodes[2]])
+    })
+
+    it('throws when alias burst hides value option', async () => {
+      await expect(
+        parser.parse(parseArgsToAST(['-mp']))
+      ).rejects.toBeInstanceOf(NoArgUnknownOptionError)
+    })
+  })
+
   describe('multi-parser mismatch edge cases', () => {
     const parser = new FakeProgramParserAST({
       id: '2',

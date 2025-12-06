@@ -1,6 +1,6 @@
 import { NoArgNodeError } from '@/constants/errors'
 import { parseArgsToAST, ProgramParser } from '@/parser'
-import { TypeNoValueSchema, TypeStringSchema } from '@/schema'
+import { TypeNoValueSchema } from '@/schema'
 
 const programParser = new ProgramParser({
   id: '0',
@@ -17,19 +17,19 @@ const programParser = new ProgramParser({
 
   options: [
     {
-      name: 'a',
-      type: new TypeStringSchema(),
-      aliases: ['a'],
-    },
-    {
-      name: 'b',
-      type: new TypeStringSchema(),
-      aliases: ['b'],
-    },
-    {
-      name: 'c',
+      name: 'verbose',
       type: new TypeNoValueSchema(),
-      aliases: ['c'],
+      aliases: ['v'],
+    },
+    {
+      name: 'silent',
+      type: new TypeNoValueSchema(),
+      aliases: ['s'],
+    },
+    {
+      name: 'force',
+      type: new TypeNoValueSchema(),
+      aliases: ['f'],
     },
   ],
 
@@ -38,15 +38,7 @@ const programParser = new ProgramParser({
   },
 })
 
-const parsedArguments = parseArgsToAST([
-  '--a=<a-value>',
-  '--b',
-  '<b-value1>',
-  '--a',
-  '<a-value2>',
-  '--c',
-  'arg-1',
-])
+const parsedArguments = parseArgsToAST(['-vs', '--silent', '-svf'])
 
 programParser
   .run(parsedArguments)
