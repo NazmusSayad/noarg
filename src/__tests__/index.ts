@@ -44,13 +44,12 @@ const programParser = new ProgramParser({
 })
 
 const parsedArguments = parseProgramArguments([
-  '--a',
-  '<a-value>',
+  '--a=<a-value>',
   '--b',
-  '<b-value>',
+  '<b-value1>',
   '--c',
   'arg-1',
-  '-dddf',
+  '-ddd',
 ])
 
 programParser

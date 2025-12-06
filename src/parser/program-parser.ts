@@ -10,13 +10,14 @@ import {
   InternalASTOptionNode,
 } from './ast.type'
 import {
+  InternalOptionSchemaResultType,
   InternalProgramParserOptionEntry,
   InternalProgramParserOptions,
   InternalProgramParserResult,
 } from './program-parser.type'
 
 export class ProgramParser {
-  constructor(public options: InternalProgramParserOptions) {}
+  constructor(public config: InternalProgramParserOptions) {}
 
   public async run(
     args: InternalASTNode[]
@@ -27,8 +28,8 @@ export class ProgramParser {
         break
       }
 
-      const program = this.options.subPrograms.find(
-        (program) => program.options.command === node.arg
+      const program = this.config.subPrograms.find(
+        (program) => program.config.command === node.arg
       )
 
       if (program) {
@@ -37,7 +38,7 @@ export class ProgramParser {
     }
 
     const result = await this.parse(args)
-    return [this.options.id, result]
+    return [this.config.id, result]
   }
 
   private async parse(
@@ -45,13 +46,14 @@ export class ProgramParser {
   ): Promise<InternalProgramParserResult> {
     const argumentsList: InternalASTArgumentNode[] = []
     const optionsRecord: Record<string, OptionRecordEntry> = Object.fromEntries(
-      this.options.options.map((option) => [
+      this.config.options.map((option) => [
         option.name,
         {
           schema: option,
-          presences: 0,
-          arguments: [],
-        },
+          operandKeys: [],
+          operandValues: [],
+          count: 0,
+        } satisfies OptionRecordEntry,
       ])
     )
 
@@ -61,7 +63,7 @@ export class ProgramParser {
       if (node.type === 'option') {
         if (currentOption) {
           if (currentOption.schema.type instanceof TypeNoValueSchema) {
-            currentOption.presences++
+            currentOption.operandKeys.push(node)
             currentOption = null
             return
           }
@@ -85,7 +87,7 @@ export class ProgramParser {
                 throw new NoArgUnknownOptionError(node.id, node.arg)
               }
 
-              option.presences++
+              option.operandKeys.push(node)
             }
 
             currentOption = null
@@ -98,15 +100,16 @@ export class ProgramParser {
         }
 
         if (option.schema.type instanceof TypeNoValueSchema) {
-          option.presences++
+          option.operandKeys.push(node)
           currentOption = null
           return
         }
 
         if (node.value === null) {
+          option.operandKeys.push(node)
           currentOption = option
         } else {
-          option.arguments.push({
+          option.operandValues.push({
             id: node.id,
             value: node.value,
           })
@@ -116,7 +119,7 @@ export class ProgramParser {
       }
 
       if (currentOption) {
-        currentOption.arguments.push({
+        currentOption.operandValues.push({
           id: node.id,
           value: node.arg,
         })
@@ -133,7 +136,14 @@ export class ProgramParser {
       currentOption = null
 
       if (co.schema.type instanceof TypeNoValueSchema) {
-        co.presences++
+        const lastNode = args[args.length - 1]
+        if (lastNode.type !== 'option') {
+          throw new NoArgUnexpectedError(
+            `Expected option at end for ${co.schema.name} but ended with ${lastNode.type}`
+          )
+        }
+
+        co.operandKeys.push(lastNode)
       } else {
         throw new NoArgUnexpectedError(
           `Expected value at end for ${co.schema.name} but ended`
@@ -155,11 +165,19 @@ export class ProgramParser {
   private async parseOptions(
     optionsRecord: Record<string, OptionRecordEntry>
   ): Promise<Record<string, unknown>> {
-    return {}
+    const result: Record<string, InternalOptionSchemaResultType> = {}
+
+    for (const option of this.config.options) {
+      const record = optionsRecord[option.name]
+
+      console.log(option, record)
+    }
+
+    return result
   }
 
   private async parseArguments(
-    argumentsList: InternalASTArgumentNode[]
+    _argumentsList: InternalASTArgumentNode[]
   ): Promise<ArgumentsParserResult> {
     return {
       primary: [],
@@ -169,7 +187,7 @@ export class ProgramParser {
   }
 
   private detectAliases(node: InternalASTOptionNode): string | string[] {
-    for (const option of this.options.options) {
+    for (const option of this.config.options) {
       for (const alias of option.aliases) {
         if (alias === node.key) {
           return option.name
@@ -181,7 +199,7 @@ export class ProgramParser {
     const splittedOptions: string[] = []
 
     for (const key of splitted) {
-      const option = this.options.options.find((option) =>
+      const option = this.config.options.find((option) =>
         option.aliases.includes(key)
       )
 
@@ -200,8 +218,11 @@ export class ProgramParser {
 
 type OptionRecordEntry = {
   schema: InternalProgramParserOptionEntry
-  presences: number
-  arguments: {
+  count: number
+
+  operandKeys: InternalASTOptionNode[]
+
+  operandValues: {
     id: string
     value: string
   }[]

@@ -18,6 +18,10 @@ export type InternalOptionSchemaType =
   | TypeArraySchema
   | TypeTupleSchema
 
+export type InternalOptionSchemaResultType =
+  | (string | boolean | number)
+  | (string | boolean | number)[]
+
 export type InternalArgumentSchemaType =
   | TypeBooleanSchema
   | TypeStringSchema
