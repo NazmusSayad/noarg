@@ -10,6 +10,7 @@ import {
   InternalASTOptionNode,
 } from './ast.type'
 import {
+  InternalProgramParserOptionEntry,
   InternalProgramParserOptions,
   InternalProgramParserResult,
 } from './program-parser.type'
@@ -39,22 +40,21 @@ export class ProgramParser {
     return [this.options.id, result]
   }
 
-  protected async parse(
+  private async parse(
     args: InternalASTNode[]
   ): Promise<InternalProgramParserResult> {
     const argumentsList: InternalASTArgumentNode[] = []
-    const optionsRecord = Object.fromEntries(
+    const optionsRecord: Record<string, OptionRecordEntry> = Object.fromEntries(
       this.options.options.map((option) => [
         option.name,
         {
           schema: option,
           presences: 0,
-          arguments: [] as { id: string; value: string }[],
+          arguments: [],
         },
       ])
     )
 
-    type OptionRecordEntry = (typeof optionsRecord)[keyof typeof optionsRecord]
     let currentOption: OptionRecordEntry | null = null
 
     args.forEach((node) => {
@@ -141,14 +141,30 @@ export class ProgramParser {
       }
     }
 
-    console.dir(optionsRecord, { depth: null })
-    console.dir(argumentsList, { depth: null })
+    const optionsResult = await this.parseOptions(optionsRecord)
+    const argumentsResult = await this.parseArguments(argumentsList)
 
     return {
-      primaryArguments: [],
-      optionalArguments: [],
-      listArguments: [],
-      options: {},
+      options: optionsResult,
+      primaryArguments: argumentsResult.primary,
+      optionalArguments: argumentsResult.optional,
+      listArguments: argumentsResult.list,
+    }
+  }
+
+  private async parseOptions(
+    optionsRecord: Record<string, OptionRecordEntry>
+  ): Promise<Record<string, unknown>> {
+    return {}
+  }
+
+  private async parseArguments(
+    argumentsList: InternalASTArgumentNode[]
+  ): Promise<ArgumentsParserResult> {
+    return {
+      primary: [],
+      optional: [],
+      list: [],
     }
   }
 
@@ -180,4 +196,19 @@ export class ProgramParser {
 
     throw new NoArgUnknownOptionError(node.id, node.arg)
   }
+}
+
+type OptionRecordEntry = {
+  schema: InternalProgramParserOptionEntry
+  presences: number
+  arguments: {
+    id: string
+    value: string
+  }[]
+}
+
+type ArgumentsParserResult = {
+  primary: string[]
+  optional: string[]
+  list: string[]
 }
