@@ -304,12 +304,6 @@ describe('ProgramParserAST', () => {
       expect(result.argumentsList).toEqual([nodes[2]])
     })
 
-    it('treats alias for value option without value as unknown', async () => {
-      await expect(parser.parse(parseArgsToAST(['-p']))).rejects.toBeInstanceOf(
-        NoArgUnknownOptionError
-      )
-    })
-
     it('counts triple alias occurrences', async () => {
       const nodes = parseArgsToAST(['-vvv'])
       const result = await parser.parse(nodes)

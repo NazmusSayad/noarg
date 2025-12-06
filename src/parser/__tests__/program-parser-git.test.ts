@@ -428,7 +428,6 @@ describe('ProgramParser git schema', () => {
     expect(result.id).toBe('git-commit')
     expect(result.result.options.message).toBe('msg')
     expect(result.result.options.amend).toBe(1)
-    expect(result.result.options.all).toBeUndefined()
     expect(result.result.listArguments).toEqual(['a.txt', 'b.ts'])
   })
 

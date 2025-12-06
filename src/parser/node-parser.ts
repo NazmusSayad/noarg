@@ -60,7 +60,7 @@ export class NodeParserAST {
         if (!node.isAlias) {
           tempOption = optionsRecord[node.key]
         } else {
-          const directMatchOption = this.findOption(node)
+          const directMatchOption = this.findExactAliasOption(node)
           if (directMatchOption) {
             tempOption = optionsRecord[directMatchOption.name]
           } else {
@@ -143,11 +143,11 @@ export class NodeParserAST {
     }
   }
 
-  private findOption(
+  private findExactAliasOption(
     node: InternalASTOptionNode
   ): InternalProgramParserOptionEntry | null {
     for (const option of this.config.options) {
-      if (option.name === node.key) {
+      if (option.aliases.includes(node.key)) {
         return option
       }
     }

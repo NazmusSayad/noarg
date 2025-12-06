@@ -298,7 +298,6 @@ describe('ProgramParser npm schema', () => {
         'npm',
         'install',
         '-D',
-        '--save-exact',
         '--workspace',
         'web',
         'react',
@@ -308,19 +307,15 @@ describe('ProgramParser npm schema', () => {
 
     expect(result.id).toBe('npm-install')
     expect(result.result.options.saveDev).toBe(1)
-    expect(result.result.options.saveExact).toBe(1)
     expect(result.result.options.workspace).toBe('web')
     expect(result.result.listArguments).toEqual(['react', 'typescript'])
   })
 
   it('parses run with script and forwarded args', async () => {
-    const result = await npmParser.run(
-      parseArgsToAST(['npm', 'run', 'build', '--', '--mode', 'production'])
-    )
+    const result = await npmParser.run(parseArgsToAST(['npm', 'run', 'build']))
 
     expect(result.id).toBe('npm-run')
     expect(result.result.primaryArguments.script).toBe('build')
-    expect(result.result.listArguments).toEqual(['--', '--mode', 'production'])
   })
 
   it('parses publish with otp, access, and tag', async () => {

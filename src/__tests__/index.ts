@@ -1,14 +1,6 @@
 import { NoArgNodeError } from '@/lib/errors'
 import { parseArgsToAST, ProgramParser } from '@/parser'
-import {
-  TypeArraySchema,
-  TypeBooleanSchema,
-  TypeEnumSchema,
-  TypeNoValueSchema,
-  TypeNumberSchema,
-  TypeStringSchema,
-  TypeTupleSchema,
-} from '@/schema'
+import { TypeStringSchema } from '@/schema'
 
 const programParser = new ProgramParser({
   id: '0',
@@ -17,113 +9,24 @@ const programParser = new ProgramParser({
 
   subPrograms: [],
 
-  primaryArguments: [
-    {
-      name: 'arg1',
-      type: new TypeStringSchema({}),
-    },
-  ],
+  primaryArguments: [],
 
-  optionalArguments: [
-    {
-      name: 'arg2',
-      type: new TypeStringSchema({}),
-    },
-  ],
+  optionalArguments: [],
 
-  listArguments: {
-    name: 'list',
-    type: new TypeStringSchema({}),
-  },
+  listArguments: null,
 
   options: [
     {
-      name: 'string',
+      name: 'message',
       type: new TypeStringSchema({}),
-      aliases: [],
-    },
-
-    {
-      name: 'number',
-      type: new TypeNumberSchema({}),
-      aliases: [],
-    },
-
-    {
-      name: 'boolean',
-      type: new TypeBooleanSchema({}),
-      aliases: [],
-    },
-
-    {
-      name: 'enum',
-      type: new TypeEnumSchema({
-        values: ['test', '123', 'true', 'false'],
-      }),
-      aliases: [],
-    },
-
-    {
-      name: 'array',
-      type: new TypeArraySchema({
-        schema: new TypeStringSchema({}),
-      }),
-      aliases: [],
-    },
-
-    {
-      name: 'tuple',
-      type: new TypeTupleSchema({
-        schema: [
-          new TypeStringSchema({}),
-          new TypeNumberSchema({}),
-          new TypeBooleanSchema({}),
-        ],
-      }),
-      aliases: [],
-    },
-
-    {
-      name: 'verbose',
-      type: new TypeNoValueSchema({}),
-      aliases: ['v'],
+      aliases: ['m'],
     },
   ],
 
   config: {},
 })
 
-const parsedArguments = parseArgsToAST([
-  '--string',
-  'test',
-
-  '--number',
-  '123',
-
-  '--boolean',
-  'yes',
-
-  '--array',
-  'test1,test2',
-
-  '--array',
-  '123',
-
-  '--array',
-  'true',
-
-  '--tuple',
-  'test,123,true',
-
-  '--enum',
-  'false',
-
-  'argument-1',
-  'argument-2',
-  'argument-3',
-  'argument-4',
-  'argument-5',
-])
+const parsedArguments = parseArgsToAST(['--message', 'b', '-m', 'a'])
 
 programParser
   .run(parsedArguments)
