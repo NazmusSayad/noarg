@@ -1,13 +1,13 @@
 import { InternalASTArgumentNode, InternalASTNode } from './ast.type'
-import { ProgramParserAST } from './program-parser-ast'
-import { OptionRecordEntry } from './program-parser-ast.type'
+import { NodeParserAST } from './node-parser-ast'
+import { OptionRecordEntry } from './node-parser-ast.type'
 import {
   InternalOptionSchemaResultType,
   InternalProgramParserOptions,
   InternalProgramParserResult,
 } from './program-parser.type'
 
-export class ProgramParser extends ProgramParserAST {
+export class ProgramParser extends NodeParserAST {
   constructor(protected config: InternalProgramParserOptions) {
     super(config)
   }

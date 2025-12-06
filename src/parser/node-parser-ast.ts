@@ -10,13 +10,13 @@ import {
   InternalASTNode,
   InternalASTOptionNode,
 } from './ast.type'
-import { OptionRecordEntry } from './program-parser-ast.type'
+import { OptionRecordEntry } from './node-parser-ast.type'
 import {
   InternalProgramParserOptionEntry,
   InternalProgramParserOptions,
 } from './program-parser.type'
 
-export class ProgramParserAST {
+export class NodeParserAST {
   protected config: InternalProgramParserOptions
   constructor(config: InternalProgramParserOptions) {
     this.config = config

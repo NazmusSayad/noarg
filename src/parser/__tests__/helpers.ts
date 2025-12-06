@@ -1,7 +1,7 @@
 import { InternalASTNode } from '../ast.type'
-import { ProgramParserAST } from '../program-parser-ast'
+import { NodeParserAST } from '../node-parser-ast'
 
-export class FakeProgramParserAST extends ProgramParserAST {
+export class FakeProgramParserAST extends NodeParserAST {
   public parse(args: InternalASTNode[]) {
     return super.parse(args)
   }
