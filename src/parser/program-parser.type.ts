@@ -1,6 +1,7 @@
 import {
   TypeArraySchema,
   TypeBooleanSchema,
+  TypeEnumSchema,
   TypeNoValueSchema,
   TypeNumberSchema,
   TypePrimitiveUnionSchema,
@@ -11,10 +12,11 @@ import { ProgramParser } from './program-parser'
 
 export type InternalOptionSchemaType =
   | TypePrimitiveUnionSchema
-  | TypeNoValueSchema
   | TypeBooleanSchema
   | TypeStringSchema
   | TypeNumberSchema
+  | TypeEnumSchema
+  | TypeNoValueSchema
   | TypeArraySchema
   | TypeTupleSchema
 
@@ -23,9 +25,11 @@ export type InternalOptionSchemaResultType =
   | (string | boolean | number)[]
 
 export type InternalArgumentSchemaType =
+  | TypePrimitiveUnionSchema
   | TypeBooleanSchema
   | TypeStringSchema
   | TypeNumberSchema
+  | TypeEnumSchema
 
 export type InternalProgramParserArgumentEntry = {
   name: string
@@ -78,8 +82,7 @@ export type InternalProgramParserOptions = {
 
   config: {
     trailingArguments?: boolean
-    doNotSplitArrayByComma?: boolean
-    doNotSplitTupleByComma?: boolean
+    doNotSplitArgumentsByComma?: boolean
   }
 }
 

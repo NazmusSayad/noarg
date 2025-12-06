@@ -10,14 +10,34 @@ export type TypeArraySchemaOptions = TypeSchemaOptions<{
   maxLength?: number
 }>
 
-export class TypeArraySchema implements TypeSchema<unknown[]> {
+export class TypeArraySchema<
+  const T extends TypeArraySchemaOptions = TypeArraySchemaOptions,
+> implements TypeSchema<unknown[]> {
   public name = 'array' as const
 
-  constructor(private options: TypeArraySchemaOptions) {}
+  constructor(private options: T) {}
 
   public parse(value: unknown) {
     if (!Array.isArray(value)) {
       throw new NoArgTypeError(`Expected array but received ${value}`)
+    }
+
+    if (
+      this.options.minLength !== undefined &&
+      value.length < this.options.minLength
+    ) {
+      throw new NoArgTypeError(
+        `Expected array to be at least ${this.options.minLength} items long`
+      )
+    }
+
+    if (
+      this.options.maxLength !== undefined &&
+      value.length > this.options.maxLength
+    ) {
+      throw new NoArgTypeError(
+        `Expected array to be at most ${this.options.maxLength} items long`
+      )
     }
 
     return value.map((item) => this.options.schema.parse(item))

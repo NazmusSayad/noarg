@@ -2,15 +2,17 @@ import { NoArgTypeError } from '@/lib/errors'
 import { TypeSchema, TypeSchemaOptions } from './interface'
 
 export type TypeStringSchemaOptions = TypeSchemaOptions<{
+  pattern?: RegExp
   minLength?: number
   maxLength?: number
-  pattern?: RegExp
 }>
 
-export class TypeStringSchema implements TypeSchema<string> {
+export class TypeStringSchema<
+  const T extends TypeStringSchemaOptions = TypeStringSchemaOptions,
+> implements TypeSchema<string> {
   public name = 'string' as const
 
-  constructor(private options: TypeStringSchemaOptions) {}
+  constructor(private options: T) {}
 
   public parse(value: unknown) {
     if (typeof value !== 'string') {

@@ -6,20 +6,28 @@ import { TypeStringSchema } from './string'
 
 export type TypeTupleSchemaOptions = TypeSchemaOptions<{
   schema: (TypeStringSchema | TypeNumberSchema | TypeBooleanSchema)[]
-  minLength?: number
-  maxLength?: number
 }>
 
-export class TypeTupleSchema implements TypeSchema<unknown[]> {
+export class TypeTupleSchema<
+  const T extends TypeTupleSchemaOptions = TypeTupleSchemaOptions,
+> implements TypeSchema<unknown[]> {
   public name = 'tuple' as const
 
-  constructor(private options: TypeTupleSchemaOptions) {}
+  constructor(private options: T) {}
 
   public parse(value: unknown) {
     if (!Array.isArray(value)) {
       throw new NoArgTypeError(`Expected array but received ${value}`)
     }
 
-    return value as unknown[]
+    if (value.length !== this.options.schema.length) {
+      throw new NoArgTypeError(
+        `Expected tuple of length ${this.options.schema.length} but received ${value.length}`
+      )
+    }
+
+    return this.options.schema.map((schema, index) =>
+      schema.parse(value[index])
+    )
   }
 }

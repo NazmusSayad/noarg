@@ -6,6 +6,7 @@ import {
 import {
   TypeArraySchema,
   TypeBooleanSchema,
+  TypeEnumSchema,
   TypeNoValueSchema,
   TypeNumberSchema,
   TypePrimitiveUnionSchema,
@@ -78,7 +79,8 @@ export class ProgramParser extends NodeParserAST {
         record.schema.type instanceof TypePrimitiveUnionSchema ||
         record.schema.type instanceof TypeBooleanSchema ||
         record.schema.type instanceof TypeNumberSchema ||
-        record.schema.type instanceof TypeStringSchema
+        record.schema.type instanceof TypeStringSchema ||
+        record.schema.type instanceof TypeEnumSchema
       ) {
         const value = this.getSingleArgumentValue(record)
 
@@ -147,7 +149,7 @@ export class ProgramParser extends NodeParserAST {
     const output = input.values.map(({ valueNode: fv }) => {
       const value = fv.type === 'option' ? fv.value! : fv.raw
 
-      if (this.config.config.doNotSplitArrayByComma) {
+      if (this.config.config.doNotSplitArgumentsByComma) {
         return value
       }
 

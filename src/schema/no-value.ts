@@ -3,10 +3,12 @@ import { TypeSchema, TypeSchemaOptions } from './interface'
 
 export type TypeNoValueSchemaOptions = TypeSchemaOptions<{}>
 
-export class TypeNoValueSchema implements TypeSchema<void> {
+export class TypeNoValueSchema<
+  const T extends TypeNoValueSchemaOptions = TypeNoValueSchemaOptions,
+> implements TypeSchema<void> {
   public name = 'no-value' as const
 
-  constructor(private options: TypeNoValueSchemaOptions) {}
+  constructor(private options: T) {}
 
   public parse(_value: unknown): void {
     throw new NoArgInternalError(`This schema should not be used`)

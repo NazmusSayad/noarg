@@ -3,6 +3,7 @@ import { parseArgsToAST, ProgramParser } from '@/parser'
 import {
   TypeArraySchema,
   TypeBooleanSchema,
+  TypeEnumSchema,
   TypeNoValueSchema,
   TypeNumberSchema,
   TypeStringSchema,
@@ -38,6 +39,14 @@ const programParser = new ProgramParser({
     {
       name: 'boolean',
       type: new TypeBooleanSchema({}),
+      aliases: [],
+    },
+
+    {
+      name: 'enum',
+      type: new TypeEnumSchema({
+        values: ['test', '123', 'true', 'false'],
+      }),
       aliases: [],
     },
 
@@ -93,8 +102,8 @@ const parsedArguments = parseArgsToAST([
   '--tuple',
   'test,123,true',
 
-  '--verbose',
-  '-vvv',
+  '--enum',
+  'false',
 ])
 
 programParser

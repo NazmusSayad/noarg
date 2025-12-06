@@ -6,12 +6,14 @@ export type TypeNumberSchemaOptions = TypeSchemaOptions<{
   max?: number
 }>
 
-export class TypeNumberSchema implements TypeSchema<number> {
+export class TypeNumberSchema<
+  const T extends TypeNumberSchemaOptions = TypeNumberSchemaOptions,
+> implements TypeSchema<number> {
   public name = 'number' as const
 
-  constructor(private options: TypeNumberSchemaOptions) {}
+  constructor(private options: T) {}
 
-  private isValidNumber(value: unknown): value is number {
+  public static isValidNumber(value: unknown): value is number {
     return (
       typeof value === 'number' &&
       Number.isFinite(value) &&
@@ -20,12 +22,12 @@ export class TypeNumberSchema implements TypeSchema<number> {
   }
 
   private parseNumberCore(value: unknown) {
-    if (this.isValidNumber(value)) {
+    if (TypeNumberSchema.isValidNumber(value)) {
       return value
     }
 
     const number = Number(value)
-    if (this.isValidNumber(number)) {
+    if (TypeNumberSchema.isValidNumber(number)) {
       return number
     }
 

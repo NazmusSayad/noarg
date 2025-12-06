@@ -8,10 +8,13 @@ export type TypePrimitiveUnionSchemaOptions = TypeSchemaOptions<{
   types: (TypeBooleanSchema | TypeStringSchema | TypeNumberSchema)[]
 }>
 
-export class TypePrimitiveUnionSchema implements TypeSchema<unknown> {
+export class TypePrimitiveUnionSchema<
+  const T extends TypePrimitiveUnionSchemaOptions =
+    TypePrimitiveUnionSchemaOptions,
+> implements TypeSchema<unknown> {
   public name = 'primitive-union' as const
 
-  constructor(private options: TypePrimitiveUnionSchemaOptions) {}
+  constructor(private options: T) {}
 
   public parse(value: unknown) {
     for (const type of this.options.types) {
