@@ -77,7 +77,9 @@ export type InternalProgramParserOptions = {
   options: InternalProgramParserOptionEntry[]
 
   config: {
-    trailingArguments: boolean
+    trailingArguments?: boolean
+    doNotSplitArrayByComma?: boolean
+    doNotSplitTupleByComma?: boolean
   }
 }
 

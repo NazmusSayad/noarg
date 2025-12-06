@@ -28,7 +28,7 @@ export class ProgramParser extends NodeParserAST {
 
   public async run(
     args: InternalASTNode[]
-  ): Promise<[string, InternalProgramParserResult]> {
+  ): Promise<{ id: string; result: InternalProgramParserResult }> {
     for (let i = 0; i < args.length; i++) {
       const node = args[i]
       if (node.type === 'option') {
@@ -48,15 +48,13 @@ export class ProgramParser extends NodeParserAST {
     const optionsResult = await this.parseOptions(result.optionsRecord)
     const argumentsResult = await this.parseArguments(result.argumentsList)
 
-    console.dir(optionsResult, { depth: null })
-
-    return [
-      this.config.id,
-      {
+    return {
+      id: this.config.id,
+      result: {
         options: optionsResult,
         ...argumentsResult,
       },
-    ]
+    }
   }
 
   private async parseOptions(
@@ -84,13 +82,11 @@ export class ProgramParser extends NodeParserAST {
       ) {
         const value = this.getSingleArgumentValue(record)
 
-        if (record.schema.required && value === null) {
-          throw new NoArgTypeError(`Option ${name} is required`)
-        }
-
         if (value !== null) {
           const output = record.schema.type.parse(value)
           result[name] = output as InternalOptionSchemaResultType
+        } else if (record.schema.required) {
+          throw new NoArgTypeError(`Option ${name} is required`)
         }
       }
 
@@ -98,9 +94,13 @@ export class ProgramParser extends NodeParserAST {
         record.schema.type instanceof TypeArraySchema ||
         record.schema.type instanceof TypeTupleSchema
       ) {
-        const values = this.getMultipleArgumentValues(record)
-        const output = record.schema.type.parse(values)
-        result[name] = output as InternalOptionSchemaResultType
+        if (record.keys.length > 0) {
+          const values = this.getMultipleArgumentValues(record)
+          const output = record.schema.type.parse(values)
+          result[name] = output as InternalOptionSchemaResultType
+        } else if (record.schema.required) {
+          throw new NoArgTypeError(`Option ${name} is required`)
+        }
       }
     }
 
@@ -144,9 +144,16 @@ export class ProgramParser extends NodeParserAST {
   }
 
   private getMultipleArgumentValues(input: OptionRecordEntry): string[] {
-    return input.values.map((value) => {
-      const fv = value.valueNode
-      return fv.type === 'option' ? fv.value! : fv.raw
+    const output = input.values.map(({ valueNode: fv }) => {
+      const value = fv.type === 'option' ? fv.value! : fv.raw
+
+      if (this.config.config.doNotSplitArrayByComma) {
+        return value
+      }
+
+      return value.split(',')
     })
+
+    return output.flat()
   }
 }

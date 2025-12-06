@@ -1,7 +1,11 @@
 import { NoArgTypeError } from '@/lib/errors'
+import { TypeBooleanSchema } from './boolean'
 import { TypeSchema, TypeSchemaOptions } from './interface'
+import { TypeNumberSchema } from './number'
+import { TypeStringSchema } from './string'
 
 export type TypeTupleSchemaOptions = TypeSchemaOptions<{
+  schema: (TypeStringSchema | TypeNumberSchema | TypeBooleanSchema)[]
   minLength?: number
   maxLength?: number
 }>

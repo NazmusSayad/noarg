@@ -1,10 +1,12 @@
 import { NoArgNodeError } from '@/lib/errors'
 import { parseArgsToAST, ProgramParser } from '@/parser'
 import {
+  TypeArraySchema,
   TypeBooleanSchema,
   TypeNoValueSchema,
   TypeNumberSchema,
   TypeStringSchema,
+  TypeTupleSchema,
 } from '@/schema'
 
 const programParser = new ProgramParser({
@@ -40,15 +42,33 @@ const programParser = new ProgramParser({
     },
 
     {
+      name: 'array',
+      type: new TypeArraySchema({
+        schema: new TypeStringSchema({}),
+      }),
+      aliases: [],
+    },
+
+    {
+      name: 'tuple',
+      type: new TypeTupleSchema({
+        schema: [
+          new TypeStringSchema({}),
+          new TypeNumberSchema({}),
+          new TypeBooleanSchema({}),
+        ],
+      }),
+      aliases: [],
+    },
+
+    {
       name: 'verbose',
       type: new TypeNoValueSchema({}),
       aliases: ['v'],
     },
   ],
 
-  config: {
-    trailingArguments: true,
-  },
+  config: {},
 })
 
 const parsedArguments = parseArgsToAST([
@@ -60,14 +80,28 @@ const parsedArguments = parseArgsToAST([
 
   '--boolean',
   'yes',
+
+  '--array',
+  'test1,test2',
+
+  '--array',
+  '123',
+
+  '--array',
+  'true',
+
+  '--tuple',
+  'test,123,true',
+
+  '--verbose',
+  '-vvv',
 ])
 
 programParser
   .run(parsedArguments)
 
-  .then(([id, result]) => {
-    // console.log(`Program ${id} parsed successfully`)
-    // console.log(result)
+  .then(({ result }) => {
+    console.dir(result, { depth: null })
   })
 
   .catch((err) => {

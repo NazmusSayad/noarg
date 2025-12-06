@@ -24,9 +24,7 @@ describe('ProgramParserAST', () => {
         { name: 'cache', type: new TypeNoValueSchema({}), aliases: ['c'] },
         { name: 'dry', type: new TypeNoValueSchema({}), aliases: ['d'] },
       ],
-      config: {
-        trailingArguments: true,
-      },
+      config: {},
     })
 
     it('collects option values and arguments', async () => {
@@ -89,9 +87,7 @@ describe('ProgramParserAST', () => {
         { name: 'noop', type: new TypeNoValueSchema({}), aliases: ['o'] },
         { name: 'flag', type: new TypeNoValueSchema({}), aliases: ['f'] },
       ],
-      config: {
-        trailingArguments: true,
-      },
+      config: {},
     })
 
     it('aggregates repeated values separated by flags and arguments', async () => {
@@ -151,9 +147,7 @@ describe('ProgramParserAST', () => {
         { name: 'silent', type: new TypeNoValueSchema({}), aliases: ['s'] },
         { name: 'force', type: new TypeNoValueSchema({}), aliases: ['f'] },
       ],
-      config: {
-        trailingArguments: true,
-      },
+      config: {},
     })
 
     it('collects multiple value options with scattered flags and arguments', async () => {
@@ -211,9 +205,7 @@ describe('ProgramParserAST', () => {
         { name: 'quiet', type: new TypeNoValueSchema({}), aliases: ['q'] },
         { name: 'mode', type: new TypeStringSchema({}), aliases: ['m'] },
       ],
-      config: {
-        trailingArguments: true,
-      },
+      config: {},
     })
 
     it('keeps keys for no-value aliases even with inline values', async () => {
@@ -256,9 +248,7 @@ describe('ProgramParserAST', () => {
         { name: 'toggle', type: new TypeNoValueSchema({}), aliases: ['t'] },
         { name: 'cache', type: new TypeNoValueSchema({}), aliases: ['c'] },
       ],
-      config: {
-        trailingArguments: true,
-      },
+      config: {},
     })
 
     it('records duplicate alias occurrences separately', async () => {
@@ -365,9 +355,7 @@ describe('ProgramParserAST', () => {
         { name: 'charlie', type: new TypeNoValueSchema({}), aliases: ['c'] },
         { name: 'delta', type: new TypeNoValueSchema({}), aliases: ['d'] },
       ],
-      config: {
-        trailingArguments: true,
-      },
+      config: {},
     })
 
     it('throws for unknown options', async () => {
