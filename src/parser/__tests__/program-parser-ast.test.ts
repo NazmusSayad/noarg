@@ -197,6 +197,159 @@ describe('ProgramParserAST', () => {
     })
   })
 
+  describe('alias bursts with inline values on no-value options', () => {
+    const parser = new FakeProgramParserAST({
+      id: '4',
+      command: '!',
+      description: undefined,
+      subPrograms: [],
+      primaryArguments: [],
+      optionalArguments: [],
+      listArguments: null,
+      options: [
+        { name: 'toggle', type: new TypeNoValueSchema(), aliases: ['t'] },
+        { name: 'quiet', type: new TypeNoValueSchema(), aliases: ['q'] },
+        { name: 'mode', type: new TypeStringSchema(), aliases: ['m'] },
+      ],
+      config: {
+        trailingArguments: true,
+      },
+    })
+
+    it('keeps keys for no-value aliases even with inline values', async () => {
+      const nodes = parseArgsToAST([
+        '-tq',
+        '--toggle=on',
+        '-qq',
+        '--mode',
+        'fast',
+        'trailing',
+      ])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.toggle.keys).toEqual([nodes[0], nodes[1]])
+      expect(result.optionsRecord.quiet.keys).toEqual([
+        nodes[0],
+        nodes[2],
+        nodes[2],
+      ])
+      expect(result.optionsRecord.mode.keys).toEqual([nodes[3]])
+      expect(result.optionsRecord.mode.values).toEqual([
+        { valueNode: nodes[4], valueKeyNode: nodes[3] },
+      ])
+      expect(result.argumentsList).toEqual([nodes[5]])
+    })
+  })
+
+  describe('edge consumption and alias quirks', () => {
+    const parser = new FakeProgramParserAST({
+      id: '5',
+      command: '*',
+      description: undefined,
+      subPrograms: [],
+      primaryArguments: [],
+      optionalArguments: [],
+      listArguments: null,
+      options: [
+        { name: 'path', type: new TypeStringSchema(), aliases: ['p'] },
+        { name: 'verbose', type: new TypeNoValueSchema(), aliases: ['v'] },
+        { name: 'toggle', type: new TypeNoValueSchema(), aliases: ['t'] },
+        { name: 'cache', type: new TypeNoValueSchema(), aliases: ['c'] },
+      ],
+      config: {
+        trailingArguments: true,
+      },
+    })
+
+    it('records duplicate alias occurrences separately', async () => {
+      const nodes = parseArgsToAST(['-cc'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.cache.keys).toEqual([nodes[0], nodes[0]])
+    })
+
+    it('keeps argument after no-value option', async () => {
+      const nodes = parseArgsToAST(['-c', 'arg'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.cache.keys).toEqual([nodes[0]])
+      expect(result.argumentsList).toEqual([nodes[1]])
+    })
+
+    it('accepts inline value on no-value alias as key only', async () => {
+      const nodes = parseArgsToAST(['-v=1'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.verbose.keys).toEqual([nodes[0]])
+      expect(result.argumentsList).toEqual([])
+    })
+
+    it('throws when value option is followed by another option', async () => {
+      await expect(
+        parser.parse(parseArgsToAST(['--path', '-v']))
+      ).rejects.toBeInstanceOf(NoArgEmptyOptionValueError)
+    })
+
+    it('keeps inline value then processes following flag and argument', async () => {
+      const nodes = parseArgsToAST(['--path=/tmp', '-v', 'rest'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.path.keys).toEqual([nodes[0]])
+      expect(result.optionsRecord.path.values).toEqual([
+        { valueNode: nodes[0], valueKeyNode: nodes[0] },
+      ])
+      expect(result.optionsRecord.verbose.keys).toEqual([nodes[1]])
+      expect(result.argumentsList).toEqual([nodes[2]])
+    })
+
+    it('captures multiple inline values for same option', async () => {
+      const nodes = parseArgsToAST(['--path=/a', '--path=/b', 'arg'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.path.keys).toEqual([nodes[0], nodes[1]])
+      expect(result.optionsRecord.path.values).toEqual([
+        { valueNode: nodes[0], valueKeyNode: nodes[0] },
+        { valueNode: nodes[1], valueKeyNode: nodes[1] },
+      ])
+      expect(result.argumentsList).toEqual([nodes[2]])
+    })
+
+    it('treats alias for value option without value as unknown', async () => {
+      await expect(parser.parse(parseArgsToAST(['-p']))).rejects.toBeInstanceOf(
+        NoArgUnknownOptionError
+      )
+    })
+
+    it('counts triple alias occurrences', async () => {
+      const nodes = parseArgsToAST(['-vvv'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.verbose.keys).toEqual([
+        nodes[0],
+        nodes[0],
+        nodes[0],
+      ])
+    })
+
+    it('binds argument value after option and still accepts trailing flag', async () => {
+      const nodes = parseArgsToAST(['-c', '--path', '/x', '-t'])
+      const result = await parser.parse(nodes)
+
+      expect(result.optionsRecord.cache.keys).toEqual([nodes[0]])
+      expect(result.optionsRecord.path.values).toEqual([
+        { valueNode: nodes[2], valueKeyNode: nodes[1] },
+      ])
+      expect(result.optionsRecord.toggle.keys).toEqual([nodes[3]])
+      expect(result.argumentsList).toEqual([])
+    })
+
+    it('fails when alias chain carries unknown entry', async () => {
+      await expect(
+        parser.parse(parseArgsToAST(['-cvx']))
+      ).rejects.toBeInstanceOf(NoArgUnknownOptionError)
+    })
+  })
+
   describe('multi-parser mismatch edge cases', () => {
     const parser = new FakeProgramParserAST({
       id: '2',
