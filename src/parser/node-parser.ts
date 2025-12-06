@@ -10,7 +10,7 @@ import {
   InternalASTNode,
   InternalASTOptionNode,
 } from './ast.type'
-import { OptionRecordEntry } from './node-parser-ast.type'
+import { OptionRecordEntry } from './node-parser.type'
 import {
   InternalProgramParserOptionEntry,
   InternalProgramParserOptions,

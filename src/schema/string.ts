@@ -4,6 +4,7 @@ import { TypeSchema, TypeSchemaOptions } from './interface'
 export type TypeStringSchemaOptions = TypeSchemaOptions<{
   minLength?: number
   maxLength?: number
+  pattern?: RegExp
 }>
 
 export class TypeStringSchema implements TypeSchema<string> {
@@ -31,6 +32,15 @@ export class TypeStringSchema implements TypeSchema<string> {
     ) {
       throw new NoArgTypeError(
         `Expected string to be at most ${this.options.maxLength} characters long`
+      )
+    }
+
+    if (
+      this.options.pattern !== undefined &&
+      !this.options.pattern.test(value)
+    ) {
+      throw new NoArgTypeError(
+        `Expected string to match pattern ${this.options.pattern.source}`
       )
     }
 

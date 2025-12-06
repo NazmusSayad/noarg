@@ -22,12 +22,6 @@ const programParser = new ProgramParser({
 
   options: [
     {
-      name: 'verbose',
-      type: new TypeNoValueSchema({}),
-      aliases: ['v'],
-    },
-
-    {
       name: 'string',
       type: new TypeStringSchema({}),
       aliases: [],
@@ -43,6 +37,12 @@ const programParser = new ProgramParser({
       name: 'boolean',
       type: new TypeBooleanSchema({}),
       aliases: [],
+    },
+
+    {
+      name: 'verbose',
+      type: new TypeNoValueSchema({}),
+      aliases: ['v'],
     },
   ],
 

@@ -13,8 +13,8 @@ import {
   TypeTupleSchema,
 } from '@/schema'
 import { InternalASTArgumentNode, InternalASTNode } from './ast.type'
-import { NodeParserAST } from './node-parser-ast'
-import { OptionRecordEntry } from './node-parser-ast.type'
+import { NodeParserAST } from './node-parser'
+import { OptionRecordEntry } from './node-parser.type'
 import {
   InternalOptionSchemaResultType,
   InternalProgramParserOptions,

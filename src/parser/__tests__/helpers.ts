@@ -1,5 +1,5 @@
 import { InternalASTNode } from '../ast.type'
-import { NodeParserAST } from '../node-parser-ast'
+import { NodeParserAST } from '../node-parser'
 
 export class FakeProgramParserAST extends NodeParserAST {
   public parse(args: InternalASTNode[]) {
