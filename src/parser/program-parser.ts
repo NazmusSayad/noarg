@@ -26,7 +26,7 @@ import {
 } from './program-parser.type'
 
 export class ProgramParser extends NodeParserAST {
-  constructor(protected config: InternalProgramParserOptions) {
+  constructor(config: InternalProgramParserOptions) {
     super(config)
   }
 

@@ -19,7 +19,7 @@ import {
 export class NodeParserAST {
   protected config: InternalProgramParserOptions
   constructor(config: InternalProgramParserOptions) {
-    this.config = config
+    this.config = Object.freeze(config)
   }
 
   protected async parse(args: InternalASTNode[]): Promise<{
