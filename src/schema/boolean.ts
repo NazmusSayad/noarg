@@ -1,14 +1,22 @@
 import { NoArgTypeError } from '@/lib/errors'
-import { TypeSchema } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './interface'
+
+export type TypeBooleanSchemaOptions = TypeSchemaOptions<{}>
 
 export class TypeBooleanSchema implements TypeSchema<boolean> {
-  constructor() {}
+  public name = 'boolean' as const
+
+  constructor(private options: TypeBooleanSchemaOptions) {}
 
   public parse(value: unknown): boolean {
-    if (typeof value !== 'boolean') {
-      throw new NoArgTypeError(`Expected boolean but received ${value}`)
+    if (value === 'true' || value === 'yes' || value === true) {
+      return true
     }
 
-    return value
+    if (value === 'false' || value === 'no' || value === false) {
+      return false
+    }
+
+    throw new NoArgTypeError(`Expected boolean but received ${value}`)
   }
 }

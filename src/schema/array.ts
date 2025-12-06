@@ -1,8 +1,15 @@
 import { NoArgTypeError } from '@/lib/errors'
-import { TypeSchema } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './interface'
+
+export type TypeArraySchemaOptions = TypeSchemaOptions<{
+  minLength?: number
+  maxLength?: number
+}>
 
 export class TypeArraySchema implements TypeSchema<unknown[]> {
-  constructor() {}
+  public name = 'array' as const
+
+  constructor(private options: TypeArraySchemaOptions) {}
 
   public parse(value: unknown): unknown[] {
     if (!Array.isArray(value)) {

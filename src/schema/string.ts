@@ -1,12 +1,14 @@
 import { NoArgTypeError } from '@/lib/errors'
-import { TypeSchema } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './interface'
 
-export type TypeStringSchemaOptions = {
+export type TypeStringSchemaOptions = TypeSchemaOptions<{
   minLength?: number
   maxLength?: number
-}
+}>
 
 export class TypeStringSchema implements TypeSchema<string> {
+  public name = 'string' as const
+
   constructor(private options: TypeStringSchemaOptions) {}
 
   public parse(value: unknown): string {

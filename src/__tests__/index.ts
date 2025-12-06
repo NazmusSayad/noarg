@@ -18,17 +18,17 @@ const programParser = new ProgramParser({
   options: [
     {
       name: 'verbose',
-      type: new TypeNoValueSchema(),
+      type: new TypeNoValueSchema({}),
       aliases: ['v'],
     },
     {
       name: 'silent',
-      type: new TypeNoValueSchema(),
+      type: new TypeNoValueSchema({}),
       aliases: ['s'],
     },
     {
       name: 'force',
-      type: new TypeNoValueSchema(),
+      type: new TypeNoValueSchema({}),
       aliases: ['f'],
     },
 

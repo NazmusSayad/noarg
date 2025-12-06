@@ -1,8 +1,15 @@
 import { NoArgTypeError } from '@/lib/errors'
-import { TypeSchema } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './interface'
+
+export type TypeNumberSchemaOptions = TypeSchemaOptions<{
+  min?: number
+  max?: number
+}>
 
 export class TypeNumberSchema implements TypeSchema<number> {
-  constructor() {}
+  public name = 'number' as const
+
+  constructor(private options: TypeNumberSchemaOptions) {}
 
   public parse(value: unknown): number {
     if (typeof value !== 'number') {

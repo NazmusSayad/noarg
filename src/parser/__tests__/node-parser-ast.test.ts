@@ -20,9 +20,9 @@ describe('ProgramParserAST', () => {
       listArguments: null,
       options: [
         { name: 'name', type: new TypeStringSchema({}), aliases: ['n'] },
-        { name: 'flag', type: new TypeNoValueSchema(), aliases: ['f'] },
-        { name: 'cache', type: new TypeNoValueSchema(), aliases: ['c'] },
-        { name: 'dry', type: new TypeNoValueSchema(), aliases: ['d'] },
+        { name: 'flag', type: new TypeNoValueSchema({}), aliases: ['f'] },
+        { name: 'cache', type: new TypeNoValueSchema({}), aliases: ['c'] },
+        { name: 'dry', type: new TypeNoValueSchema({}), aliases: ['d'] },
       ],
       config: {
         trailingArguments: true,
@@ -83,11 +83,11 @@ describe('ProgramParserAST', () => {
       optionalArguments: [],
       listArguments: null,
       options: [
-        { name: 'count', type: new TypeNumberSchema(), aliases: ['c'] },
+        { name: 'count', type: new TypeNumberSchema({}), aliases: ['c'] },
         { name: 'mode', type: new TypeStringSchema({}), aliases: ['m'] },
-        { name: 'quick', type: new TypeNoValueSchema(), aliases: ['q'] },
-        { name: 'noop', type: new TypeNoValueSchema(), aliases: ['o'] },
-        { name: 'flag', type: new TypeNoValueSchema(), aliases: ['f'] },
+        { name: 'quick', type: new TypeNoValueSchema({}), aliases: ['q'] },
+        { name: 'noop', type: new TypeNoValueSchema({}), aliases: ['o'] },
+        { name: 'flag', type: new TypeNoValueSchema({}), aliases: ['f'] },
       ],
       config: {
         trailingArguments: true,
@@ -147,9 +147,9 @@ describe('ProgramParserAST', () => {
       options: [
         { name: 'path', type: new TypeStringSchema({}), aliases: ['p'] },
         { name: 'mode', type: new TypeStringSchema({}), aliases: ['m'] },
-        { name: 'verbose', type: new TypeNoValueSchema(), aliases: ['v'] },
-        { name: 'silent', type: new TypeNoValueSchema(), aliases: ['s'] },
-        { name: 'force', type: new TypeNoValueSchema(), aliases: ['f'] },
+        { name: 'verbose', type: new TypeNoValueSchema({}), aliases: ['v'] },
+        { name: 'silent', type: new TypeNoValueSchema({}), aliases: ['s'] },
+        { name: 'force', type: new TypeNoValueSchema({}), aliases: ['f'] },
       ],
       config: {
         trailingArguments: true,
@@ -207,8 +207,8 @@ describe('ProgramParserAST', () => {
       optionalArguments: [],
       listArguments: null,
       options: [
-        { name: 'toggle', type: new TypeNoValueSchema(), aliases: ['t'] },
-        { name: 'quiet', type: new TypeNoValueSchema(), aliases: ['q'] },
+        { name: 'toggle', type: new TypeNoValueSchema({}), aliases: ['t'] },
+        { name: 'quiet', type: new TypeNoValueSchema({}), aliases: ['q'] },
         { name: 'mode', type: new TypeStringSchema({}), aliases: ['m'] },
       ],
       config: {
@@ -252,9 +252,9 @@ describe('ProgramParserAST', () => {
       listArguments: null,
       options: [
         { name: 'path', type: new TypeStringSchema({}), aliases: ['p'] },
-        { name: 'verbose', type: new TypeNoValueSchema(), aliases: ['v'] },
-        { name: 'toggle', type: new TypeNoValueSchema(), aliases: ['t'] },
-        { name: 'cache', type: new TypeNoValueSchema(), aliases: ['c'] },
+        { name: 'verbose', type: new TypeNoValueSchema({}), aliases: ['v'] },
+        { name: 'toggle', type: new TypeNoValueSchema({}), aliases: ['t'] },
+        { name: 'cache', type: new TypeNoValueSchema({}), aliases: ['c'] },
       ],
       config: {
         trailingArguments: true,
@@ -361,9 +361,9 @@ describe('ProgramParserAST', () => {
       listArguments: null,
       options: [
         { name: 'alpha', type: new TypeStringSchema({}), aliases: ['a'] },
-        { name: 'bravo', type: new TypeNoValueSchema(), aliases: ['b'] },
-        { name: 'charlie', type: new TypeNoValueSchema(), aliases: ['c'] },
-        { name: 'delta', type: new TypeNoValueSchema(), aliases: ['d'] },
+        { name: 'bravo', type: new TypeNoValueSchema({}), aliases: ['b'] },
+        { name: 'charlie', type: new TypeNoValueSchema({}), aliases: ['c'] },
+        { name: 'delta', type: new TypeNoValueSchema({}), aliases: ['d'] },
       ],
       config: {
         trailingArguments: true,

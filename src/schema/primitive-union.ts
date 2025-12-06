@@ -1,22 +1,20 @@
 import { NoArgTypeError } from '@/lib/errors'
 import { TypeBooleanSchema } from './boolean'
-import { TypeSchema } from './interface'
-import { TypeNoValueSchema } from './no-value'
+import { TypeSchema, TypeSchemaOptions } from './interface'
 import { TypeNumberSchema } from './number'
 import { TypeStringSchema } from './string'
 
+export type TypePrimitiveUnionSchemaOptions = TypeSchemaOptions<{
+  types: (TypeBooleanSchema | TypeStringSchema | TypeNumberSchema)[]
+}>
+
 export class TypePrimitiveUnionSchema implements TypeSchema<unknown> {
-  constructor(
-    public types: (
-      | TypeNoValueSchema
-      | TypeBooleanSchema
-      | TypeStringSchema
-      | TypeNumberSchema
-    )[]
-  ) {}
+  public name = 'primitive-union' as const
+
+  constructor(private options: TypePrimitiveUnionSchemaOptions) {}
 
   public parse(value: unknown): unknown {
-    for (const type of this.types) {
+    for (const type of this.options.types) {
       try {
         return type.parse(value)
       } catch {
@@ -25,7 +23,7 @@ export class TypePrimitiveUnionSchema implements TypeSchema<unknown> {
     }
 
     throw new NoArgTypeError(
-      `Expected one of ${this.types.map((type) => type.constructor.name).join(', ')} but received ${value}`
+      `Expected one of ${this.options.types.map((type) => type.constructor.name).join(', ')} but received ${value}`
     )
   }
 }

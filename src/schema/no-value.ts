@@ -1,14 +1,14 @@
-import { NoArgTypeError } from '@/lib/errors'
-import { TypeSchema } from './interface'
+import { NoArgInternalError } from '@/lib/errors'
+import { TypeSchema, TypeSchemaOptions } from './interface'
+
+export type TypeNoValueSchemaOptions = TypeSchemaOptions<{}>
 
 export class TypeNoValueSchema implements TypeSchema<void> {
-  constructor() {}
+  public name = 'no-value' as const
 
-  public parse(value: unknown): void {
-    if (value !== undefined) {
-      throw new NoArgTypeError(`Expected void but received ${value}`)
-    }
+  constructor(private options: TypeNoValueSchemaOptions) {}
 
-    return value
+  public parse(_value: unknown): void {
+    throw new NoArgInternalError(`This schema should not be used`)
   }
 }
