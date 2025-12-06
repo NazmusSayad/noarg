@@ -7,6 +7,6 @@ export type OptionRecordEntry = {
   keys: InternalASTOptionNode[]
   values: {
     valueNode: InternalASTNode
-    valueKeyNode: InternalASTOptionNode
+    optionNode: InternalASTOptionNode
   }[]
 }

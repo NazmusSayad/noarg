@@ -1,3 +1,16 @@
+import {
+  NoArgDuplicateOptionValueError,
+  NoArgInternalError,
+} from '@/lib/errors'
+import {
+  TypeArraySchema,
+  TypeBooleanSchema,
+  TypeNoValueSchema,
+  TypeNumberSchema,
+  TypePrimitiveUnionSchema,
+  TypeStringSchema,
+  TypeTupleSchema,
+} from '@/schema'
 import { InternalASTArgumentNode, InternalASTNode } from './ast.type'
 import { NodeParserAST } from './node-parser-ast'
 import { OptionRecordEntry } from './node-parser-ast.type'
@@ -22,7 +35,7 @@ export class ProgramParser extends NodeParserAST {
       }
 
       const program = this.config.subPrograms.find(
-        (program) => program.config.command === node.arg
+        (program) => program.config.command === node.raw
       )
 
       if (program) {
@@ -33,6 +46,8 @@ export class ProgramParser extends NodeParserAST {
     const result = await this.parse(args)
     const optionsResult = await this.parseOptions(result.optionsRecord)
     const argumentsResult = await this.parseArguments(result.argumentsList)
+
+    console.dir(optionsResult, { depth: null })
 
     return [
       this.config.id,
@@ -48,10 +63,42 @@ export class ProgramParser extends NodeParserAST {
   ): Promise<Record<string, unknown>> {
     const result: Record<string, InternalOptionSchemaResultType> = {}
 
-    for (const option of this.config.options) {
-      const record = optionsRecord[option.name]
+    for (const _option of this.config.options) {
+      const record = optionsRecord[_option.name]
+      if (!record) {
+        throw new NoArgInternalError(
+          `Option ${_option.name} not found in options record`
+        )
+      }
 
-      console.dir(record, { depth: null })
+      if (record.schema.type instanceof TypeNoValueSchema) {
+        result[_option.name] = record.keys.length
+      }
+
+      if (
+        record.schema.type instanceof TypePrimitiveUnionSchema ||
+        record.schema.type instanceof TypeBooleanSchema ||
+        record.schema.type instanceof TypeNumberSchema ||
+        record.schema.type instanceof TypeStringSchema
+      ) {
+        console.log(record.values)
+        console.log(record.values.length)
+
+        if (record.values.length > 1) {
+          const secondValue = record.values[1]
+
+          throw new NoArgDuplicateOptionValueError(
+            secondValue.valueNode.index,
+            secondValue.optionNode.raw
+          )
+        }
+      }
+
+      if (
+        record.schema.type instanceof TypeArraySchema ||
+        record.schema.type instanceof TypeTupleSchema
+      ) {
+      }
     }
 
     return result

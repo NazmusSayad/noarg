@@ -36,3 +36,9 @@ export class NoArgEmptyOptionValueError extends NoArgNodeError {
     super(index, `Expected option value but received option ${option}`)
   }
 }
+
+export class NoArgDuplicateOptionValueError extends NoArgNodeError {
+  constructor(index: number, option: string) {
+    super(index, `Duplicate option value for ${option}`)
+  }
+}

@@ -1,6 +1,6 @@
 import { NoArgNodeError } from '@/lib/errors'
 import { parseArgsToAST, ProgramParser } from '@/parser'
-import { TypeNoValueSchema } from '@/schema'
+import { TypeNoValueSchema, TypeStringSchema } from '@/schema'
 
 const programParser = new ProgramParser({
   id: '0',
@@ -31,6 +31,12 @@ const programParser = new ProgramParser({
       type: new TypeNoValueSchema(),
       aliases: ['f'],
     },
+
+    {
+      name: 'string',
+      type: new TypeStringSchema(),
+      aliases: [],
+    },
   ],
 
   config: {
@@ -38,7 +44,17 @@ const programParser = new ProgramParser({
   },
 })
 
-const parsedArguments = parseArgsToAST(['-vs', '--silent', '-svf'])
+const parsedArguments = parseArgsToAST([
+  '-vs',
+  '--silent',
+  '-svf',
+
+  '--string',
+  'test',
+
+  '--string',
+  'test',
+])
 
 programParser
   .run(parsedArguments)
@@ -52,10 +68,10 @@ programParser
     if (err instanceof NoArgNodeError) {
       const colorizedArgs = parsedArguments.map((arg) => {
         if (arg.index === err.index) {
-          return `\x1b[31m${arg.arg}\x1b[0m`
+          return `\x1b[31m${arg.raw}\x1b[0m`
         }
 
-        return arg.arg
+        return arg.raw
       })
 
       console.error(`${colorizedArgs.join(' ')}`)

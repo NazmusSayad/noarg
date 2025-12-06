@@ -52,7 +52,7 @@ export class NodeParserAST {
             return
           }
 
-          throw new NoArgEmptyOptionValueError(node.index, node.arg)
+          throw new NoArgEmptyOptionValueError(node.index, node.raw)
         }
 
         let tempOption: OptionRecordEntry | null = null
@@ -69,7 +69,7 @@ export class NodeParserAST {
             for (const alias of aliasParsed) {
               tempOption = optionsRecord[alias]
               if (!tempOption) {
-                throw new NoArgUnknownOptionError(node.index, node.arg)
+                throw new NoArgUnknownOptionError(node.index, node.raw)
               }
 
               tempOption.keys.push(node)
@@ -81,7 +81,7 @@ export class NodeParserAST {
         }
 
         if (!tempOption) {
-          throw new NoArgUnknownOptionError(node.index, node.arg)
+          throw new NoArgUnknownOptionError(node.index, node.raw)
         }
 
         if (tempOption.schema.type instanceof TypeNoValueSchema) {
@@ -94,7 +94,7 @@ export class NodeParserAST {
           tempOption.keys.push(node)
           tempOption.values.push({
             valueNode: node,
-            valueKeyNode: node,
+            optionNode: node,
           })
         } else {
           tempOption.keys.push(node)
@@ -107,7 +107,7 @@ export class NodeParserAST {
       if (currentOption) {
         currentOption.values.push({
           valueNode: node,
-          valueKeyNode: currentOption.node,
+          optionNode: currentOption.node,
         })
 
         currentOption = null
@@ -175,6 +175,6 @@ export class NodeParserAST {
       return splittedOptions
     }
 
-    throw new NoArgUnknownOptionError(node.index, node.arg)
+    throw new NoArgUnknownOptionError(node.index, node.raw)
   }
 }

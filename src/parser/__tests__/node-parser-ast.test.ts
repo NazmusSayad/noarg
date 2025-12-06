@@ -36,7 +36,7 @@ describe('ProgramParserAST', () => {
       expect(result.argumentsList).toEqual([nodes[3]])
       expect(result.optionsRecord.name.keys).toEqual([nodes[0]])
       expect(result.optionsRecord.name.values).toEqual([
-        { valueNode: nodes[1], valueKeyNode: nodes[0] },
+        { valueNode: nodes[1], optionNode: nodes[0] },
       ])
       expect(result.optionsRecord.flag.keys).toEqual([nodes[2]])
     })
@@ -47,7 +47,7 @@ describe('ProgramParserAST', () => {
 
       expect(result.optionsRecord.name.keys).toEqual([nodes[0]])
       expect(result.optionsRecord.name.values).toEqual([
-        { valueNode: nodes[0], valueKeyNode: nodes[0] },
+        { valueNode: nodes[0], optionNode: nodes[0] },
       ])
       expect(result.argumentsList).toEqual([nodes[1]])
     })
@@ -106,8 +106,8 @@ describe('ProgramParserAST', () => {
 
       expect(result.optionsRecord.count.keys).toEqual([nodes[0], nodes[3]])
       expect(result.optionsRecord.count.values).toEqual([
-        { valueNode: nodes[1], valueKeyNode: nodes[0] },
-        { valueNode: nodes[3], valueKeyNode: nodes[3] },
+        { valueNode: nodes[1], optionNode: nodes[0] },
+        { valueNode: nodes[3], optionNode: nodes[3] },
       ])
       expect(result.optionsRecord.flag.keys).toEqual([nodes[2]])
       expect(result.argumentsList).toEqual([nodes[4]])
@@ -170,12 +170,12 @@ describe('ProgramParserAST', () => {
 
       expect(result.optionsRecord.path.keys).toEqual([nodes[0], nodes[5]])
       expect(result.optionsRecord.path.values).toEqual([
-        { valueNode: nodes[0], valueKeyNode: nodes[0] },
-        { valueNode: nodes[5], valueKeyNode: nodes[5] },
+        { valueNode: nodes[0], optionNode: nodes[0] },
+        { valueNode: nodes[5], optionNode: nodes[5] },
       ])
       expect(result.optionsRecord.mode.keys).toEqual([nodes[2]])
       expect(result.optionsRecord.mode.values).toEqual([
-        { valueNode: nodes[3], valueKeyNode: nodes[2] },
+        { valueNode: nodes[3], optionNode: nodes[2] },
       ])
       expect(result.optionsRecord.verbose.keys).toEqual([nodes[4]])
       expect(result.argumentsList).toEqual([nodes[1], nodes[6]])
@@ -235,7 +235,7 @@ describe('ProgramParserAST', () => {
       ])
       expect(result.optionsRecord.mode.keys).toEqual([nodes[3]])
       expect(result.optionsRecord.mode.values).toEqual([
-        { valueNode: nodes[4], valueKeyNode: nodes[3] },
+        { valueNode: nodes[4], optionNode: nodes[3] },
       ])
       expect(result.argumentsList).toEqual([nodes[5]])
     })
@@ -296,7 +296,7 @@ describe('ProgramParserAST', () => {
 
       expect(result.optionsRecord.path.keys).toEqual([nodes[0]])
       expect(result.optionsRecord.path.values).toEqual([
-        { valueNode: nodes[0], valueKeyNode: nodes[0] },
+        { valueNode: nodes[0], optionNode: nodes[0] },
       ])
       expect(result.optionsRecord.verbose.keys).toEqual([nodes[1]])
       expect(result.argumentsList).toEqual([nodes[2]])
@@ -308,8 +308,8 @@ describe('ProgramParserAST', () => {
 
       expect(result.optionsRecord.path.keys).toEqual([nodes[0], nodes[1]])
       expect(result.optionsRecord.path.values).toEqual([
-        { valueNode: nodes[0], valueKeyNode: nodes[0] },
-        { valueNode: nodes[1], valueKeyNode: nodes[1] },
+        { valueNode: nodes[0], optionNode: nodes[0] },
+        { valueNode: nodes[1], optionNode: nodes[1] },
       ])
       expect(result.argumentsList).toEqual([nodes[2]])
     })
@@ -337,7 +337,7 @@ describe('ProgramParserAST', () => {
 
       expect(result.optionsRecord.cache.keys).toEqual([nodes[0]])
       expect(result.optionsRecord.path.values).toEqual([
-        { valueNode: nodes[2], valueKeyNode: nodes[1] },
+        { valueNode: nodes[2], optionNode: nodes[1] },
       ])
       expect(result.optionsRecord.toggle.keys).toEqual([nodes[3]])
       expect(result.argumentsList).toEqual([])

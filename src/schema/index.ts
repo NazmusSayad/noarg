@@ -1,7 +1,9 @@
-export * from './array'
 export * from './boolean'
-export * from './no-value'
 export * from './number'
-export * from './primitive-union'
 export * from './string'
+
+export * from './primitive-union'
+
+export * from './array'
+export * from './no-value'
 export * from './tuple'

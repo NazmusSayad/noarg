@@ -1,16 +1,16 @@
 import {
-  PrimitiveUnionSchema,
   TypeArraySchema,
   TypeBooleanSchema,
   TypeNoValueSchema,
   TypeNumberSchema,
+  TypePrimitiveUnionSchema,
   TypeStringSchema,
   TypeTupleSchema,
 } from '@/schema'
 import { ProgramParser } from './program-parser'
 
 export type InternalOptionSchemaType =
-  | PrimitiveUnionSchema
+  | TypePrimitiveUnionSchema
   | TypeNoValueSchema
   | TypeBooleanSchema
   | TypeStringSchema

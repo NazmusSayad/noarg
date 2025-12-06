@@ -9,12 +9,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: 'file.txt',
+        raw: 'file.txt',
         type: 'argument',
       },
       {
         index: 1,
-        arg: '--verbose',
+        raw: '--verbose',
         type: 'option',
         isAlias: false,
         key: 'verbose',
@@ -22,7 +22,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 2,
-        arg: 'notes',
+        raw: 'notes',
         type: 'argument',
       },
     ],
@@ -32,7 +32,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: '-a',
+        raw: '-a',
         type: 'option',
         isAlias: true,
         key: 'a',
@@ -40,7 +40,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 1,
-        arg: '--beta=2',
+        raw: '--beta=2',
         type: 'option',
         isAlias: false,
         key: 'beta',
@@ -48,7 +48,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 2,
-        arg: '-c=see',
+        raw: '-c=see',
         type: 'option',
         isAlias: true,
         key: 'c',
@@ -56,7 +56,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 3,
-        arg: 'z',
+        raw: 'z',
         type: 'argument',
       },
     ],
@@ -73,7 +73,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: '--mix-9=value-123_+=[]',
+        raw: '--mix-9=value-123_+=[]',
         type: 'option',
         isAlias: false,
         key: 'mix-9',
@@ -81,7 +81,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 1,
-        arg: '--chain=a=b=c',
+        raw: '--chain=a=b=c',
         type: 'option',
         isAlias: false,
         key: 'chain',
@@ -89,7 +89,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 2,
-        arg: '--empty=',
+        raw: '--empty=',
         type: 'option',
         isAlias: false,
         key: 'empty',
@@ -97,12 +97,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 3,
-        arg: 'ARG',
+        raw: 'ARG',
         type: 'argument',
       },
       {
         index: 4,
-        arg: '-x',
+        raw: '-x',
         type: 'option',
         isAlias: true,
         key: 'x',
@@ -110,7 +110,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 5,
-        arg: '--Path=C:\\temp\\file.txt',
+        raw: '--Path=C:\\temp\\file.txt',
         type: 'option',
         isAlias: false,
         key: 'Path',
@@ -130,7 +130,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: '--multi-part-flag',
+        raw: '--multi-part-flag',
         type: 'option',
         isAlias: false,
         key: 'multi-part-flag',
@@ -138,12 +138,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 1,
-        arg: 'arg-1',
+        raw: 'arg-1',
         type: 'argument',
       },
       {
         index: 2,
-        arg: '--numbers-123',
+        raw: '--numbers-123',
         type: 'option',
         isAlias: false,
         key: 'numbers-123',
@@ -151,7 +151,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 3,
-        arg: '-Z=99',
+        raw: '-Z=99',
         type: 'option',
         isAlias: true,
         key: 'Z',
@@ -159,7 +159,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 4,
-        arg: '--caps-lock=ON',
+        raw: '--caps-lock=ON',
         type: 'option',
         isAlias: false,
         key: 'caps-lock',
@@ -167,7 +167,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 5,
-        arg: 'final',
+        raw: 'final',
         type: 'argument',
       },
     ],
@@ -185,7 +185,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: '--url=https://example.com/path?query=1&list[]=2',
+        raw: '--url=https://example.com/path?query=1&list[]=2',
         type: 'option',
         isAlias: false,
         key: 'url',
@@ -193,7 +193,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 1,
-        arg: '-0==',
+        raw: '-0==',
         type: 'option',
         isAlias: true,
         key: '0',
@@ -201,12 +201,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 2,
-        arg: 'plain.txt',
+        raw: 'plain.txt',
         type: 'argument',
       },
       {
         index: 3,
-        arg: '--mixCase=LoWeR-UPPER-123.!',
+        raw: '--mixCase=LoWeR-UPPER-123.!',
         type: 'option',
         isAlias: false,
         key: 'mixCase',
@@ -214,7 +214,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 4,
-        arg: '--dash-only',
+        raw: '--dash-only',
         type: 'option',
         isAlias: false,
         key: 'dash-only',
@@ -222,7 +222,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 5,
-        arg: '-nine9',
+        raw: '-nine9',
         type: 'option',
         isAlias: true,
         key: 'nine9',
@@ -230,7 +230,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 6,
-        arg: 'dots.and-dashes',
+        raw: 'dots.and-dashes',
         type: 'argument',
       },
     ],
@@ -247,7 +247,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: '--9nine=99',
+        raw: '--9nine=99',
         type: 'option',
         isAlias: false,
         key: '9nine',
@@ -255,12 +255,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 1,
-        arg: 'ASCII-[]{}^`~',
+        raw: 'ASCII-[]{}^`~',
         type: 'argument',
       },
       {
         index: 2,
-        arg: '-multi-word=value-with=equals',
+        raw: '-multi-word=value-with=equals',
         type: 'option',
         isAlias: true,
         key: 'multi-word',
@@ -268,7 +268,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 3,
-        arg: '--CAPS-and-digits123=OK',
+        raw: '--CAPS-and-digits123=OK',
         type: 'option',
         isAlias: false,
         key: 'CAPS-and-digits123',
@@ -276,7 +276,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 4,
-        arg: '--trail99=',
+        raw: '--trail99=',
         type: 'option',
         isAlias: false,
         key: 'trail99',
@@ -284,7 +284,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 5,
-        arg: 'final-arg',
+        raw: 'final-arg',
         type: 'argument',
       },
     ],
@@ -301,12 +301,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     expected: [
       {
         index: 0,
-        arg: '\tleading-tab',
+        raw: '\tleading-tab',
         type: 'argument',
       },
       {
         index: 1,
-        arg: '--tabbed=with\ttab',
+        raw: '--tabbed=with\ttab',
         type: 'option',
         isAlias: false,
         key: 'tabbed',
@@ -314,7 +314,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 2,
-        arg: '--long-hyphen-chain=---===',
+        raw: '--long-hyphen-chain=---===',
         type: 'option',
         isAlias: false,
         key: 'long-hyphen-chain',
@@ -322,7 +322,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 3,
-        arg: '-X==value=still',
+        raw: '-X==value=still',
         type: 'option',
         isAlias: true,
         key: 'X',
@@ -330,7 +330,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 4,
-        arg: '--digits-000=000',
+        raw: '--digits-000=000',
         type: 'option',
         isAlias: false,
         key: 'digits-000',
@@ -338,7 +338,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
       },
       {
         index: 5,
-        arg: 'trailing\t tab',
+        raw: 'trailing\t tab',
         type: 'argument',
       },
     ],

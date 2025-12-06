@@ -4,7 +4,7 @@ import { TypeNoValueSchema } from './no-value'
 import { TypeNumberSchema } from './number'
 import { TypeStringSchema } from './string'
 
-export class PrimitiveUnionSchema extends TypeSchemaBase {
+export class TypePrimitiveUnionSchema extends TypeSchemaBase {
   constructor(
     public types: (
       | TypeNoValueSchema
