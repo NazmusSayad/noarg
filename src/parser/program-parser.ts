@@ -1,6 +1,7 @@
 import {
   NoArgDuplicateOptionValueError,
   NoArgInternalError,
+  NoArgPrimaryArgumentError,
   NoArgTypeError,
 } from '@/lib/errors'
 import {
@@ -17,6 +18,7 @@ import { InternalASTArgumentNode, InternalASTNode } from './ast.type'
 import { NodeParserAST } from './node-parser'
 import { OptionRecordEntry } from './node-parser.type'
 import {
+  InternalArgumentSchemaResultType,
   InternalOptionSchemaResultType,
   InternalProgramParserOptions,
   InternalProgramParserResult,
@@ -60,7 +62,7 @@ export class ProgramParser extends NodeParserAST {
 
   private async parseOptions(
     optionsRecord: Record<string, OptionRecordEntry>
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Record<string, InternalOptionSchemaResultType>> {
     const result: Record<string, InternalOptionSchemaResultType> = {}
 
     for (const { name } of this.config.options) {
@@ -110,17 +112,60 @@ export class ProgramParser extends NodeParserAST {
   }
 
   private async parseArguments(
-    _argumentsList: InternalASTArgumentNode[]
+    argumentsList: InternalASTArgumentNode[]
   ): Promise<
     Pick<
       InternalProgramParserResult,
       'primaryArguments' | 'optionalArguments' | 'listArguments'
     >
   > {
+    type ResultRecord = Record<string, InternalArgumentSchemaResultType>
+
+    const primaryArguments: ResultRecord = {}
+    const optionalArguments: Partial<ResultRecord> = {}
+    const listArguments: InternalArgumentSchemaResultType[] = []
+
+    const primaryArgumentsCount = this.config.primaryArguments.length
+    const optionalArgumentsCount = this.config.optionalArguments.length
+
+    const primaryArgumentsList = argumentsList.slice(0, primaryArgumentsCount)
+    for (let i = 0; i < primaryArgumentsCount; i++) {
+      const argument = primaryArgumentsList[i]
+      if (argument === undefined) {
+        throw new NoArgPrimaryArgumentError(i)
+      }
+
+      const schema = this.config.primaryArguments[i]
+      const value = schema.type.parse(argument.raw)
+      primaryArguments[schema.name] = value as InternalArgumentSchemaResultType
+    }
+
+    const optionalArgumentsList = argumentsList.slice(
+      primaryArgumentsCount,
+      primaryArgumentsCount + optionalArgumentsCount
+    )
+    for (let i = 0; i < optionalArgumentsCount; i++) {
+      const argument = optionalArgumentsList[i]
+      if (argument === undefined) {
+        continue
+      }
+
+      const schema = this.config.optionalArguments[i]
+      const value = schema.type.parse(argument.raw)
+      optionalArguments[schema.name] = value as InternalArgumentSchemaResultType
+    }
+
+    const listArgumentsList = argumentsList.slice(
+      primaryArgumentsCount + optionalArgumentsCount
+    )
+    if (!this.config.listArguments) {
+      throw new NoArgInternalError('List arguments are not supported')
+    }
+
     return {
-      primaryArguments: [],
-      optionalArguments: [],
-      listArguments: [],
+      primaryArguments,
+      optionalArguments,
+      listArguments,
     }
   }
 

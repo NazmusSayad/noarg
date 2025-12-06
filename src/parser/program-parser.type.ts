@@ -20,16 +20,18 @@ export type InternalOptionSchemaType =
   | TypeArraySchema
   | TypeTupleSchema
 
-export type InternalOptionSchemaResultType =
-  | (string | boolean | number)
-  | (string | boolean | number)[]
-
 export type InternalArgumentSchemaType =
   | TypePrimitiveUnionSchema
   | TypeBooleanSchema
   | TypeStringSchema
   | TypeNumberSchema
   | TypeEnumSchema
+
+export type InternalOptionSchemaResultType =
+  | (string | boolean | number)
+  | (string | boolean | number)[]
+
+export type InternalArgumentSchemaResultType = string | boolean | number
 
 export type InternalProgramParserArgumentEntry = {
   name: string
@@ -87,8 +89,8 @@ export type InternalProgramParserOptions = {
 }
 
 export type InternalProgramParserResult = {
-  primaryArguments: string[]
-  optionalArguments: string[]
-  listArguments: string[]
-  options: Record<string, unknown>
+  options: Record<string, InternalOptionSchemaResultType>
+  primaryArguments: Record<string, InternalArgumentSchemaResultType>
+  optionalArguments: Partial<Record<string, InternalArgumentSchemaResultType>>
+  listArguments: InternalArgumentSchemaResultType[]
 }

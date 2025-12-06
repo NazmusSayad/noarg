@@ -17,7 +17,12 @@ const programParser = new ProgramParser({
 
   subPrograms: [],
 
-  primaryArguments: [],
+  primaryArguments: [
+    {
+      name: 'arg1',
+      type: new TypeStringSchema({}),
+    },
+  ],
 
   optionalArguments: [],
 
@@ -104,6 +109,8 @@ const parsedArguments = parseArgsToAST([
 
   '--enum',
   'false',
+
+  'argument-1',
 ])
 
 programParser
