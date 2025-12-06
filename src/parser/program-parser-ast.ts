@@ -17,7 +17,10 @@ import {
 } from './program-parser.type'
 
 export class ProgramParserAST {
-  constructor(public config: InternalProgramParserOptions) {}
+  protected config: InternalProgramParserOptions
+  constructor(config: InternalProgramParserOptions) {
+    this.config = config
+  }
 
   protected async parse(args: InternalASTNode[]): Promise<{
     optionsRecord: Record<string, OptionRecordEntry>

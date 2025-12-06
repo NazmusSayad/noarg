@@ -8,7 +8,7 @@ import {
 } from './program-parser.type'
 
 export class ProgramParser extends ProgramParserAST {
-  constructor(public config: InternalProgramParserOptions) {
+  constructor(protected config: InternalProgramParserOptions) {
     super(config)
   }
 
