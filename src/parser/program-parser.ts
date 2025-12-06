@@ -78,11 +78,12 @@ export class ProgramParser {
         if (!node.isAlias) {
           tempOption = optionsRecord[node.key]
         } else {
-          const aliasParsed = this.detectAliases(node)
-
-          if (typeof aliasParsed === 'string') {
-            tempOption = optionsRecord[aliasParsed]
+          const directMatchOption = this.findOption(node)
+          if (directMatchOption) {
+            tempOption = optionsRecord[directMatchOption.name]
           } else {
+            // This should only happen for NoValue aliases
+            const aliasParsed = this.splitAliasAndFindOptions(node)
             for (const alias of aliasParsed) {
               tempOption = optionsRecord[alias]
               if (!tempOption) {
@@ -191,15 +192,21 @@ export class ProgramParser {
     }
   }
 
-  private detectAliases(node: InternalASTOptionNode): string | string[] {
+  private findOption(
+    node: InternalASTOptionNode
+  ): InternalProgramParserOptionEntry | null {
     for (const option of this.config.options) {
-      for (const alias of option.aliases) {
-        if (alias === node.key) {
-          return option.name
-        }
+      if (option.name === node.key) {
+        return option
       }
     }
 
+    return null
+  }
+
+  private splitAliasAndFindOptions(
+    node: InternalASTOptionNode
+  ): string | string[] {
     const splitted = node.key.split('')
     const splittedOptions: string[] = []
 
