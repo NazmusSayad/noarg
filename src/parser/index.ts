@@ -1,4 +1,6 @@
 export * from './ast'
 export * from './ast.type'
 export * from './program-parser'
+export * from './program-parser-ast'
+export * from './program-parser-ast.type'
 export * from './program-parser.type'

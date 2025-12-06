@@ -1,24 +1,16 @@
-import {
-  NoArgClientError,
-  NoArgEmptyOptionValueError,
-  NoArgInternalError,
-  NoArgUnknownOptionError,
-} from '@/constants/errors'
-import { TypeNoValueSchema } from '@/schema'
-import {
-  InternalASTArgumentNode,
-  InternalASTNode,
-  InternalASTOptionNode,
-} from './ast.type'
+import { InternalASTArgumentNode, InternalASTNode } from './ast.type'
+import { ProgramParserAST } from './program-parser-ast'
+import { OptionRecordEntry } from './program-parser-ast.type'
 import {
   InternalOptionSchemaResultType,
-  InternalProgramParserOptionEntry,
   InternalProgramParserOptions,
   InternalProgramParserResult,
 } from './program-parser.type'
 
-export class ProgramParser {
-  constructor(public config: InternalProgramParserOptions) {}
+export class ProgramParser extends ProgramParserAST {
+  constructor(public config: InternalProgramParserOptions) {
+    super(config)
+  }
 
   public async run(
     args: InternalASTNode[]
@@ -39,132 +31,16 @@ export class ProgramParser {
     }
 
     const result = await this.parse(args)
-    return [this.config.id, result]
-  }
+    const optionsResult = await this.parseOptions(result.optionsRecord)
+    const argumentsResult = await this.parseArguments(result.argumentsList)
 
-  private async parse(
-    args: InternalASTNode[]
-  ): Promise<InternalProgramParserResult> {
-    const argumentsList: InternalASTArgumentNode[] = []
-    const optionsRecord: Record<string, OptionRecordEntry> = Object.fromEntries(
-      this.config.options.map((option) => [
-        option.name,
-        {
-          keys: [],
-          values: [],
-          schema: option,
-        } satisfies OptionRecordEntry,
-      ])
-    )
-
-    let currentOption:
-      | (OptionRecordEntry & { node: InternalASTOptionNode })
-      | null = null
-
-    args.forEach((node) => {
-      if (node.type === 'option') {
-        // Handle if there already a option in queue
-        if (currentOption) {
-          if (currentOption.schema.type instanceof TypeNoValueSchema) {
-            currentOption.keys.push(node)
-            currentOption = null
-            return
-          }
-
-          throw new NoArgEmptyOptionValueError(node.id, node.arg)
-        }
-
-        let tempOption: OptionRecordEntry | null = null
-
-        if (!node.isAlias) {
-          tempOption = optionsRecord[node.key]
-        } else {
-          const directMatchOption = this.findOption(node)
-          if (directMatchOption) {
-            tempOption = optionsRecord[directMatchOption.name]
-          } else {
-            // This should only happen for NoValue aliases
-            const aliasParsed = this.splitAliasAndFindOptions(node)
-            for (const alias of aliasParsed) {
-              tempOption = optionsRecord[alias]
-              if (!tempOption) {
-                throw new NoArgUnknownOptionError(node.id, node.arg)
-              }
-
-              tempOption.keys.push(node)
-            }
-
-            currentOption = null
-            return
-          }
-        }
-
-        if (!tempOption) {
-          throw new NoArgUnknownOptionError(node.id, node.arg)
-        }
-
-        if (tempOption.schema.type instanceof TypeNoValueSchema) {
-          tempOption.keys.push(node)
-          currentOption = null
-          return
-        }
-
-        if (node.value !== null) {
-          tempOption.keys.push(node)
-          tempOption.values.push({
-            valueNode: node,
-            valueKeyNode: node,
-          })
-        } else {
-          tempOption.keys.push(node)
-          currentOption = { ...tempOption, node }
-        }
-
-        return
-      }
-
-      if (currentOption) {
-        currentOption.values.push({
-          valueNode: node,
-          valueKeyNode: currentOption.node,
-        })
-
-        currentOption = null
-        return
-      }
-
-      argumentsList.push(node)
-    })
-
-    if (currentOption) {
-      const currentOptionEnd = currentOption as OptionRecordEntry
-      currentOption = null
-
-      if (currentOptionEnd.schema.type instanceof TypeNoValueSchema) {
-        const lastNode = args[args.length - 1]
-        if (lastNode.type !== 'option') {
-          throw new NoArgInternalError(
-            `Expected option at end for ${currentOptionEnd.schema.name} but ended with ${lastNode.type}`
-          )
-        }
-
-        currentOptionEnd.keys.push(lastNode)
-      } else {
-        throw new NoArgClientError(
-          `Expected value at end for ${currentOptionEnd.schema.name} but ended`
-        )
-      }
-    }
-
-    const optionsResult = await this.parseOptions(optionsRecord)
-    const argumentsResult = await this.parseArguments(argumentsList)
-
-    return {
-      options: optionsResult,
-      primaryArguments: argumentsResult.primary,
-      optionalArguments: argumentsResult.optional,
-      listArguments: argumentsResult.list,
-    }
+    return [
+      this.config.id,
+      {
+        options: optionsResult,
+        ...argumentsResult,
+      },
+    ]
   }
 
   private async parseOptions(
@@ -183,62 +59,16 @@ export class ProgramParser {
 
   private async parseArguments(
     _argumentsList: InternalASTArgumentNode[]
-  ): Promise<ArgumentsParserResult> {
+  ): Promise<
+    Pick<
+      InternalProgramParserResult,
+      'primaryArguments' | 'optionalArguments' | 'listArguments'
+    >
+  > {
     return {
-      primary: [],
-      optional: [],
-      list: [],
+      primaryArguments: [],
+      optionalArguments: [],
+      listArguments: [],
     }
   }
-
-  private findOption(
-    node: InternalASTOptionNode
-  ): InternalProgramParserOptionEntry | null {
-    for (const option of this.config.options) {
-      if (option.name === node.key) {
-        return option
-      }
-    }
-
-    return null
-  }
-
-  private splitAliasAndFindOptions(
-    node: InternalASTOptionNode
-  ): string | string[] {
-    const splitted = node.key.split('')
-    const splittedOptions: string[] = []
-
-    for (const key of splitted) {
-      const option = this.config.options.find((option) =>
-        option.aliases.includes(key)
-      )
-
-      if (option?.type instanceof TypeNoValueSchema) {
-        splittedOptions.push(option.name)
-      }
-    }
-
-    if (splittedOptions.length === splitted.length) {
-      return splittedOptions
-    }
-
-    throw new NoArgUnknownOptionError(node.id, node.arg)
-  }
-}
-
-type OptionRecordEntry = {
-  schema: InternalProgramParserOptionEntry
-
-  keys: InternalASTOptionNode[]
-  values: {
-    valueNode: InternalASTNode
-    valueKeyNode: InternalASTOptionNode
-  }[]
-}
-
-type ArgumentsParserResult = {
-  primary: string[]
-  optional: string[]
-  list: string[]
 }
