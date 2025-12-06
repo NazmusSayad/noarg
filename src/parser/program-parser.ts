@@ -1,8 +1,9 @@
 import {
   NoArgDuplicateOptionValueError,
-  NoArgInternalError,
   NoArgPrimaryArgumentError,
   NoArgTypeError,
+  NoArgUnexpectedError,
+  NoArgUnknownArgumentError,
 } from '@/lib/errors'
 import {
   TypeArraySchema,
@@ -68,7 +69,7 @@ export class ProgramParser extends NodeParserAST {
     for (const { name } of this.config.options) {
       const record = optionsRecord[name]
       if (!record) {
-        throw new NoArgInternalError(
+        throw new NoArgUnexpectedError(
           `Option ${name} not found in options record`
         )
       }
@@ -129,10 +130,17 @@ export class ProgramParser extends NodeParserAST {
     const optionalArgumentsCount = this.config.optionalArguments.length
 
     const primaryArgumentsList = argumentsList.slice(0, primaryArgumentsCount)
+    if (primaryArgumentsList.length !== primaryArgumentsCount) {
+      throw new NoArgPrimaryArgumentError(
+        primaryArgumentsCount,
+        primaryArgumentsList.length
+      )
+    }
+
     for (let i = 0; i < primaryArgumentsCount; i++) {
       const argument = primaryArgumentsList[i]
       if (argument === undefined) {
-        throw new NoArgPrimaryArgumentError(i)
+        throw new NoArgUnexpectedError(`Unexpected argument at index ${i}`)
       }
 
       const schema = this.config.primaryArguments[i]
@@ -158,8 +166,18 @@ export class ProgramParser extends NodeParserAST {
     const listArgumentsList = argumentsList.slice(
       primaryArgumentsCount + optionalArgumentsCount
     )
-    if (!this.config.listArguments) {
-      throw new NoArgInternalError('List arguments are not supported')
+
+    if (listArgumentsList.length > 0) {
+      const listArgumentsSchema = this.config.listArguments
+      if (!listArgumentsSchema) {
+        throw new NoArgUnknownArgumentError(listArgumentsList[0].index)
+      }
+
+      const values = listArgumentsList.map(({ raw }) =>
+        listArgumentsSchema.type.parse(raw)
+      )
+
+      listArguments.push(...(values as InternalArgumentSchemaResultType[]))
     }
 
     return {

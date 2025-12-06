@@ -24,9 +24,17 @@ const programParser = new ProgramParser({
     },
   ],
 
-  optionalArguments: [],
+  optionalArguments: [
+    {
+      name: 'arg2',
+      type: new TypeStringSchema({}),
+    },
+  ],
 
-  listArguments: null,
+  listArguments: {
+    name: 'list',
+    type: new TypeStringSchema({}),
+  },
 
   options: [
     {
@@ -111,6 +119,10 @@ const parsedArguments = parseArgsToAST([
   'false',
 
   'argument-1',
+  'argument-2',
+  'argument-3',
+  'argument-4',
+  'argument-5',
 ])
 
 programParser

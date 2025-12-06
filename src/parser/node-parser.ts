@@ -1,7 +1,7 @@
 import {
   NoArgClientError,
   NoArgEmptyOptionValueError,
-  NoArgInternalError,
+  NoArgUnexpectedError,
   NoArgUnknownOptionError,
 } from '@/lib/errors'
 import { TypeNoValueSchema } from '@/schema'
@@ -124,7 +124,7 @@ export class NodeParserAST {
       if (currentOptionEnd.schema.type instanceof TypeNoValueSchema) {
         const lastNode = args[args.length - 1]
         if (lastNode.type !== 'option') {
-          throw new NoArgInternalError(
+          throw new NoArgUnexpectedError(
             `Expected option at end for ${currentOptionEnd.schema.name} but ended with ${lastNode.type}`
           )
         }

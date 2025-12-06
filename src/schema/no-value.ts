@@ -1,4 +1,4 @@
-import { NoArgInternalError } from '@/lib/errors'
+import { NoArgUnexpectedError } from '@/lib/errors'
 import { TypeSchema, TypeSchemaOptions } from './interface'
 
 export type TypeNoValueSchemaOptions = TypeSchemaOptions<{}>
@@ -11,6 +11,6 @@ export class TypeNoValueSchema<
   constructor(private options: T) {}
 
   public parse(_value: unknown): void {
-    throw new NoArgInternalError(`This schema should not be used`)
+    throw new NoArgUnexpectedError(`This schema should not be used`)
   }
 }
