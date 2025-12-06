@@ -4,7 +4,7 @@ import { InternalASTNode } from './ast.type'
 const OPTION_REGEX = /^(?<i>--?)(?<k>[^=]+)(=(?<v>.+)?)?$/
 const OPTION_VALID_KEY_REGEX = /^([a-zA-Z0-9-]+)?[a-zA-Z0-9]$/
 
-export function parseProgramArguments(args: string[]): InternalASTNode[] {
+export function parseArgsToAST(args: string[]): InternalASTNode[] {
   return args.map((arg, index) => {
     if (arg.startsWith('-')) {
       const match = arg.match(OPTION_REGEX)
@@ -26,7 +26,7 @@ export function parseProgramArguments(args: string[]): InternalASTNode[] {
       }
 
       return {
-        id: index.toString(),
+        index,
         isAlias: i === '-',
         type: 'option',
 
@@ -37,7 +37,7 @@ export function parseProgramArguments(args: string[]): InternalASTNode[] {
     }
 
     return {
-      id: index.toString(),
+      index,
       type: 'argument',
       arg,
     }

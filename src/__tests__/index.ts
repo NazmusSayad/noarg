@@ -1,5 +1,5 @@
 import { NoArgNodeError } from '@/constants/errors'
-import { parseProgramArguments, ProgramParser } from '@/parser'
+import { parseArgsToAST, ProgramParser } from '@/parser'
 import { TypeNoValueSchema, TypeStringSchema } from '@/schema'
 
 const programParser = new ProgramParser({
@@ -38,7 +38,7 @@ const programParser = new ProgramParser({
   },
 })
 
-const parsedArguments = parseProgramArguments([
+const parsedArguments = parseArgsToAST([
   '--a=<a-value>',
   '--b',
   '<b-value1>',
@@ -59,7 +59,7 @@ programParser
   .catch((err) => {
     if (err instanceof NoArgNodeError) {
       const colorizedArgs = parsedArguments.map((arg) => {
-        if (arg.id === err.id) {
+        if (arg.index === err.index) {
           return `\x1b[31m${arg.arg}\x1b[0m`
         }
 

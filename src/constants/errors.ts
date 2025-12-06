@@ -18,7 +18,7 @@ export class NoArgSyntaxError extends NoArgClientError {
 
 export class NoArgNodeError extends NoArgClientError {
   constructor(
-    public id: string,
+    public index: number,
     message: string
   ) {
     super(message)
@@ -26,13 +26,13 @@ export class NoArgNodeError extends NoArgClientError {
 }
 
 export class NoArgUnknownOptionError extends NoArgNodeError {
-  constructor(id: string, option: string) {
-    super(id, `Option ${option} is unknown`)
+  constructor(index: number, option: string) {
+    super(index, `Option ${option} is unknown`)
   }
 }
 
 export class NoArgEmptyOptionValueError extends NoArgNodeError {
-  constructor(id: string, option: string) {
-    super(id, `Expected option value bug received option ${option}`)
+  constructor(index: number, option: string) {
+    super(index, `Expected option value but received option ${option}`)
   }
 }

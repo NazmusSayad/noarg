@@ -1,7 +1,7 @@
 import { Prettify } from '@/utils/utils.type'
 
 type AstBaseNode = {
-  id: string
+  index: number
 }
 
 export type InternalASTOptionNode = Prettify<

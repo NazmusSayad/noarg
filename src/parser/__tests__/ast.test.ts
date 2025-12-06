@@ -1,6 +1,6 @@
 import { NoArgSyntaxError } from '@/constants/errors'
 import { describe, expect, it } from 'vitest'
-import { parseProgramArguments } from '../ast'
+import { parseArgsToAST } from '../ast'
 import { InternalASTNode } from '../ast.type'
 
 const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
@@ -8,12 +8,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     input: ['file.txt', '--verbose', 'notes'],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: 'file.txt',
         type: 'argument',
       },
       {
-        id: '1',
+        index: 1,
         arg: '--verbose',
         type: 'option',
         isAlias: false,
@@ -21,7 +21,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '2',
+        index: 2,
         arg: 'notes',
         type: 'argument',
       },
@@ -31,7 +31,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     input: ['-a', '--beta=2', '-c=see', 'z'],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: '-a',
         type: 'option',
         isAlias: true,
@@ -39,7 +39,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '1',
+        index: 1,
         arg: '--beta=2',
         type: 'option',
         isAlias: false,
@@ -47,7 +47,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '2',
       },
       {
-        id: '2',
+        index: 2,
         arg: '-c=see',
         type: 'option',
         isAlias: true,
@@ -55,7 +55,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'see',
       },
       {
-        id: '3',
+        index: 3,
         arg: 'z',
         type: 'argument',
       },
@@ -72,7 +72,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     ],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: '--mix-9=value-123_+=[]',
         type: 'option',
         isAlias: false,
@@ -80,7 +80,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'value-123_+=[]',
       },
       {
-        id: '1',
+        index: 1,
         arg: '--chain=a=b=c',
         type: 'option',
         isAlias: false,
@@ -88,7 +88,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'a=b=c',
       },
       {
-        id: '2',
+        index: 2,
         arg: '--empty=',
         type: 'option',
         isAlias: false,
@@ -96,12 +96,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '3',
+        index: 3,
         arg: 'ARG',
         type: 'argument',
       },
       {
-        id: '4',
+        index: 4,
         arg: '-x',
         type: 'option',
         isAlias: true,
@@ -109,7 +109,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '5',
+        index: 5,
         arg: '--Path=C:\\temp\\file.txt',
         type: 'option',
         isAlias: false,
@@ -129,7 +129,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     ],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: '--multi-part-flag',
         type: 'option',
         isAlias: false,
@@ -137,12 +137,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '1',
+        index: 1,
         arg: 'arg-1',
         type: 'argument',
       },
       {
-        id: '2',
+        index: 2,
         arg: '--numbers-123',
         type: 'option',
         isAlias: false,
@@ -150,7 +150,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '3',
+        index: 3,
         arg: '-Z=99',
         type: 'option',
         isAlias: true,
@@ -158,7 +158,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '99',
       },
       {
-        id: '4',
+        index: 4,
         arg: '--caps-lock=ON',
         type: 'option',
         isAlias: false,
@@ -166,7 +166,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'ON',
       },
       {
-        id: '5',
+        index: 5,
         arg: 'final',
         type: 'argument',
       },
@@ -184,7 +184,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     ],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: '--url=https://example.com/path?query=1&list[]=2',
         type: 'option',
         isAlias: false,
@@ -192,7 +192,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'https://example.com/path?query=1&list[]=2',
       },
       {
-        id: '1',
+        index: 1,
         arg: '-0==',
         type: 'option',
         isAlias: true,
@@ -200,12 +200,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '=',
       },
       {
-        id: '2',
+        index: 2,
         arg: 'plain.txt',
         type: 'argument',
       },
       {
-        id: '3',
+        index: 3,
         arg: '--mixCase=LoWeR-UPPER-123.!',
         type: 'option',
         isAlias: false,
@@ -213,7 +213,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'LoWeR-UPPER-123.!',
       },
       {
-        id: '4',
+        index: 4,
         arg: '--dash-only',
         type: 'option',
         isAlias: false,
@@ -221,7 +221,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '5',
+        index: 5,
         arg: '-nine9',
         type: 'option',
         isAlias: true,
@@ -229,7 +229,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '6',
+        index: 6,
         arg: 'dots.and-dashes',
         type: 'argument',
       },
@@ -246,7 +246,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     ],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: '--9nine=99',
         type: 'option',
         isAlias: false,
@@ -254,12 +254,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '99',
       },
       {
-        id: '1',
+        index: 1,
         arg: 'ASCII-[]{}^`~',
         type: 'argument',
       },
       {
-        id: '2',
+        index: 2,
         arg: '-multi-word=value-with=equals',
         type: 'option',
         isAlias: true,
@@ -267,7 +267,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'value-with=equals',
       },
       {
-        id: '3',
+        index: 3,
         arg: '--CAPS-and-digits123=OK',
         type: 'option',
         isAlias: false,
@@ -275,7 +275,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'OK',
       },
       {
-        id: '4',
+        index: 4,
         arg: '--trail99=',
         type: 'option',
         isAlias: false,
@@ -283,7 +283,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: null,
       },
       {
-        id: '5',
+        index: 5,
         arg: 'final-arg',
         type: 'argument',
       },
@@ -300,12 +300,12 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
     ],
     expected: [
       {
-        id: '0',
+        index: 0,
         arg: '\tleading-tab',
         type: 'argument',
       },
       {
-        id: '1',
+        index: 1,
         arg: '--tabbed=with\ttab',
         type: 'option',
         isAlias: false,
@@ -313,7 +313,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: 'with\ttab',
       },
       {
-        id: '2',
+        index: 2,
         arg: '--long-hyphen-chain=---===',
         type: 'option',
         isAlias: false,
@@ -321,7 +321,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '---===',
       },
       {
-        id: '3',
+        index: 3,
         arg: '-X==value=still',
         type: 'option',
         isAlias: true,
@@ -329,7 +329,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '=value=still',
       },
       {
-        id: '4',
+        index: 4,
         arg: '--digits-000=000',
         type: 'option',
         isAlias: false,
@@ -337,7 +337,7 @@ const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
         value: '000',
       },
       {
-        id: '5',
+        index: 5,
         arg: 'trailing\t tab',
         type: 'argument',
       },
@@ -372,11 +372,11 @@ describe('parseProgramArguments', () => {
   it.each(EXPECTED_AST_NODES)(
     'parses $input correctly',
     ({ input, expected }) => {
-      expect(parseProgramArguments(input)).toEqual(expected)
+      expect(parseArgsToAST(input)).toEqual(expected)
     }
   )
 
   it.each(INVALID_ARGUMENTS)('throws for invalid argument: %s', (arg) => {
-    expect(() => parseProgramArguments([arg])).toThrow(NoArgSyntaxError)
+    expect(() => parseArgsToAST([arg])).toThrow(NoArgSyntaxError)
   })
 })
