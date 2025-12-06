@@ -1,7 +1,7 @@
 import { NoArgSyntaxError } from '@/constants/errors'
 import { describe, expect, it } from 'vitest'
-import { parseProgramArguments } from './ast'
-import { InternalASTNode } from './ast.type'
+import { parseProgramArguments } from '../ast'
+import { InternalASTNode } from '../ast.type'
 
 const EXPECTED_AST_NODES: { input: string[]; expected: InternalASTNode[] }[] = [
   {
