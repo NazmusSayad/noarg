@@ -11,7 +11,7 @@ export class TypeStringSchema implements TypeSchema<string> {
 
   constructor(private options: TypeStringSchemaOptions) {}
 
-  public parse(value: unknown): string {
+  public parse(value: unknown) {
     if (typeof value !== 'string') {
       throw new NoArgTypeError(`Expected string but received ${value}`)
     }

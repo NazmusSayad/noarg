@@ -8,7 +8,7 @@ export class TypeBooleanSchema implements TypeSchema<boolean> {
 
   constructor(private options: TypeBooleanSchemaOptions) {}
 
-  public parse(value: unknown): boolean {
+  public parse(value: unknown) {
     if (value === 'true' || value === 'yes' || value === true) {
       return true
     }

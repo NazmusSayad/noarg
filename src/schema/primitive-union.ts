@@ -13,7 +13,7 @@ export class TypePrimitiveUnionSchema implements TypeSchema<unknown> {
 
   constructor(private options: TypePrimitiveUnionSchemaOptions) {}
 
-  public parse(value: unknown): unknown {
+  public parse(value: unknown) {
     for (const type of this.options.types) {
       try {
         return type.parse(value)

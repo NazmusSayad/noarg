@@ -11,7 +11,7 @@ export class TypeArraySchema implements TypeSchema<unknown[]> {
 
   constructor(private options: TypeArraySchemaOptions) {}
 
-  public parse(value: unknown): unknown[] {
+  public parse(value: unknown) {
     if (!Array.isArray(value)) {
       throw new NoArgTypeError(`Expected array but received ${value}`)
     }
