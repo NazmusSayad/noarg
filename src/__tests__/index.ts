@@ -49,11 +49,10 @@ const parsedArguments = parseArgsToAST([
   '--silent',
   '-svf',
 
+  // '--string=test',
+
   '--string',
   'test',
-
-  // '--string',
-  // 'test',
 ])
 
 programParser

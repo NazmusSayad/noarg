@@ -1,6 +1,7 @@
 import {
   NoArgDuplicateOptionValueError,
   NoArgInternalError,
+  NoArgTypeError,
 } from '@/lib/errors'
 import {
   TypeArraySchema,
@@ -81,30 +82,25 @@ export class ProgramParser extends NodeParserAST {
         record.schema.type instanceof TypeNumberSchema ||
         record.schema.type instanceof TypeStringSchema
       ) {
-        if (record.keys.length > 1) {
-          const secondKey = record.keys[1]
-          throw new NoArgDuplicateOptionValueError(
-            secondKey.index,
-            secondKey.raw
-          )
+        const value = this.getSingleArgumentValue(record)
+
+        if (record.schema.required && value === null) {
+          throw new NoArgTypeError(`Option ${name} is required`)
         }
 
-        if (record.values.length > 1) {
-          const secondValue = record.values[1]
-          throw new NoArgDuplicateOptionValueError(
-            secondValue.optionNode.index,
-            secondValue.optionNode.raw
-          )
+        if (value !== null) {
+          const output = record.schema.type.parse(value)
+          result[name] = output as InternalOptionSchemaResultType
         }
-
-        console.log(record.values)
-        console.log(record.values.length)
       }
 
       if (
         record.schema.type instanceof TypeArraySchema ||
         record.schema.type instanceof TypeTupleSchema
       ) {
+        const values = this.getMultipleArgumentValues(record)
+        const output = record.schema.type.parse(values)
+        result[name] = output as InternalOptionSchemaResultType
       }
     }
 
@@ -124,5 +120,33 @@ export class ProgramParser extends NodeParserAST {
       optionalArguments: [],
       listArguments: [],
     }
+  }
+
+  private getSingleArgumentValue(input: OptionRecordEntry): string | null {
+    if (input.keys.length > 1) {
+      const secondKey = input.keys[1]
+      throw new NoArgDuplicateOptionValueError(secondKey.index, secondKey.raw)
+    }
+
+    if (input.values.length > 1) {
+      const secondValue = input.values[1]
+      throw new NoArgDuplicateOptionValueError(
+        secondValue.optionNode.index,
+        secondValue.optionNode.raw
+      )
+    }
+
+    const fv = input.values[0]?.valueNode
+    if (!fv) return null
+
+    const value = fv.type === 'option' ? fv.value! : fv.raw
+    return value ?? null
+  }
+
+  private getMultipleArgumentValues(input: OptionRecordEntry): string[] {
+    return input.values.map((value) => {
+      const fv = value.valueNode
+      return fv.type === 'option' ? fv.value! : fv.raw
+    })
   }
 }

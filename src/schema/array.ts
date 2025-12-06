@@ -1,7 +1,14 @@
-import { TypeSchemaBase } from './base'
+import { NoArgTypeError } from '@/lib/errors'
+import { TypeSchema } from './interface'
 
-export class TypeArraySchema extends TypeSchemaBase {
-  constructor() {
-    super()
+export class TypeArraySchema implements TypeSchema<unknown[]> {
+  constructor() {}
+
+  public parse(value: unknown): unknown[] {
+    if (!Array.isArray(value)) {
+      throw new NoArgTypeError(`Expected array but received ${value}`)
+    }
+
+    return value as unknown[]
   }
 }

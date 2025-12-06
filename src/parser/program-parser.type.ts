@@ -57,10 +57,12 @@ export type InternalProgramParserOptionEntry = {
   type: InternalOptionSchemaType
   aliases: string[]
 
-  global?: boolean
-  description?: string
+  required?: boolean
   askQuestion?: string
   defaultValue?: unknown
+
+  global?: boolean
+  description?: string
 }
 
 export type InternalProgramParserOptions = {
