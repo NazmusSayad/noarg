@@ -154,3 +154,35 @@ programParser
       console.error(err)
     }
   })
+
+// TEST
+;(async () => {
+  const sub1 = new ProgramParser({
+    id: 'sub-5',
+    command: 'sub1',
+    description: undefined,
+    subPrograms: [],
+    primaryArguments: [],
+    optionalArguments: [],
+    listArguments: null,
+    options: [],
+    config: {},
+  })
+
+  const root = new ProgramParser({
+    id: 'root-5',
+    command: 'root',
+    description: undefined,
+    subPrograms: [sub1],
+    primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
+    optionalArguments: [],
+    listArguments: null,
+    options: [{ name: 'opt1', type: new TypeNoValueSchema({}), aliases: [] }],
+    config: {},
+  })
+
+  const nodes = parseArgsToAST(['lead', '--opt1', 'sub1'])
+  const result = await root.run(nodes)
+
+  console.dir(result, { depth: null })
+})().catch(console.error)
