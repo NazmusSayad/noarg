@@ -1,4 +1,4 @@
-import { NoArgNodeError } from '@/constants/errors'
+import { NoArgNodeError } from '@/lib/errors'
 import { parseArgsToAST, ProgramParser } from '@/parser'
 import { TypeNoValueSchema } from '@/schema'
 

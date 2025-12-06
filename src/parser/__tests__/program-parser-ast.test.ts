@@ -2,7 +2,7 @@ import {
   NoArgClientError,
   NoArgEmptyOptionValueError,
   NoArgUnknownOptionError,
-} from '@/constants/errors'
+} from '@/lib/errors'
 import { TypeNoValueSchema, TypeNumberSchema, TypeStringSchema } from '@/schema'
 import { describe, expect, it } from 'vitest'
 import { parseArgsToAST } from '../ast'
