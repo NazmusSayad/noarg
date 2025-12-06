@@ -34,7 +34,7 @@ const programParser = new ProgramParser({
 
     {
       name: 'string',
-      type: new TypeStringSchema(),
+      type: new TypeStringSchema({}),
       aliases: [],
     },
   ],
@@ -52,8 +52,8 @@ const parsedArguments = parseArgsToAST([
   '--string',
   'test',
 
-  '--string',
-  'test',
+  // '--string',
+  // 'test',
 ])
 
 programParser

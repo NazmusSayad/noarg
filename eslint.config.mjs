@@ -80,6 +80,15 @@ export default [
       'prefer-arrow-callback': [2, { allowNamedFunctions: false }],
       'func-style': [2, 'declaration', { allowArrowFunctions: false }],
 
+      '@typescript-eslint/explicit-member-accessibility': [
+        2,
+        {
+          accessibility: 'explicit',
+          overrides: {
+            constructors: 'no-public',
+          },
+        },
+      ],
       '@typescript-eslint/naming-convention': [
         2,
         {
@@ -118,7 +127,7 @@ export default [
   {
     files: ['**/*.test.ts', '**/__tests__/*.ts'],
     rules: {
-      '@typescript-eslint/no-unused-vars': 0, 
+      '@typescript-eslint/no-unused-vars': 0,
       '@typescript-eslint/no-unsafe-call': 0,
       '@typescript-eslint/no-unsafe-assignment': 0,
       '@typescript-eslint/no-unsafe-member-access': 0,

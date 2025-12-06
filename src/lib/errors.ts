@@ -25,6 +25,12 @@ export class NoArgNodeError extends NoArgClientError {
   }
 }
 
+export class NoArgTypeError extends NoArgClientError {
+  constructor(message: string) {
+    super(`Validation error: ${message}`)
+  }
+}
+
 export class NoArgUnknownOptionError extends NoArgNodeError {
   constructor(index: number, option: string) {
     super(index, `Option ${option} is unknown`)

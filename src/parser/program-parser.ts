@@ -63,16 +63,16 @@ export class ProgramParser extends NodeParserAST {
   ): Promise<Record<string, unknown>> {
     const result: Record<string, InternalOptionSchemaResultType> = {}
 
-    for (const _option of this.config.options) {
-      const record = optionsRecord[_option.name]
+    for (const { name } of this.config.options) {
+      const record = optionsRecord[name]
       if (!record) {
         throw new NoArgInternalError(
-          `Option ${_option.name} not found in options record`
+          `Option ${name} not found in options record`
         )
       }
 
       if (record.schema.type instanceof TypeNoValueSchema) {
-        result[_option.name] = record.keys.length
+        result[name] = record.keys.length
       }
 
       if (
@@ -81,17 +81,24 @@ export class ProgramParser extends NodeParserAST {
         record.schema.type instanceof TypeNumberSchema ||
         record.schema.type instanceof TypeStringSchema
       ) {
-        console.log(record.values)
-        console.log(record.values.length)
+        if (record.keys.length > 1) {
+          const secondKey = record.keys[1]
+          throw new NoArgDuplicateOptionValueError(
+            secondKey.index,
+            secondKey.raw
+          )
+        }
 
         if (record.values.length > 1) {
           const secondValue = record.values[1]
-
           throw new NoArgDuplicateOptionValueError(
-            secondValue.valueNode.index,
+            secondValue.optionNode.index,
             secondValue.optionNode.raw
           )
         }
+
+        console.log(record.values)
+        console.log(record.values.length)
       }
 
       if (
