@@ -4,19 +4,19 @@ export class NoArgInternalError extends Error {
   }
 }
 
-export class NoArgUnexpectedError extends Error {
+export class NoArgClientError extends Error {
   constructor(message: string) {
     super(message)
   }
 }
 
-export class NoArgSyntaxError extends NoArgUnexpectedError {
+export class NoArgSyntaxError extends NoArgClientError {
   constructor(message: string) {
     super(`Syntax error: ${message}`)
   }
 }
 
-export class NoArgNodeError extends Error {
+export class NoArgNodeError extends NoArgClientError {
   constructor(
     public id: string,
     message: string

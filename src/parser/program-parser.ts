@@ -1,6 +1,7 @@
 import {
+  NoArgClientError,
   NoArgEmptyOptionValueError,
-  NoArgUnexpectedError,
+  NoArgInternalError,
   NoArgUnknownOptionError,
 } from '@/constants/errors'
 import { TypeNoValueSchema } from '@/schema'
@@ -138,21 +139,21 @@ export class ProgramParser {
     })
 
     if (currentOption) {
-      const co = currentOption as OptionRecordEntry
+      const currentOptionEnd = currentOption as OptionRecordEntry
       currentOption = null
 
-      if (co.schema.type instanceof TypeNoValueSchema) {
+      if (currentOptionEnd.schema.type instanceof TypeNoValueSchema) {
         const lastNode = args[args.length - 1]
         if (lastNode.type !== 'option') {
-          throw new NoArgUnexpectedError(
-            `Expected option at end for ${co.schema.name} but ended with ${lastNode.type}`
+          throw new NoArgInternalError(
+            `Expected option at end for ${currentOptionEnd.schema.name} but ended with ${lastNode.type}`
           )
         }
 
-        co.operandKeys.push(lastNode)
+        currentOptionEnd.operandKeys.push(lastNode)
       } else {
-        throw new NoArgUnexpectedError(
-          `Expected value at end for ${co.schema.name} but ended`
+        throw new NoArgClientError(
+          `Expected value at end for ${currentOptionEnd.schema.name} but ended`
         )
       }
     }
