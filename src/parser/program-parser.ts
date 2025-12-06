@@ -52,15 +52,17 @@ export class ProgramParser {
           schema: option,
           operandKeys: [],
           operandValues: [],
-          count: 0,
         } satisfies OptionRecordEntry,
       ])
     )
 
-    let currentOption: OptionRecordEntry | null = null
+    let currentOption:
+      | (OptionRecordEntry & { node: InternalASTOptionNode })
+      | null = null
 
     args.forEach((node) => {
       if (node.type === 'option') {
+        // Handle if there already a option in queue
         if (currentOption) {
           if (currentOption.schema.type instanceof TypeNoValueSchema) {
             currentOption.operandKeys.push(node)
@@ -71,23 +73,23 @@ export class ProgramParser {
           throw new NoArgEmptyOptionValueError(node.id, node.arg)
         }
 
-        let option: OptionRecordEntry | null = null
+        let tempOption: OptionRecordEntry | null = null
 
         if (!node.isAlias) {
-          option = optionsRecord[node.key]
+          tempOption = optionsRecord[node.key]
         } else {
           const aliasParsed = this.detectAliases(node)
 
           if (typeof aliasParsed === 'string') {
-            option = optionsRecord[aliasParsed]
+            tempOption = optionsRecord[aliasParsed]
           } else {
             for (const alias of aliasParsed) {
-              option = optionsRecord[alias]
-              if (!option) {
+              tempOption = optionsRecord[alias]
+              if (!tempOption) {
                 throw new NoArgUnknownOptionError(node.id, node.arg)
               }
 
-              option.operandKeys.push(node)
+              tempOption.operandKeys.push(node)
             }
 
             currentOption = null
@@ -95,23 +97,25 @@ export class ProgramParser {
           }
         }
 
-        if (!option) {
+        if (!tempOption) {
           throw new NoArgUnknownOptionError(node.id, node.arg)
         }
 
-        if (option.schema.type instanceof TypeNoValueSchema) {
-          option.operandKeys.push(node)
+        if (tempOption.schema.type instanceof TypeNoValueSchema) {
+          tempOption.operandKeys.push(node)
           currentOption = null
           return
         }
 
         if (node.value === null) {
-          option.operandKeys.push(node)
-          currentOption = option
+          tempOption.operandKeys.push(node)
+          currentOption = { ...tempOption, node }
         } else {
-          option.operandValues.push({
+          tempOption.operandKeys.push(node)
+          tempOption.operandValues.push({
             id: node.id,
             value: node.value,
+            source: node,
           })
         }
 
@@ -122,6 +126,7 @@ export class ProgramParser {
         currentOption.operandValues.push({
           id: node.id,
           value: node.arg,
+          source: currentOption.node,
         })
 
         currentOption = null
@@ -170,7 +175,7 @@ export class ProgramParser {
     for (const option of this.config.options) {
       const record = optionsRecord[option.name]
 
-      console.log(option, record)
+      console.dir(record, { depth: null })
     }
 
     return result
@@ -218,13 +223,11 @@ export class ProgramParser {
 
 type OptionRecordEntry = {
   schema: InternalProgramParserOptionEntry
-  count: number
-
   operandKeys: InternalASTOptionNode[]
-
   operandValues: {
     id: string
     value: string
+    source: InternalASTOptionNode
   }[]
 }
 
