@@ -4,6 +4,16 @@
 
 `noarg` is a lightweight Node.js package designed to simplify command-line argument parsing for CLI applications. With `noarg`, you can effortlessly define and parse command-line arguments and options, making it easier to build robust and user-friendly command-line interfaces.
 
+## 🔜 v4 coming in two weeks with:
+
+* Full GNU/POSIX-style argument support
+* Browser-compatible API
+* Zero dependencies, tree shakeable
+* More flexible configuration
+* Smarter help with typo suggestions (e.g. `--stutus` → “Did you mean `--status`?”)
+* Simpler schema declaration
+* Stronger test coverage (including full git/npm cli clone tested)
+
 ## Features
 
 - Fully type safe.
