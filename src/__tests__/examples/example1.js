@@ -64,4 +64,3 @@ const childApp = na.create('ChildApp', {
 })
 
 app.start()
-app.start(['-v', '1', '2', '3'])
