@@ -1,7 +1,7 @@
 /* eslint-disable */
 
-const app = na.createApp('App', {
-  description: 'App description',
+const program = na.createProgram('git', {
+  description: 'git is a version control system',
 
   arguments: [
     na.argument('name', String, {
@@ -16,10 +16,12 @@ const app = na.createApp('App', {
 
     na.option('age', Number, {
       description: 'A number option with multiple values',
+      global: true,
     }),
 
     na.option('tags', [String], {
       description: 'A string option with multiple values',
+      aliases: ['t'],
     }),
 
     na.option('isAdmin', Boolean, {
@@ -43,7 +45,7 @@ const app = na.createApp('App', {
   },
 })
 
-const childApp = na.create('ChildApp', {
+program.create('commit', {
   description: 'ChildApp description',
 
   arguments: [
@@ -59,8 +61,9 @@ const childApp = na.create('ChildApp', {
   ],
 
   handle({ args, options }) {
+    options.age // The number option with multiple values
     console.log('ChildApp handle')
   },
 })
 
-app.start()
+program.start()
