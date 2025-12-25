@@ -1,3 +1,4 @@
 {
-	"*": ["biome check --write"]
+  "*.{js,jsx,ts,tsx}": ["eslint --fix --max-warnings 5"],
+  "*.{json,md,yml,yaml,css,scss}": ["prettier --write"]
 }

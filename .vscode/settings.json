@@ -1,9 +1,3 @@
 {
-	"cSpell.words": ["Filenaming", "Instantiator", "noarg"],
-	"editor.codeActionsOnSave": {
-		"source.fixAll.biome": "explicit"
-	},
-	"[typescript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	}
+  "cSpell.words": ["noarg"]
 }

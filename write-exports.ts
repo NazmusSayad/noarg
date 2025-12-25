@@ -30,7 +30,7 @@ Object.keys(tsDownConfig.entry ?? {}).forEach((key) => {
 })
 
 console.log('📢 Writing package.json...')
-fs.writeFileSync('./package.json', JSON.stringify(pkgJSON, null, 2))
+fs.writeFileSync('./package.json', JSON.stringify(pkgJSON))
 
 console.log('✨ Running prettier...')
 spawnSync('npx', ['prettier', '--write', './package.json'])

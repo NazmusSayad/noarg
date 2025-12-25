@@ -1,1 +1,1 @@
-# noarg
+# npm package
