@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "./dist",
     "target": "ES2018",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -10,9 +10,7 @@
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "paths": { "@/*": ["./src/*"] }
   },
   "include": ["./src"]
 }
