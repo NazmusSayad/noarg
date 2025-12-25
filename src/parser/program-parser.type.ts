@@ -1,96 +1,96 @@
 import {
-  TypeArraySchema,
-  TypeBooleanSchema,
-  TypeEnumSchema,
-  TypeNoValueSchema,
-  TypeNumberSchema,
-  TypePrimitiveUnionSchema,
-  TypeStringSchema,
-  TypeTupleSchema,
+	TypeArraySchema,
+	TypeBooleanSchema,
+	TypeEnumSchema,
+	TypeNoValueSchema,
+	TypeNumberSchema,
+	TypePrimitiveUnionSchema,
+	TypeStringSchema,
+	TypeTupleSchema,
 } from '@/schema'
 import { ProgramParser } from './program-parser'
 
 export type InternalOptionSchemaType =
-  | TypePrimitiveUnionSchema
-  | TypeBooleanSchema
-  | TypeStringSchema
-  | TypeNumberSchema
-  | TypeEnumSchema
-  | TypeNoValueSchema
-  | TypeArraySchema
-  | TypeTupleSchema
+	| TypePrimitiveUnionSchema
+	| TypeBooleanSchema
+	| TypeStringSchema
+	| TypeNumberSchema
+	| TypeEnumSchema
+	| TypeNoValueSchema
+	| TypeArraySchema
+	| TypeTupleSchema
 
 export type InternalArgumentSchemaType =
-  | TypePrimitiveUnionSchema
-  | TypeBooleanSchema
-  | TypeStringSchema
-  | TypeNumberSchema
-  | TypeEnumSchema
+	| TypePrimitiveUnionSchema
+	| TypeBooleanSchema
+	| TypeStringSchema
+	| TypeNumberSchema
+	| TypeEnumSchema
 
 export type InternalOptionSchemaResultType =
-  | (string | boolean | number)
-  | (string | boolean | number)[]
+	| (string | boolean | number)
+	| (string | boolean | number)[]
 
 export type InternalArgumentSchemaResultType = string | boolean | number
 
 export type InternalProgramParserArgumentEntry = {
-  name: string
-  type: InternalArgumentSchemaType
+	name: string
+	type: InternalArgumentSchemaType
 
-  defaultValue?: unknown
-  description?: string
-  askQuestion?: string
+	defaultValue?: unknown
+	description?: string
+	askQuestion?: string
 }
 
 export type InternalProgramParserOptionalArgumentEntry = {
-  name: string
-  type: InternalArgumentSchemaType
+	name: string
+	type: InternalArgumentSchemaType
 
-  description?: string
+	description?: string
 }
 
 export type InternalProgramParserListArgumentEntry = {
-  name: string
-  type: InternalArgumentSchemaType
+	name: string
+	type: InternalArgumentSchemaType
 
-  description?: string
-  minLength?: number
-  maxLength?: number
+	description?: string
+	minLength?: number
+	maxLength?: number
 }
 
 export type InternalProgramParserOptionEntry = {
-  name: string
-  type: InternalOptionSchemaType
-  aliases: string[]
+	name: string
+	type: InternalOptionSchemaType
+	aliases: string[]
 
-  required?: boolean
-  askQuestion?: string
-  defaultValue?: unknown
+	required?: boolean
+	askQuestion?: string
+	defaultValue?: unknown
 
-  global?: boolean
-  description?: string
+	global?: boolean
+	description?: string
 }
 
 export type InternalProgramParserOptions = {
-  id: string
-  command: string
-  description: string | undefined
+	id: string
+	command: string
+	description: string | undefined
 
-  subPrograms: ProgramParser[]
-  primaryArguments: InternalProgramParserArgumentEntry[]
-  optionalArguments: InternalProgramParserOptionalArgumentEntry[]
-  listArguments: InternalProgramParserListArgumentEntry | null
-  options: InternalProgramParserOptionEntry[]
+	subPrograms: ProgramParser[]
+	primaryArguments: InternalProgramParserArgumentEntry[]
+	optionalArguments: InternalProgramParserOptionalArgumentEntry[]
+	listArguments: InternalProgramParserListArgumentEntry | null
+	options: InternalProgramParserOptionEntry[]
 
-  config: {
-    trailingArguments?: boolean
-    doNotSplitArgumentsByComma?: boolean
-  }
+	config: {
+		trailingArguments?: boolean
+		doNotSplitArgumentsByComma?: boolean
+	}
 }
 
 export type InternalProgramParserResult = {
-  options: Record<string, InternalOptionSchemaResultType>
-  primaryArguments: Record<string, InternalArgumentSchemaResultType>
-  optionalArguments: Partial<Record<string, InternalArgumentSchemaResultType>>
-  listArguments: InternalArgumentSchemaResultType[]
+	options: Record<string, InternalOptionSchemaResultType>
+	primaryArguments: Record<string, InternalArgumentSchemaResultType>
+	optionalArguments: Partial<Record<string, InternalArgumentSchemaResultType>>
+	listArguments: InternalArgumentSchemaResultType[]
 }

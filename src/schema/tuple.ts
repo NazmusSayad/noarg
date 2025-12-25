@@ -5,29 +5,30 @@ import { TypeNumberSchema } from './number'
 import { TypeStringSchema } from './string'
 
 export type TypeTupleSchemaOptions = TypeSchemaOptions<{
-  schema: (TypeStringSchema | TypeNumberSchema | TypeBooleanSchema)[]
+	schema: (TypeStringSchema | TypeNumberSchema | TypeBooleanSchema)[]
 }>
 
 export class TypeTupleSchema<
-  const T extends TypeTupleSchemaOptions = TypeTupleSchemaOptions,
-> implements TypeSchema<unknown[]> {
-  public name = 'tuple' as const
+	const T extends TypeTupleSchemaOptions = TypeTupleSchemaOptions,
+> implements TypeSchema<unknown[]>
+{
+	public name = 'tuple' as const
 
-  constructor(private options: T) {}
+	constructor(private options: T) {}
 
-  public parse(value: unknown) {
-    if (!Array.isArray(value)) {
-      throw new NoArgTypeError(`Expected array but received ${value}`)
-    }
+	public parse(value: unknown) {
+		if (!Array.isArray(value)) {
+			throw new NoArgTypeError(`Expected array but received ${value}`)
+		}
 
-    if (value.length !== this.options.schema.length) {
-      throw new NoArgTypeError(
-        `Expected tuple of length ${this.options.schema.length} but received ${value.length}`
-      )
-    }
+		if (value.length !== this.options.schema.length) {
+			throw new NoArgTypeError(
+				`Expected tuple of length ${this.options.schema.length} but received ${value.length}`
+			)
+		}
 
-    return this.options.schema.map((schema, index) =>
-      schema.parse(value[index])
-    )
-  }
+		return this.options.schema.map((schema, index) =>
+			schema.parse(value[index])
+		)
+	}
 }

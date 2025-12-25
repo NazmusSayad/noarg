@@ -1,0 +1,104 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+
+	"files": {
+		"includes": ["./src/**/*.ts", "!**/__tests__"]
+	},
+
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"recommended": true
+		}
+	},
+
+	"formatter": {
+		"enabled": true,
+		"lineWidth": 80,
+		"lineEnding": "lf"
+	},
+	"javascript": {
+		"formatter": {
+			"trailingCommas": "es5",
+			"semicolons": "asNeeded",
+			"quoteStyle": "single"
+		}
+	},
+
+	"linter": {
+		"enabled": true,
+
+		"rules": {
+			"recommended": true,
+
+			"style": {
+				"useImportType": "off",
+				"useBlockStatements": "off",
+				"useSymbolDescription": "off",
+
+				"useConst": "error",
+				"noCommonJs": "error",
+				"noNamespace": "error",
+				"useArrayLiterals": "error",
+				"noParameterAssign": "error",
+				"useAsConstAssertion": "error",
+
+				"useFilenamingConvention": {
+					"level": "error",
+					"options": {
+						"filenameCases": ["kebab-case"]
+					}
+				}
+			},
+
+			"nursery": {
+				"noFloatingPromises": "error"
+			},
+
+			"complexity": {
+				"noVoid": "off",
+				"noUselessConstructor": "off",
+				"noUselessEscapeInRegex": "off",
+
+				"noArguments": "error",
+				"noUselessTypeConstraint": "error"
+			},
+
+			"correctness": {
+				"noConstAssign": "off",
+				"noUnreachable": "off",
+				"noSetterReturn": "off",
+				"noUnreachableSuper": "off",
+				"noGlobalObjectCalls": "off",
+				"noUndeclaredVariables": "off",
+				"noUndeclaredDependencies": "off",
+				"noInvalidConstructorSuper": "off",
+				"noUnusedPrivateClassMembers": "off",
+				"noInvalidBuiltinInstantiation": "off",
+
+				"noUnusedVariables": "warn"
+			},
+
+			"suspicious": {
+				"noWith": "off",
+				"noRedeclare": "off",
+				"noClassAssign": "off",
+				"noImportAssign": "off",
+				"useGetterReturn": "off",
+				"noUnsafeNegation": "off",
+				"noFunctionAssign": "off",
+				"noDuplicateObjectKeys": "off",
+				"noDuplicateParameters": "off",
+				"noDuplicateClassMembers": "off",
+
+				"noVar": "error",
+				"noExplicitAny": "error",
+				"useNamespaceKeyword": "error",
+				"noExtraNonNullAssertion": "error",
+				"noMisleadingInstantiator": "error",
+				"noUnsafeDeclarationMerging": "error",
+				"noNonNullAssertedOptionalChain": "error"
+			}
+		}
+	}
+}

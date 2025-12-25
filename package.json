@@ -1,16 +1,17 @@
 {
-  "name": "npm",
+  "name": "noarg",
   "version": "4.0.0",
   "scripts": {
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint .",
-    "fix": "eslint . --fix",
+    "lint": "biome check",
+    "fix": "biome check --write",
     "tc": "tsc --noEmit --watch",
-    "build": "tsx ./write-exports.ts && tsdown --config ./tsdown.config.ts",
-    "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
-    "start": "tsx --watch ./src/__tests__/index.ts"
+    "start": "tsx --watch ./src/__tests__/index.ts",
+    "exports": "tsx ./write-exports.ts",
+    "build": "tsdown --config ./tsdown.config.ts",
+    "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\""
   },
   "sideEffects": false,
   "main": "./dist/index.cjs",
@@ -19,6 +20,10 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./parser": {
+      "import": "./dist/parser.mjs",
+      "require": "./dist/parser.cjs"
     }
   },
   "typesVersions": {
@@ -26,31 +31,21 @@
       ".": [
         "./dist/index.d.mts",
         "./dist/index.d.cts"
+      ],
+      "parser": [
+        "./dist/parser.d.mts",
+        "./dist/parser.d.cts"
       ]
     }
   },
   "devDependencies": {
-    "@eslint/compat": "^1.4.1",
-    "@eslint/eslintrc": "^3.3.3",
-    "@eslint/js": "^9.39.1",
+    "@biomejs/biome": "2.3.10",
     "@types/node": "^24.10.3",
-    "@typescript-eslint/eslint-plugin": "^8.49.0",
-    "@typescript-eslint/parser": "^8.49.0",
     "concurrently": "^9.2.1",
-    "eslint": "^9.39.1",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-check-file": "^3.3.1",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
-    "jiti": "^2.6.1",
-    "prettier": "^3.7.4",
-    "prettier-plugin-organize-imports": "^4.3.0",
     "tsdown": "^0.15.12",
-    "tslib": "^2.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.49.0",
     "vitest": "^4.0.15"
   }
 }

@@ -1,16 +1,19 @@
 import { NoArgUnexpectedError } from '@/lib/errors'
 import { TypeSchema, TypeSchemaOptions } from './interface'
 
-export type TypeNoValueSchemaOptions = TypeSchemaOptions<{}>
+export type TypeNoValueSchemaOptions = TypeSchemaOptions<{
+	_?: never
+}>
 
 export class TypeNoValueSchema<
-  const T extends TypeNoValueSchemaOptions = TypeNoValueSchemaOptions,
-> implements TypeSchema<void> {
-  public name = 'no-value' as const
+	const T extends TypeNoValueSchemaOptions = TypeNoValueSchemaOptions,
+> implements TypeSchema<void>
+{
+	public name = 'no-value' as const
 
-  constructor(private options: T) {}
+	constructor(private options: T) {}
 
-  public parse(_value: unknown): void {
-    throw new NoArgUnexpectedError(`This schema should not be used`)
-  }
+	public parse(_value: unknown): void {
+		throw new NoArgUnexpectedError(`This schema should not be used`)
+	}
 }
