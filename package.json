@@ -1,50 +1,51 @@
 {
-  "name": "noarg",
-  "version": "4.0.0",
-  "scripts": {
-    "prepare": "husky",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "lint": "biome check",
-    "fix": "biome check --write",
-    "tc": "tsc --noEmit --watch",
-    "start": "bun run --watch ./src/__tests__/index.ts",
-    "exports": "bun run ./write-exports.ts",
-    "build": "tsdown --config ./tsdown.config.ts",
-    "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\""
-  },
-  "sideEffects": false,
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./parser": {
-      "import": "./dist/parser.mjs",
-      "require": "./dist/parser.cjs"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      ".": [
-        "./dist/index.d.mts",
-        "./dist/index.d.cts"
-      ],
-      "parser": [
-        "./dist/parser.d.mts",
-        "./dist/parser.d.cts"
-      ]
-    }
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.3.10",
-    "@types/node": "^24.10.3",
-    "concurrently": "^9.2.1",
-    "husky": "^9.1.7",
-    "tsdown": "^0.15.12",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.15"
-  }
+	"name": "noarg",
+	"version": "4.0.0",
+	"scripts": {
+		"prepare": "husky",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "biome check",
+		"fix": "biome check --write",
+		"tc": "tsc --noEmit --watch",
+		"start": "bun run --watch ./src/__tests__/index.ts",
+		"exports": "bun run ./write-exports.ts",
+		"build": "tsdown --config ./tsdown.config.ts",
+		"dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\""
+	},
+	"sideEffects": false,
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		},
+		"./parser": {
+			"import": "./dist/parser.mjs",
+			"require": "./dist/parser.cjs"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			".": [
+				"./dist/index.d.mts",
+				"./dist/index.d.cts"
+			],
+			"parser": [
+				"./dist/parser.d.mts",
+				"./dist/parser.d.cts"
+			]
+		}
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.10",
+		"@types/node": "^24.10.3",
+		"concurrently": "^9.2.1",
+		"husky": "^9.1.7",
+		"rolldown": "1.0.0-beta.57",
+		"tsdown": "^0.15.12",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.15"
+	}
 }

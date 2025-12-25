@@ -2,7 +2,14 @@
 	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
 
 	"files": {
-		"includes": ["./src/**/*.ts"]
+		"includes": [
+			"**",
+			"!*.config.ts",
+			"!write-exports.ts",
+			"!**/dist",
+			"!**/node_modules",
+			"!**/src/__tests__/examples"
+		]
 	},
 
 	"assist": {

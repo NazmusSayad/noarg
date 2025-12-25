@@ -3,42 +3,42 @@ import { defineConfig } from 'tsdown'
 import packageJSON from './package.json' with { type: 'json' }
 
 export default defineConfig({
-  entry: {
-    index: './src/index.ts',
-    parser: './src/parser/index.ts',
-  },
+	entry: {
+		index: './src/index.ts',
+		parser: './src/parser/index.ts',
+	},
 
-  outDir: './dist',
-  tsconfig: './tsconfig.json',
-  format: ['cjs', 'es'] satisfies InternalModuleFormat[],
+	outDir: './dist',
+	tsconfig: './tsconfig.json',
+	format: ['cjs', 'es'] satisfies InternalModuleFormat[],
 
-  dts: true,
-  sourcemap: true,
+	dts: true,
+	sourcemap: true,
 
-  target: 'ES6',
-  minify: 'dce-only',
+	target: 'ES6',
+	minify: 'dce-only',
 
-  external: [
-    /node:/gim,
-    /node_modules/gim,
-    ...getExternal((packageJSON as any).dependencies),
-    ...getExternal((packageJSON as any).devDependencies),
-    ...getExternal((packageJSON as any).peerDependencies),
-  ],
+	external: [
+		/node:/gim,
+		/node_modules/gim,
+		...getExternal((packageJSON as any).dependencies),
+		...getExternal((packageJSON as any).devDependencies),
+		...getExternal((packageJSON as any).peerDependencies),
+	],
 
-  outputOptions(options, format) {
-    const ext = format === 'cjs' ? 'cjs' : format === 'es' ? 'mjs' : 'js'
+	outputOptions(options, format) {
+		const ext = format === 'cjs' ? 'cjs' : format === 'es' ? 'mjs' : 'js'
 
-    return {
-      ...options,
-      entryFileNames: `[name].${ext}`,
-      chunkFileNames: `__[name].[hash].${ext}`,
-    }
-  },
+		return {
+			...options,
+			entryFileNames: `[name].${ext}`,
+			chunkFileNames: `__[name].[hash].${ext}`,
+		}
+	},
 })
 
 function getExternal(dependencies: unknown) {
-  return Object.keys((dependencies ?? {}) as Record<string, string>).map(
-    (dep) => new RegExp(`(^${dep}$)|(^${dep}/)`)
-  )
+	return Object.keys((dependencies ?? {}) as Record<string, string>).map(
+		(dep) => new RegExp(`(^${dep}$)|(^${dep}/)`)
+	)
 }

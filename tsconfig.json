@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist",
-    "target": "ES2018",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "strict": true,
-    "noEmit": true,
-    "allowJs": true,
-    "declaration": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "paths": { "@/*": ["./src/*"] }
-  },
-  "include": ["./src"]
+	"compilerOptions": {
+		"outDir": "./dist",
+		"target": "ES2018",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"strict": true,
+		"noEmit": true,
+		"allowJs": true,
+		"declaration": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"paths": { "@/*": ["./src/*"] }
+	},
+	"include": ["./src"]
 }
