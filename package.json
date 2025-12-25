@@ -8,8 +8,8 @@
     "lint": "biome check",
     "fix": "biome check --write",
     "tc": "tsc --noEmit --watch",
-    "start": "tsx --watch ./src/__tests__/index.ts",
-    "exports": "tsx ./write-exports.ts",
+    "start": "bun run --watch ./src/__tests__/index.ts",
+    "exports": "bun run ./write-exports.ts",
     "build": "tsdown --config ./tsdown.config.ts",
     "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\""
   },
@@ -44,7 +44,6 @@
     "concurrently": "^9.2.1",
     "husky": "^9.1.7",
     "tsdown": "^0.15.12",
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
   }

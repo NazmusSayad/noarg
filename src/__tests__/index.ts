@@ -13,7 +13,7 @@ import {
 const programParser = new ProgramParser({
 	id: '0',
 	command: '#',
-	description: 'npm is a package manager for Node.js',
+	description: 'noarg is a command line parser for Node.js',
 
 	subPrograms: [],
 
