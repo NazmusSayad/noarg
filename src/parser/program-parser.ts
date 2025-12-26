@@ -4,7 +4,7 @@ import {
   NoArgTypeError,
   NoArgUnexpectedError,
   NoArgUnknownArgumentError,
-} from '@/lib/errors'
+} from '@/helpers/errors'
 import {
   TypeArraySchema,
   TypeBooleanSchema,

@@ -1,7 +1,7 @@
 import {
   NoArgDuplicateOptionValueError,
   NoArgUnknownArgumentError,
-} from '@/lib/errors'
+} from '@/helpers/errors'
 import { TypeNoValueSchema, TypeNumberSchema, TypeStringSchema } from '@/schema'
 import { describe, expect, it } from 'vitest'
 import { parseArgsToAST } from '../ast'

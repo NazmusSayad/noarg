@@ -3,7 +3,7 @@ import {
   NoArgPrimaryArgumentError,
   NoArgTypeError,
   NoArgUnknownArgumentError,
-} from '@/lib/errors'
+} from '@/helpers/errors'
 import {
   TypeArraySchema,
   TypeBooleanSchema,

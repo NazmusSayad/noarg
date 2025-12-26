@@ -1,4 +1,4 @@
-import { NoArgSyntaxError } from '@/lib/errors'
+import { NoArgSyntaxError } from '@/helpers/errors'
 import { describe, expect, it } from 'vitest'
 import { parseArgsToAST } from '../ast'
 import { InternalASTNode } from '../ast.type'

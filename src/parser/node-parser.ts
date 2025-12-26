@@ -3,7 +3,7 @@ import {
   NoArgEmptyOptionValueError,
   NoArgUnexpectedError,
   NoArgUnknownOptionError,
-} from '@/lib/errors'
+} from '@/helpers/errors'
 import { TypeNoValueSchema } from '@/schema'
 import {
   InternalASTArgumentNode,

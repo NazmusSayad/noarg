@@ -1,4 +1,4 @@
-import { NoArgUnexpectedError } from '@/lib/errors'
+import { NoArgUnexpectedError } from '@/helpers/errors'
 import { TypeSchema, TypeSchemaOptions } from './interface'
 
 export type TypeNoValueSchemaOptions = TypeSchemaOptions<{}>

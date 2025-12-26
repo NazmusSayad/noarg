@@ -1,7 +1,7 @@
 import {
   NoArgDuplicateOptionValueError,
   NoArgUnknownArgumentError,
-} from '@/lib/errors'
+} from '@/helpers/errors'
 import {
   TypeBooleanSchema,
   TypeNoValueSchema,

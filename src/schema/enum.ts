@@ -1,4 +1,4 @@
-import { NoArgTypeError } from '@/lib/errors'
+import { NoArgTypeError } from '@/helpers/errors'
 import { TypeSchema, TypeSchemaOptions } from './interface'
 
 export type TypeEnumSchemaOptions = TypeSchemaOptions<{

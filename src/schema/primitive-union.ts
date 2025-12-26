@@ -1,4 +1,4 @@
-import { NoArgTypeError } from '@/lib/errors'
+import { NoArgTypeError } from '@/helpers/errors'
 import { TypeBooleanSchema } from './boolean'
 import { TypeSchema, TypeSchemaOptions } from './interface'
 import { TypeNumberSchema } from './number'

@@ -1,4 +1,4 @@
-import { NoArgNodeError } from '@/lib/errors'
+import { NoArgNodeError } from '@/helpers/errors'
 import { parseArgsToAST, ProgramParser } from '@/parser'
 import {
   TypeArraySchema,

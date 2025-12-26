@@ -1,4 +1,4 @@
-import { NoArgSyntaxError } from '@/lib/errors'
+import { NoArgSyntaxError } from '@/helpers/errors'
 import { InternalASTNode } from './ast.type'
 
 const OPTION_REGEX = /^(?<i>--?)(?<k>[^=]+)(=(?<v>.+)?)?$/
