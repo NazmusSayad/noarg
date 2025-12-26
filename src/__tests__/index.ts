@@ -1,188 +1,41 @@
-import { NoArgNodeError } from '@/helpers/errors'
-import { parseArgsToAST, ProgramParser } from '@/parser'
-import {
-  TypeArraySchema,
-  TypeBooleanSchema,
-  TypeEnumSchema,
-  TypeNoValueSchema,
-  TypeNumberSchema,
-  TypeStringSchema,
-  TypeTupleSchema,
-} from '@/schema'
+import { na } from '..'
 
-const programParser = new ProgramParser({
-  id: '0',
-  command: '#',
-  description: 'npm is a package manager for Node.js',
+const program = na.createProgram(
+  {
+    name: 'test',
+    description: 'Test program',
 
-  subPrograms: [],
+    options: [
+      na.option('test1', String, {}),
+      na.option('test2', Number, {}),
+      na.option('test3', Number, {}),
+    ],
 
-  primaryArguments: [
-    {
-      name: 'arg1',
-      type: new TypeStringSchema({}),
-    },
-  ],
-
-  optionalArguments: [
-    {
-      name: 'arg2',
-      type: new TypeStringSchema({}),
-    },
-  ],
-
-  listArguments: {
-    name: 'list',
-    type: new TypeStringSchema({}),
+    arguments: [
+      na.argument('test', String, {
+        description: 'Test argument',
+      }),
+    ],
   },
+  (result) => {
+    console.log(result)
+  }
+)
 
-  options: [
-    {
-      name: 'string',
-      type: new TypeStringSchema({}),
-      aliases: [],
-    },
+const program2 = program.create(
+  {
+    name: 'test2',
+    description: 'Test program 2',
 
-    {
-      name: 'number',
-      type: new TypeNumberSchema({}),
-      aliases: [],
-    },
+    options: [
+      na.option('test4', String, {}),
+      na.option('test5', String, {}),
+      na.option('test6', Number, {}),
+    ],
+  },
+  (result) => {
+    console.log(result)
+  }
+)
 
-    {
-      name: 'boolean',
-      type: new TypeBooleanSchema({}),
-      aliases: [],
-    },
-
-    {
-      name: 'enum',
-      type: new TypeEnumSchema({
-        values: ['test', '123', 'true', 'false'],
-      }),
-      aliases: [],
-    },
-
-    {
-      name: 'array',
-      type: new TypeArraySchema({
-        schema: new TypeStringSchema({}),
-      }),
-      aliases: [],
-    },
-
-    {
-      name: 'tuple',
-      type: new TypeTupleSchema({
-        schema: [
-          new TypeStringSchema({}),
-          new TypeNumberSchema({}),
-          new TypeBooleanSchema({}),
-        ],
-      }),
-      aliases: [],
-    },
-
-    {
-      name: 'verbose',
-      type: new TypeNoValueSchema({}),
-      aliases: ['v'],
-    },
-
-    {
-      name: 'message',
-      type: new TypeStringSchema({}),
-      aliases: ['m'],
-    },
-  ],
-
-  config: {},
-})
-
-const parsedArguments = parseArgsToAST([
-  '--string',
-  'test',
-
-  '--number',
-  '123',
-
-  '--boolean',
-  'yes',
-
-  '--array',
-  'test1,test2',
-
-  '--array',
-  '123',
-
-  '--array',
-  'true',
-
-  '--tuple',
-  'test,123,true',
-
-  '--enum',
-  'false',
-
-  'argument-1',
-  'argument-2',
-  'argument-3',
-  'argument-4',
-  'argument-5',
-])
-
-programParser
-  .run(parsedArguments)
-
-  .then(({ result }) => {
-    console.dir(result, { depth: null })
-  })
-
-  .catch((err) => {
-    if (err instanceof NoArgNodeError) {
-      const colorizedArgs = parsedArguments.map((arg) => {
-        if (arg.index === err.index) {
-          return `\x1b[31m${arg.raw}\x1b[0m`
-        }
-
-        return arg.raw
-      })
-
-      console.error(`${colorizedArgs.join(' ')}`)
-      console.error(`\x1b[31m${err.message}\x1b[0m`)
-    } else {
-      console.error(err)
-    }
-  })
-
-// TEST
-;(async () => {
-  const sub1 = new ProgramParser({
-    id: 'sub-5',
-    command: 'sub1',
-    description: undefined,
-    subPrograms: [],
-    primaryArguments: [],
-    optionalArguments: [],
-    listArguments: null,
-    options: [],
-    config: {},
-  })
-
-  const root = new ProgramParser({
-    id: 'root-5',
-    command: 'root',
-    description: undefined,
-    subPrograms: [sub1],
-    primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
-    optionalArguments: [],
-    listArguments: null,
-    options: [{ name: 'opt1', type: new TypeNoValueSchema({}), aliases: [] }],
-    config: {},
-  })
-
-  const nodes = parseArgsToAST(['lead', '--opt1', 'sub1'])
-  const result = await root.run(nodes)
-
-  console.dir(result, { depth: null })
-})().catch(console.error)
+const opt1 = na.option('why-it-is-working', String, {})
