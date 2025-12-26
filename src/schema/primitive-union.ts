@@ -1,7 +1,7 @@
 import { NoArgTypeError } from '@/helpers/errors'
 import { TypeBooleanSchema } from './boolean'
-import { TypeSchema, TypeSchemaOptions } from './interface'
 import { TypeNumberSchema } from './number'
+import { TypeSchema, TypeSchemaOptions } from './schema.interface'
 import { TypeStringSchema } from './string'
 
 export type TypePrimitiveUnionSchemaOptions = TypeSchemaOptions<{

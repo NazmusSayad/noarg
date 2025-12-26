@@ -1,7 +1,8 @@
 import { NoArgTypeError } from '@/helpers/errors'
-import { TypeSchema, TypeSchemaOptions } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './schema.interface'
 
 export type TypeNumberSchemaOptions = TypeSchemaOptions<{
+  defaultValue?: number
   min?: number
   max?: number
 }>

@@ -1,7 +1,8 @@
 import { NoArgTypeError } from '@/helpers/errors'
-import { TypeSchema, TypeSchemaOptions } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './schema.interface'
 
 export type TypeStringSchemaOptions = TypeSchemaOptions<{
+  defaultValue?: string
   pattern?: RegExp
   minLength?: number
   maxLength?: number

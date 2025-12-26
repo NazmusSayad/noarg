@@ -1,7 +1,9 @@
 import { NoArgTypeError } from '@/helpers/errors'
-import { TypeSchema, TypeSchemaOptions } from './interface'
+import { TypeSchema, TypeSchemaOptions } from './schema.interface'
 
-export type TypeBooleanSchemaOptions = TypeSchemaOptions<{}>
+export type TypeBooleanSchemaOptions = TypeSchemaOptions<{
+  defaultValue?: boolean
+}>
 
 export class TypeBooleanSchema<
   const T extends TypeBooleanSchemaOptions = TypeBooleanSchemaOptions,
