@@ -8,3 +8,5 @@ export type ConcatNullableArray<
   A extends readonly unknown[] | undefined,
   B extends readonly unknown[] | undefined,
 > = [...NormalizeNullableArray<A>, ...NormalizeNullableArray<B>]
+
+export type MergeTwoObjects<Base, T> = Omit<Base, keyof T> & T

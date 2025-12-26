@@ -6,9 +6,7 @@ const program = na.createProgram(
     description: 'Test program',
 
     options: [
-      na.option('test1', String, {
-        global: true,
-      }),
+      na.option('test1', String, {}),
       na.option('test2', Number, {}),
       na.option('test3', Boolean, {}),
     ],
@@ -31,15 +29,11 @@ const program2 = program.create(
 
     options: [
       na.option('test4', String, {}),
-      na.option('test5', String, {}),
-      na.option('test6', Number, {}),
+      na.option('test5', Number, {}),
+      na.option('test6', Boolean, {}),
     ],
   },
   (result) => {
     console.log(result)
   }
 )
-
-const opt1 = na.option('why-it-is-working-1', String, {})
-const opt2 = na.option('why-it-is-working-2', Number, {})
-const opt3 = na.option('why-it-is-working-3', Boolean, {})

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   TypeArraySchema,
   TypeBooleanSchema,
@@ -11,21 +13,21 @@ import {
 import { ProgramParser } from './program-parser'
 
 export type InternalOptionSchemaType =
-  | TypePrimitiveUnionSchema
-  | TypeBooleanSchema
-  | TypeStringSchema
-  | TypeNumberSchema
-  | TypeEnumSchema
-  | TypeNoValueSchema
-  | TypeArraySchema
-  | TypeTupleSchema
+  | TypePrimitiveUnionSchema<any>
+  | TypeBooleanSchema<any>
+  | TypeStringSchema<any>
+  | TypeNumberSchema<any>
+  | TypeEnumSchema<any>
+  | TypeNoValueSchema<any>
+  | TypeArraySchema<any>
+  | TypeTupleSchema<any>
 
 export type InternalArgumentSchemaType =
-  | TypePrimitiveUnionSchema
-  | TypeBooleanSchema
-  | TypeStringSchema
-  | TypeNumberSchema
-  | TypeEnumSchema
+  | TypePrimitiveUnionSchema<any>
+  | TypeBooleanSchema<any>
+  | TypeStringSchema<any>
+  | TypeNumberSchema<any>
+  | TypeEnumSchema<any>
 
 export type InternalOptionSchemaResultType =
   | (string | boolean | number)
