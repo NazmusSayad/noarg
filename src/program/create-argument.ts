@@ -1,19 +1,30 @@
 import { MergeTwoObjects, Prettify } from '@/utils/utils.type'
-import {
-  GetInternalArgumentSchemaOptions,
-  MapInternalArgumentSchemaType,
-  ProgramArgumentTypes,
-} from './create.type'
 import { ProgramArgument } from './program'
 import { ProgramArgumentOptions, ProgramOptionOptions } from './program.type'
-import { mapToInternalArgumentSchemaType } from './utils'
+import {
+  GetLiteralToInternalSchemaOptions,
+  LiteralBooleanType,
+  LiteralEnumType,
+  LiteralNumberType,
+  LiteralPrimitiveUnionType,
+  LiteralStringType,
+  MapLiteralInternalSchemaType,
+} from './types.type'
+import { mapLiteralToInternalSchema } from './utils'
+
+type ProgramArgumentTypes =
+  | LiteralStringType
+  | LiteralNumberType
+  | LiteralBooleanType
+  | LiteralEnumType
+  | LiteralPrimitiveUnionType
 
 function createArgument<const TName extends string>(
   name: TName
 ): ProgramArgument<
   Prettify<{
     readonly name: TName
-    readonly type: MapInternalArgumentSchemaType<StringConstructor, {}>
+    readonly type: MapLiteralInternalSchemaType<StringConstructor, {}>
   }>
 >
 
@@ -26,7 +37,7 @@ function createArgument<
 ): ProgramArgument<
   Prettify<{
     readonly name: TName
-    readonly type: MapInternalArgumentSchemaType<TType, {}>
+    readonly type: MapLiteralInternalSchemaType<TType, {}>
   }>
 >
 
@@ -34,7 +45,7 @@ function createArgument<
   const TName extends string,
   const TType extends ProgramArgumentTypes,
   const TOptions extends MergeTwoObjects<
-    GetInternalArgumentSchemaOptions<TType>,
+    GetLiteralToInternalSchemaOptions<TType>,
     ProgramArgumentOptions
   >,
 >(
@@ -45,7 +56,7 @@ function createArgument<
   Prettify<
     Omit<TOptions, Exclude<keyof TOptions, keyof ProgramArgumentOptions>> & {
       readonly name: TName
-      readonly type: MapInternalArgumentSchemaType<
+      readonly type: MapLiteralInternalSchemaType<
         TType,
         Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
       >
@@ -57,21 +68,21 @@ function createArgument<
   const TName extends string,
   const TType extends ProgramArgumentTypes,
   const TOptions extends MergeTwoObjects<
-    GetInternalArgumentSchemaOptions<TType>,
+    GetLiteralToInternalSchemaOptions<TType>,
     ProgramArgumentOptions
   >,
 >(name: TName, type?: TType, options?: TOptions) {
   type PrettifiedConfig = Prettify<
     Omit<TOptions, Exclude<keyof TOptions, keyof ProgramArgumentOptions>> & {
       readonly name: TName
-      readonly type: MapInternalArgumentSchemaType<
+      readonly type: MapLiteralInternalSchemaType<
         TType,
         Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
       >
     }
   >
 
-  const internalType = mapToInternalArgumentSchemaType(type ?? String)
+  const internalType = mapLiteralToInternalSchema(type ?? String, options)
 
   return new ProgramArgument<PrettifiedConfig>({
     ...options,

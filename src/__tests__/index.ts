@@ -1,37 +1,22 @@
 import { na } from '..'
 
 const program = na
-  .createProgram('test', {
-    description: 'Test program',
+  .createProgram('git', {
+    description: 'Git Test Program',
 
     options: [
-      na.option('test1', String, {
+      na.option('silent', Boolean, {
         global: true,
         minLength: 10,
       }),
-
-      na.option('test2', Number, {}),
-
-      na.option('test3'),
     ],
-
-    arguments: [na.argument('test', String)],
   })
   .on((result) => {
     console.log(result.name)
   })
 
-const p2 = program.create('test2', {}).on((result) => {
+const p2 = program.create('commit', {}).on((result) => {
   console.log(result.name)
 })
 
-program.start([
-  'test',
-  'test1',
-  'test2',
-  'test3',
-  'test',
-  'test1',
-  'test2',
-  'test3',
-])
+program.start(['commit', '--silent'])

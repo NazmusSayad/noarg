@@ -12,22 +12,26 @@ import {
 } from '@/schema'
 import { ProgramParser } from './program-parser'
 
-export type InternalOptionSchemaType =
-  | TypePrimitiveUnionSchema<any>
-  | TypeBooleanSchema<any>
+type InternalPrimitiveSchemaType =
   | TypeStringSchema<any>
   | TypeNumberSchema<any>
+  | TypeBooleanSchema<any>
   | TypeEnumSchema<any>
-  | TypeNoValueSchema<any>
-  | TypeArraySchema<any>
-  | TypeTupleSchema<any>
+  | TypePrimitiveUnionSchema<any>
 
-export type InternalArgumentSchemaType =
-  | TypePrimitiveUnionSchema<any>
-  | TypeBooleanSchema<any>
-  | TypeStringSchema<any>
-  | TypeNumberSchema<any>
-  | TypeEnumSchema<any>
+type InternalCompositeSchemaType = TypeArraySchema<any> | TypeTupleSchema<any>
+
+export type InternalSchemaType =
+  | InternalPrimitiveSchemaType
+  | InternalCompositeSchemaType
+  | TypeNoValueSchema<any>
+
+export type InternalOptionSchemaType =
+  | TypeNoValueSchema<any>
+  | InternalPrimitiveSchemaType
+  | InternalCompositeSchemaType
+
+export type InternalArgumentSchemaType = InternalPrimitiveSchemaType
 
 export type InternalOptionSchemaResultType =
   | (string | boolean | number)

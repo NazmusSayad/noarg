@@ -1,19 +1,36 @@
 import { MergeTwoObjects, Prettify } from '@/utils/utils.type'
-import {
-  GetInternalOptionSchemaOptions,
-  MapInternalOptionSchemaType,
-  ProgramOptionTypes,
-} from './create.type'
 import { ProgramOption } from './program'
 import { ProgramOptionOptions } from './program.type'
-import { mapToInternalOptionSchemaType } from './utils'
+import {
+  GetLiteralToInternalSchemaOptions,
+  LiteralArrayType,
+  LiteralBooleanType,
+  LiteralEnumType,
+  LiteralNoValueType,
+  LiteralNumberType,
+  LiteralPrimitiveUnionType,
+  LiteralStringType,
+  LiteralTupleType,
+  MapLiteralInternalSchemaType,
+} from './types.type'
+import { mapLiteralToInternalSchema } from './utils'
+
+type ProgramOptionTypes =
+  | LiteralNoValueType
+  | LiteralStringType
+  | LiteralNumberType
+  | LiteralBooleanType
+  | LiteralEnumType
+  | LiteralPrimitiveUnionType
+  | LiteralArrayType
+  | LiteralTupleType
 
 function createOption<const TName extends string>(
   name: TName
 ): ProgramOption<
   Prettify<{
     readonly name: TName
-    readonly type: MapInternalOptionSchemaType<StringConstructor, {}>
+    readonly type: MapLiteralInternalSchemaType<StringConstructor, {}>
   }>
 >
 
@@ -26,7 +43,7 @@ function createOption<
 ): ProgramOption<
   Prettify<{
     readonly name: TName
-    readonly type: MapInternalOptionSchemaType<TType, {}>
+    readonly type: MapLiteralInternalSchemaType<TType, {}>
   }>
 >
 
@@ -34,7 +51,7 @@ function createOption<
   const TName extends string,
   const TType extends ProgramOptionTypes,
   const TOptions extends MergeTwoObjects<
-    GetInternalOptionSchemaOptions<TType>,
+    GetLiteralToInternalSchemaOptions<TType>,
     ProgramOptionOptions
   >,
 >(
@@ -45,7 +62,7 @@ function createOption<
   Prettify<
     Omit<TOptions, Exclude<keyof TOptions, keyof ProgramOptionOptions>> & {
       readonly name: TName
-      readonly type: MapInternalOptionSchemaType<
+      readonly type: MapLiteralInternalSchemaType<
         TType,
         Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
       >
@@ -57,21 +74,21 @@ function createOption<
   const TName extends string,
   const TType extends ProgramOptionTypes,
   const TOptions extends MergeTwoObjects<
-    GetInternalOptionSchemaOptions<TType>,
+    GetLiteralToInternalSchemaOptions<TType>,
     ProgramOptionOptions
   >,
 >(name: TName, type?: TType, options?: TOptions) {
   type PrettifiedConfig = Prettify<
     Omit<TOptions, Exclude<keyof TOptions, keyof ProgramOptionOptions>> & {
       readonly name: TName
-      readonly type: MapInternalOptionSchemaType<
+      readonly type: MapLiteralInternalSchemaType<
         TType,
         Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
       >
     }
   >
 
-  const internalType = mapToInternalOptionSchemaType(type ?? String)
+  const internalType = mapLiteralToInternalSchema(type ?? String, options)
 
   return new ProgramOption<PrettifiedConfig>({
     ...options,
