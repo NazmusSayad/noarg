@@ -13,14 +13,10 @@ const program = na.createProgram(
 
       na.option('test2', Number, {}),
 
-      na.option('test3', Boolean, {}),
+      na.option('test3', Boolean),
     ],
 
-    arguments: [
-      na.argument('test', String, {
-        description: 'Test argument',
-      }),
-    ],
+    arguments: [na.argument('test', String)],
   },
   (result) => {
     console.log(result)

@@ -51,7 +51,7 @@ export type GetInternalOptionSchemaOptions<T extends ProgramOptionTypes> =
         ? TypeBooleanSchemaOptions
         : T extends ArrayConstructor
           ? TypeArraySchemaOptions
-          : never
+          : {}
 
 export type MapInternalArgumentSchemaType<
   T extends ProgramPrimitiveTypes,

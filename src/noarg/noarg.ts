@@ -30,11 +30,13 @@ function createProgram<const TOptions extends Omit<ProgramConfig, 'handler'>>(
 function option<
   const TName extends string,
   const TType extends ProgramOptionTypes,
-  const TOptions extends MergeTwoObjects<
-    GetInternalOptionSchemaOptions<TType>,
-    ProgramOptionOptions
-  >,
->(name: TName, type: TType, options: TOptions) {
+  const TOptions extends
+    | {}
+    | MergeTwoObjects<
+        GetInternalOptionSchemaOptions<TType>,
+        ProgramOptionOptions
+      >,
+>(name: TName, type: TType, options: TOptions = {} as TOptions) {
   type ProgramOptions = Omit<
     TOptions,
     Exclude<keyof TOptions, keyof ProgramOptionOptions>
@@ -59,11 +61,13 @@ function option<
 function argument<
   const TName extends string,
   const TType extends ProgramArgumentTypes,
-  const TOptions extends MergeTwoObjects<
-    GetInternalArgumentSchemaOptions<TType>,
-    ProgramArgumentOptions
-  >,
->(name: TName, type: TType, options: TOptions) {
+  const TOptions extends
+    | {}
+    | MergeTwoObjects<
+        GetInternalArgumentSchemaOptions<TType>,
+        ProgramArgumentOptions
+      >,
+>(name: TName, type: TType, options: TOptions = {} as TOptions) {
   type ProgramOptions = Omit<
     TOptions,
     Exclude<keyof TOptions, keyof ProgramArgumentOptions>
