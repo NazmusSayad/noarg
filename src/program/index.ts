@@ -3,7 +3,7 @@ import { createOption } from './create-option'
 import { createProgram } from './create-program'
 
 export const noarg = {
-  program: createProgram,
+  createProgram: createProgram,
   argument: createArgument,
   option: createOption,
 }

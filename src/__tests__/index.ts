@@ -1,7 +1,7 @@
 import { na } from '..'
 
 const program = na
-  .program('test', {
+  .createProgram('test', {
     description: 'Test program',
 
     options: [
@@ -25,4 +25,4 @@ const program2 = program.create('test2', {}).on((result) => {
   console.log(result.name)
 })
 
-const app = na.program('test3', { description: 'Test program 3' })
+const app = na.createProgram('test3', { description: 'Test program 3' })
