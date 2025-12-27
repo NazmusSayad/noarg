@@ -1,10 +1,10 @@
 import { Prettify } from '@/utils/utils.type'
-import { Program } from './program'
+import { RootProgram } from './program'
 import { ProgramHandler, ProgramRootConfig } from './program.type'
 
 function createProgram<const TName extends string>(
   name: TName
-): Program<Prettify<{ readonly name: TName }>>
+): RootProgram<Prettify<{ readonly name: TName }>>
 
 function createProgram<
   const TName extends string,
@@ -13,7 +13,7 @@ function createProgram<
   name: TName,
   options: TOptions,
   handler?: ProgramHandler<{ readonly name: TName } & TOptions>
-): Program<Prettify<{ readonly name: TName } & TOptions>>
+): RootProgram<Prettify<{ readonly name: TName } & TOptions>>
 
 function createProgram<
   const TName extends string,
@@ -24,7 +24,7 @@ function createProgram<
   handler?: ProgramHandler<{ readonly name: TName } & TOptions>
 ) {
   type PrettifiedConfig = Prettify<{ readonly name: TName } & TOptions>
-  const program = new Program<PrettifiedConfig>({
+  const program = new RootProgram<PrettifiedConfig>({
     name,
     ...(options ?? {}),
   } as unknown as PrettifiedConfig)
