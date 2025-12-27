@@ -17,7 +17,7 @@ import {
 } from './program-parser.type'
 
 export class NodeParserAST {
-  protected config: InternalProgramParserOptions
+  public config: InternalProgramParserOptions
   constructor(config: InternalProgramParserOptions) {
     this.config = Object.freeze(config)
   }

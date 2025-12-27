@@ -16,15 +16,15 @@ const gitParser = new ProgramParser({
   id: 'git',
   command: 'git',
   description: undefined,
-  subPrograms: [
+  childPrograms: [
     new ProgramParser({
       id: 'git-init',
       command: 'init',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'bare', type: new TypeNoValueSchema({}), aliases: [] },
         { name: 'initialBranch', type: new TypeStringSchema({}), aliases: [] },
@@ -35,10 +35,10 @@ const gitParser = new ProgramParser({
       id: 'git-clone',
       command: 'clone',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'repo', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'dir', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'branch', type: new TypeStringSchema({}), aliases: ['b'] },
         { name: 'depth', type: new TypeNumberSchema({}), aliases: [] },
@@ -60,10 +60,10 @@ const gitParser = new ProgramParser({
       id: 'git-add',
       command: 'add',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: { name: 'paths', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'paths', type: new TypeStringSchema({}) },
       options: [
         { name: 'all', type: new TypeNoValueSchema({}), aliases: ['A'] },
         { name: 'patch', type: new TypeNoValueSchema({}), aliases: ['p'] },
@@ -76,10 +76,10 @@ const gitParser = new ProgramParser({
       id: 'git-commit',
       command: 'commit',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: { name: 'paths', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'paths', type: new TypeStringSchema({}) },
       options: [
         {
           name: 'message',
@@ -98,10 +98,10 @@ const gitParser = new ProgramParser({
       id: 'git-push',
       command: 'push',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'remote', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'branch', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'force', type: new TypeNoValueSchema({}), aliases: ['f'] },
         { name: 'tags', type: new TypeNoValueSchema({}), aliases: [] },
@@ -118,10 +118,10 @@ const gitParser = new ProgramParser({
       id: 'git-pull',
       command: 'pull',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'remote', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'branch', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'rebase', type: new TypeNoValueSchema({}), aliases: [] },
         { name: 'ffOnly', type: new TypeNoValueSchema({}), aliases: [] },
@@ -133,10 +133,10 @@ const gitParser = new ProgramParser({
       id: 'git-checkout',
       command: 'checkout',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'target', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: { name: 'paths', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'paths', type: new TypeStringSchema({}) },
       options: [
         { name: 'detach', type: new TypeNoValueSchema({}), aliases: [] },
         { name: 'force', type: new TypeNoValueSchema({}), aliases: ['f'] },
@@ -148,12 +148,12 @@ const gitParser = new ProgramParser({
       id: 'git-branch',
       command: 'branch',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'name', type: new TypeStringSchema({}) }],
       optionalArguments: [
         { name: 'startPoint', type: new TypeStringSchema({}) },
       ],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'delete', type: new TypeNoValueSchema({}), aliases: ['d'] },
         { name: 'move', type: new TypeNoValueSchema({}), aliases: ['m'] },
@@ -166,10 +166,10 @@ const gitParser = new ProgramParser({
       id: 'git-merge',
       command: 'merge',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'branch', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: { name: 'more', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'more', type: new TypeStringSchema({}) },
       options: [
         { name: 'noFastForward', type: new TypeNoValueSchema({}), aliases: [] },
         { name: 'squash', type: new TypeNoValueSchema({}), aliases: [] },
@@ -181,10 +181,10 @@ const gitParser = new ProgramParser({
       id: 'git-rebase',
       command: 'rebase',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'upstream', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'branch', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'interactive',
@@ -200,10 +200,10 @@ const gitParser = new ProgramParser({
       id: 'git-fetch',
       command: 'fetch',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'remote', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'refspec', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'all', type: new TypeNoValueSchema({}), aliases: [] },
         { name: 'tags', type: new TypeNoValueSchema({}), aliases: [] },
@@ -216,18 +216,18 @@ const gitParser = new ProgramParser({
       id: 'git-remote',
       command: 'remote',
       description: undefined,
-      subPrograms: [
+      childPrograms: [
         new ProgramParser({
           id: 'git-remote-add',
           command: 'add',
           description: undefined,
-          subPrograms: [],
+          childPrograms: [],
           primaryArguments: [
             { name: 'name', type: new TypeStringSchema({}) },
             { name: 'url', type: new TypeStringSchema({}) },
           ],
           optionalArguments: [],
-          listArguments: null,
+          additionalArguments: null,
           options: [
             { name: 'fetch', type: new TypeNoValueSchema({}), aliases: [] },
             { name: 'tags', type: new TypeNoValueSchema({}), aliases: ['t'] },
@@ -238,13 +238,13 @@ const gitParser = new ProgramParser({
           id: 'git-remote-set-url',
           command: 'set-url',
           description: undefined,
-          subPrograms: [],
+          childPrograms: [],
           primaryArguments: [
             { name: 'name', type: new TypeStringSchema({}) },
             { name: 'newUrl', type: new TypeStringSchema({}) },
           ],
           optionalArguments: [],
-          listArguments: null,
+          additionalArguments: null,
           options: [
             { name: 'push', type: new TypeNoValueSchema({}), aliases: [] },
             { name: 'add', type: new TypeNoValueSchema({}), aliases: [] },
@@ -255,17 +255,17 @@ const gitParser = new ProgramParser({
           id: 'git-remote-remove',
           command: 'remove',
           description: undefined,
-          subPrograms: [],
+          childPrograms: [],
           primaryArguments: [{ name: 'name', type: new TypeStringSchema({}) }],
           optionalArguments: [],
-          listArguments: null,
+          additionalArguments: null,
           options: [],
           config: {},
         }),
       ],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'verbose', type: new TypeNoValueSchema({}), aliases: ['v'] },
       ],
@@ -275,15 +275,18 @@ const gitParser = new ProgramParser({
       id: 'git-stash',
       command: 'stash',
       description: undefined,
-      subPrograms: [
+      childPrograms: [
         new ProgramParser({
           id: 'git-stash-push',
           command: 'push',
           description: undefined,
-          subPrograms: [],
+          childPrograms: [],
           primaryArguments: [],
           optionalArguments: [],
-          listArguments: { name: 'paths', type: new TypeStringSchema({}) },
+          additionalArguments: {
+            name: 'paths',
+            type: new TypeStringSchema({}),
+          },
           options: [
             { name: 'message', type: new TypeStringSchema({}), aliases: ['m'] },
             { name: 'keepIndex', type: new TypeNoValueSchema({}), aliases: [] },
@@ -299,10 +302,10 @@ const gitParser = new ProgramParser({
           id: 'git-stash-apply',
           command: 'apply',
           description: undefined,
-          subPrograms: [],
+          childPrograms: [],
           primaryArguments: [{ name: 'stash', type: new TypeStringSchema({}) }],
           optionalArguments: [],
-          listArguments: null,
+          additionalArguments: null,
           options: [
             { name: 'index', type: new TypeNoValueSchema({}), aliases: [] },
             { name: 'quiet', type: new TypeNoValueSchema({}), aliases: ['q'] },
@@ -313,17 +316,17 @@ const gitParser = new ProgramParser({
           id: 'git-stash-pop',
           command: 'pop',
           description: undefined,
-          subPrograms: [],
+          childPrograms: [],
           primaryArguments: [{ name: 'stash', type: new TypeStringSchema({}) }],
           optionalArguments: [],
-          listArguments: null,
+          additionalArguments: null,
           options: [],
           config: {},
         }),
       ],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     }),
@@ -331,10 +334,10 @@ const gitParser = new ProgramParser({
       id: 'git-tag',
       command: 'tag',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'name', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'target', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'annotate', type: new TypeNoValueSchema({}), aliases: ['a'] },
         { name: 'message', type: new TypeStringSchema({}), aliases: ['m'] },
@@ -346,10 +349,10 @@ const gitParser = new ProgramParser({
       id: 'git-config',
       command: 'config',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'key', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'value', type: new TypeStringSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'global', type: new TypeNoValueSchema({}), aliases: ['g'] },
         { name: 'system', type: new TypeNoValueSchema({}), aliases: [] },
@@ -362,10 +365,10 @@ const gitParser = new ProgramParser({
       id: 'git-log',
       command: 'log',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: { name: 'paths', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'paths', type: new TypeStringSchema({}) },
       options: [
         { name: 'oneline', type: new TypeNoValueSchema({}), aliases: [] },
         { name: 'stat', type: new TypeNoValueSchema({}), aliases: [] },
@@ -378,10 +381,10 @@ const gitParser = new ProgramParser({
       id: 'git-diff',
       command: 'diff',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: { name: 'paths', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'paths', type: new TypeStringSchema({}) },
       options: [
         {
           name: 'staged',
@@ -397,10 +400,10 @@ const gitParser = new ProgramParser({
       id: 'git-status',
       command: 'status',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'short', type: new TypeNoValueSchema({}), aliases: ['s'] },
         { name: 'branch', type: new TypeNoValueSchema({}), aliases: ['b'] },
@@ -411,7 +414,7 @@ const gitParser = new ProgramParser({
   ],
   primaryArguments: [],
   optionalArguments: [],
-  listArguments: null,
+  additionalArguments: null,
   options: [
     { name: 'help', type: new TypeNoValueSchema({}), aliases: ['h'] },
     { name: 'version', type: new TypeNoValueSchema({}), aliases: ['v'] },
@@ -428,7 +431,7 @@ describe('ProgramParser git schema', () => {
     expect(result.id).toBe('git-commit')
     expect(result.result.options.message).toBe('msg')
     expect(result.result.options.amend).toBe(1)
-    expect(result.result.listArguments).toEqual(['a.txt', 'b.ts'])
+    expect(result.result.additionalArguments).toEqual(['a.txt', 'b.ts'])
   })
 
   it('parses clone with depth, branch, and target directory', async () => {
@@ -496,7 +499,7 @@ describe('ProgramParser git schema', () => {
     expect(result.result.options.oneline).toBe(1)
     expect(result.result.options.maxCount).toBe(5)
     expect(result.result.options.author).toBe('me')
-    expect(result.result.listArguments).toEqual(['src', 'lib'])
+    expect(result.result.additionalArguments).toEqual(['src', 'lib'])
   })
 
   it('throws duplicate for repeated commit message option', async () => {

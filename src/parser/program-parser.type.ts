@@ -80,11 +80,12 @@ export type InternalProgramParserOptions = {
   command: string
   description: string | undefined
 
-  subPrograms: ProgramParser[]
+  childPrograms: ProgramParser[]
+
+  options: InternalProgramParserOptionEntry[]
   primaryArguments: InternalProgramParserArgumentEntry[]
   optionalArguments: InternalProgramParserOptionalArgumentEntry[]
-  listArguments: InternalProgramParserListArgumentEntry | null
-  options: InternalProgramParserOptionEntry[]
+  additionalArguments: InternalProgramParserListArgumentEntry | null
 
   config: {
     trailingArguments?: boolean
@@ -96,5 +97,5 @@ export type InternalProgramParserResult = {
   options: Record<string, InternalOptionSchemaResultType>
   primaryArguments: Record<string, InternalArgumentSchemaResultType>
   optionalArguments: Partial<Record<string, InternalArgumentSchemaResultType>>
-  listArguments: InternalArgumentSchemaResultType[]
+  additionalArguments: InternalArgumentSchemaResultType[]
 }

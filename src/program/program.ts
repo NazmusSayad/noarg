@@ -5,6 +5,7 @@ import {
   ProgramParser,
 } from '@/parser'
 import { Prettify } from '@/utils/utils.type'
+import { uuidv4 } from '@/utils/uuid'
 import {
   ProgramArgumentConfig,
   ProgramConfig,
@@ -18,23 +19,22 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
   private readonly entity = 'program' as const
 
   protected parser
-  protected rootParser: ProgramParser | undefined
-  protected parentParser: ProgramParser | undefined
+  protected rootProgram: RootProgram<ProgramRootConfig> | null = null
+  protected parentProgram: Program<ProgramRootConfig> | null = null
   protected handler: ProgramHandler<ProgramConfig> | undefined
 
   constructor(private readonly config: TRootConfig) {
     this.parser = new ProgramParser({
+      id: uuidv4(),
       command: config.name,
+      description: config.description,
+
       config: {
         trailingArguments: false,
         doNotSplitArgumentsByComma: false,
       },
 
-      id: config.name,
-
-      description: config.description,
-
-      subPrograms: [],
+      childPrograms: [],
 
       primaryArguments:
         config.arguments?.map((argument) =>
@@ -46,7 +46,7 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
           argument.toInternalArgumentSchema()
         ) ?? [],
 
-      listArguments:
+      additionalArguments:
         config.additionalArguments?.toInternalArgumentSchema() ?? null,
 
       options:
@@ -82,6 +82,14 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
       MergeTwoProgramConfig<TRootConfig, TSubConfig & { readonly name: TName }>
     >
   ) {
+    if (!this.rootProgram) {
+      throw new Error('Root program not found, NEVER SHOULD HAPPEN')
+    }
+
+    if (!this.parentProgram && !(this instanceof RootProgram)) {
+      throw new Error('Parent program not found, NEVER SHOULD HAPPEN')
+    }
+
     type PrettifiedConfig = Prettify<
       MergeTwoProgramConfig<TRootConfig, TSubConfig & { readonly name: TName }>
     >
@@ -99,9 +107,11 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
       ...mergedConfig,
     })
 
-    childProgram.parentParser = this.parser
-    childProgram.rootParser = this.rootParser
+    childProgram.parentProgram = this
+    childProgram.rootProgram = this.rootProgram
     childProgram.handler = handler as ProgramHandler<ProgramConfig>
+
+    this.parser.config.childPrograms.push(childProgram.parser)
 
     return childProgram
   }
@@ -115,8 +125,11 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
 export class RootProgram<
   const TRootConfig extends ProgramRootConfig,
 > extends Program<TRootConfig> {
-  protected rootParser: undefined
-  protected parentParser: undefined
+  constructor(config: TRootConfig) {
+    super(config)
+    this.rootProgram = this
+    this.parentProgram = null
+  }
 
   public start(args: string[]) {
     this.parser

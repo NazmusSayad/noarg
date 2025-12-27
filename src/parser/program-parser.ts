@@ -39,7 +39,7 @@ export class ProgramParser extends NodeParserAST {
         break
       }
 
-      const program = this.config.subPrograms.find(
+      const program = this.config.childPrograms.find(
         (program) => program.config.command === node.raw
       )
 
@@ -117,14 +117,14 @@ export class ProgramParser extends NodeParserAST {
   ): Promise<
     Pick<
       InternalProgramParserResult,
-      'primaryArguments' | 'optionalArguments' | 'listArguments'
+      'primaryArguments' | 'optionalArguments' | 'additionalArguments'
     >
   > {
     type ResultRecord = Record<string, InternalArgumentSchemaResultType>
 
     const primaryArguments: ResultRecord = {}
     const optionalArguments: Partial<ResultRecord> = {}
-    const listArguments: InternalArgumentSchemaResultType[] = []
+    const additionalArguments: InternalArgumentSchemaResultType[] = []
 
     const primaryArgumentsCount = this.config.primaryArguments.length
     const optionalArgumentsCount = this.config.optionalArguments.length
@@ -168,7 +168,7 @@ export class ProgramParser extends NodeParserAST {
     )
 
     if (listArgumentsList.length > 0) {
-      const listArgumentsSchema = this.config.listArguments
+      const listArgumentsSchema = this.config.additionalArguments
       if (!listArgumentsSchema) {
         throw new NoArgUnknownArgumentError(listArgumentsList[0].index)
       }
@@ -177,13 +177,15 @@ export class ProgramParser extends NodeParserAST {
         listArgumentsSchema.type.parse(raw)
       )
 
-      listArguments.push(...(values as InternalArgumentSchemaResultType[]))
+      additionalArguments.push(
+        ...(values as InternalArgumentSchemaResultType[])
+      )
     }
 
     return {
       primaryArguments,
       optionalArguments,
-      listArguments,
+      additionalArguments,
     }
   }
 

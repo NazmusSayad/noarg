@@ -23,10 +23,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'nested',
       command: 'deploy',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'env', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: { name: 'rest', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'rest', type: new TypeStringSchema({}) },
       options: [
         { name: 'debug', type: new TypeNoValueSchema({}), aliases: ['d'] },
       ],
@@ -37,10 +37,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'root',
       command: 'root',
       description: undefined,
-      subPrograms: [nested],
+      childPrograms: [nested],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -52,7 +52,7 @@ describe('ProgramParser subprogram routing', () => {
     expect(result.id).toBe('nested')
     expect(result.result.options.debug).toBe(1)
     expect(result.result.primaryArguments.env).toBe('prod')
-    expect(result.result.listArguments).toEqual(['tail'])
+    expect(result.result.additionalArguments).toEqual(['tail'])
   })
 
   it('stops routing when bundled aliases precede subcommand', async () => {
@@ -60,10 +60,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'child',
       command: 'child',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -73,10 +73,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'root',
       command: 'root',
       description: undefined,
-      subPrograms: [child],
+      childPrograms: [child],
       primaryArguments: [{ name: 'target', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'verbose', type: new TypeNoValueSchema({}), aliases: ['v'] },
         { name: 'check', type: new TypeNoValueSchema({}), aliases: ['c'] },
@@ -99,10 +99,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'short',
       command: 'do',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -112,10 +112,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'long',
       command: 'do-more',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'value', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -125,10 +125,10 @@ describe('ProgramParser subprogram routing', () => {
       id: 'root',
       command: 'root',
       description: undefined,
-      subPrograms: [short, long],
+      childPrograms: [short, long],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -149,10 +149,10 @@ describe('ProgramParser option parsing', () => {
       id: 'o1',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'shape',
@@ -181,10 +181,10 @@ describe('ProgramParser option parsing', () => {
       id: 'o2',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'names',
@@ -207,10 +207,10 @@ describe('ProgramParser option parsing', () => {
       id: 'o3',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'level',
@@ -231,10 +231,10 @@ describe('ProgramParser option parsing', () => {
       id: 'o4',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'coords',
@@ -260,13 +260,13 @@ describe('ProgramParser argument parsing', () => {
       id: 'a1',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [
         { name: 'first', type: new TypeStringSchema({}) },
         { name: 'second', type: new TypeNumberSchema({}) },
       ],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -281,10 +281,10 @@ describe('ProgramParser argument parsing', () => {
       id: 'a2',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'topic', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'enabled', type: new TypeBooleanSchema({}) }],
-      listArguments: { name: 'tags', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'tags', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
@@ -295,7 +295,7 @@ describe('ProgramParser argument parsing', () => {
 
     expect(result.result.primaryArguments.topic).toBe('news')
     expect(result.result.optionalArguments.enabled).toBe(false)
-    expect(result.result.listArguments).toEqual(['a', 'b', 'c'])
+    expect(result.result.additionalArguments).toEqual(['a', 'b', 'c'])
   })
 
   it('rejects extra arguments when list schema is absent', async () => {
@@ -303,10 +303,10 @@ describe('ProgramParser argument parsing', () => {
       id: 'a3',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'main', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'count', type: new TypeNumberSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })

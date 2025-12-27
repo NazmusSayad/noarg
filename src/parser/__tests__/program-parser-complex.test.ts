@@ -27,10 +27,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-1',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -40,7 +40,7 @@ describe('ProgramParser routing', () => {
         options: {},
         primaryArguments: { arg1: 'v1' },
         optionalArguments: {},
-        listArguments: [],
+        additionalArguments: [],
       },
     })
 
@@ -48,10 +48,10 @@ describe('ProgramParser routing', () => {
       id: 'root-1',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -69,10 +69,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-2',
       command: 'sub2',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: { name: 'list1', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
@@ -80,10 +80,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-1',
       command: 'sub1',
       description: undefined,
-      subPrograms: [sub2],
+      childPrograms: [sub2],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -93,7 +93,7 @@ describe('ProgramParser routing', () => {
         options: {},
         primaryArguments: { arg1: 'x' },
         optionalArguments: {},
-        listArguments: ['y', 'z'],
+        additionalArguments: ['y', 'z'],
       },
     })
 
@@ -101,10 +101,10 @@ describe('ProgramParser routing', () => {
       id: 'root-2',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -114,7 +114,7 @@ describe('ProgramParser routing', () => {
 
     expect(subSpy).toHaveBeenCalledWith(nodes.slice(2))
     expect(result.id).toBe('sub2')
-    expect(result.result.listArguments).toEqual(['y', 'z'])
+    expect(result.result.additionalArguments).toEqual(['y', 'z'])
   })
 
   it('routes when command appears after leading argument', async () => {
@@ -122,10 +122,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-3',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -135,7 +135,7 @@ describe('ProgramParser routing', () => {
         options: {},
         primaryArguments: { arg1: 'late' },
         optionalArguments: {},
-        listArguments: [],
+        additionalArguments: [],
       },
     })
 
@@ -143,10 +143,10 @@ describe('ProgramParser routing', () => {
       id: 'root-3',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -164,10 +164,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-4',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -177,10 +177,10 @@ describe('ProgramParser routing', () => {
       id: 'root-4',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeNoValueSchema({}), aliases: [] }],
       config: {},
     })
@@ -199,10 +199,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-6',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeStringSchema({}), aliases: [] }],
       config: {},
     })
@@ -212,7 +212,7 @@ describe('ProgramParser routing', () => {
         options: { opt1: 'v' },
         primaryArguments: {},
         optionalArguments: {},
-        listArguments: [],
+        additionalArguments: [],
       },
     })
 
@@ -220,10 +220,10 @@ describe('ProgramParser routing', () => {
       id: 'root-6',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -240,10 +240,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-7',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -253,7 +253,7 @@ describe('ProgramParser routing', () => {
         options: {},
         primaryArguments: { arg1: 'value' },
         optionalArguments: {},
-        listArguments: [],
+        additionalArguments: [],
       },
     })
 
@@ -261,10 +261,10 @@ describe('ProgramParser routing', () => {
       id: 'root-7',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -282,10 +282,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-8',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -294,10 +294,10 @@ describe('ProgramParser routing', () => {
       id: 'root-8',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1],
+      childPrograms: [sub1],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeStringSchema({}) }],
-      listArguments: { name: 'list1', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
@@ -307,7 +307,7 @@ describe('ProgramParser routing', () => {
     expect(result.id).toBe('root-8')
     expect(result.result.primaryArguments.arg1).toBe('main')
     expect(result.result.optionalArguments.arg2).toBe('opt')
-    expect(result.result.listArguments).toEqual(['rest'])
+    expect(result.result.additionalArguments).toEqual(['rest'])
   })
 
   it('routes to second subprogram when names differ', async () => {
@@ -315,10 +315,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-9a',
       command: 'sub1',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -326,10 +326,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-9b',
       command: 'sub2',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -339,7 +339,7 @@ describe('ProgramParser routing', () => {
         options: {},
         primaryArguments: { arg1: 'choose' },
         optionalArguments: {},
-        listArguments: [],
+        additionalArguments: [],
       },
     })
 
@@ -347,10 +347,10 @@ describe('ProgramParser routing', () => {
       id: 'root-9',
       command: 'root',
       description: undefined,
-      subPrograms: [sub1, sub2],
+      childPrograms: [sub1, sub2],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -368,10 +368,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-10b',
       command: 'sub2a',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -379,10 +379,10 @@ describe('ProgramParser routing', () => {
       id: 'sub-10a',
       command: 'sub2',
       description: undefined,
-      subPrograms: [sub2a],
+      childPrograms: [sub2a],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -392,7 +392,7 @@ describe('ProgramParser routing', () => {
         options: {},
         primaryArguments: { arg1: 'deep' },
         optionalArguments: {},
-        listArguments: [],
+        additionalArguments: [],
       },
     })
 
@@ -400,10 +400,10 @@ describe('ProgramParser routing', () => {
       id: 'root-10',
       command: 'root',
       description: undefined,
-      subPrograms: [sub2],
+      childPrograms: [sub2],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -423,10 +423,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-1',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeStringSchema({}), aliases: [] }],
       config: {},
     })
@@ -441,10 +441,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-2',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -465,10 +465,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-3',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -489,10 +489,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-4',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -513,10 +513,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-5',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -537,10 +537,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-6',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -563,10 +563,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-7',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -591,10 +591,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-8',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -621,10 +621,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-9',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -651,10 +651,10 @@ describe('ProgramParser option successes', () => {
       id: 'opt-10',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'opt1', type: new TypeNoValueSchema({}), aliases: ['v'] },
       ],
@@ -673,10 +673,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-1',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -691,10 +691,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-2',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -716,10 +716,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-3',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeStringSchema({}), aliases: [] }],
       config: {},
     })
@@ -734,10 +734,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-4',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'opt1', type: new TypeStringSchema({}), aliases: [] },
         { name: 'opt2', type: new TypeNoValueSchema({}), aliases: [] },
@@ -755,10 +755,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-5',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeNumberSchema({}), aliases: [] }],
       config: {},
     })
@@ -773,10 +773,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-6',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         { name: 'opt1', type: new TypeNoValueSchema({}), aliases: ['a'] },
         { name: 'opt2', type: new TypeNoValueSchema({}), aliases: ['b'] },
@@ -794,10 +794,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-7',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeNumberSchema({}), aliases: [] }],
       config: {},
     })
@@ -812,10 +812,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-8',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -839,10 +839,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-9',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [
         {
           name: 'opt1',
@@ -864,10 +864,10 @@ describe('ProgramParser option errors', () => {
       id: 'err-opt-10',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [{ name: 'opt1', type: new TypeNumberSchema({}), aliases: [] }],
       config: {},
     })
@@ -884,13 +884,13 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-1',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [
         { name: 'arg1', type: new TypeStringSchema({}) },
         { name: 'arg2', type: new TypeNumberSchema({}) },
       ],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -906,10 +906,10 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-2',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeBooleanSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -924,10 +924,10 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-3',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeNumberSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -942,10 +942,10 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-4',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: { name: 'list1', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
@@ -953,7 +953,7 @@ describe('ProgramParser argument successes', () => {
     const result = await parser.run(parseArgsToAST(['base', 'a', 'b']))
 
     expect(result.result.primaryArguments.arg1).toBe('base')
-    expect(result.result.listArguments).toEqual(['a', 'b'])
+    expect(result.result.additionalArguments).toEqual(['a', 'b'])
   })
 
   it('collects numeric list arguments', async () => {
@@ -961,10 +961,10 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-5',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeStringSchema({}) }],
-      listArguments: { name: 'list1', type: new TypeNumberSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeNumberSchema({}) },
       options: [],
       config: {},
     })
@@ -972,7 +972,7 @@ describe('ProgramParser argument successes', () => {
     const result = await parser.run(parseArgsToAST(['main', 'side', '1', '2']))
 
     expect(result.result.optionalArguments.arg2).toBe('side')
-    expect(result.result.listArguments).toEqual([1, 2])
+    expect(result.result.additionalArguments).toEqual([1, 2])
   })
 
   it('parses optional enum argument', async () => {
@@ -980,12 +980,12 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-6',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [
         { name: 'arg2', type: new TypeEnumSchema({ values: ['a', 'b'] }) },
       ],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1000,17 +1000,17 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-7',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [],
       optionalArguments: [],
-      listArguments: { name: 'list1', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
 
     const result = await parser.run(parseArgsToAST(['x', 'y']))
 
-    expect(result.result.listArguments).toEqual(['x', 'y'])
+    expect(result.result.additionalArguments).toEqual(['x', 'y'])
   })
 
   it('parses optional primitive union argument', async () => {
@@ -1018,7 +1018,7 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-8',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [
         {
@@ -1028,7 +1028,7 @@ describe('ProgramParser argument successes', () => {
           }),
         },
       ],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1043,17 +1043,17 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-9',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeBooleanSchema({}) }],
-      listArguments: { name: 'list1', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
 
     const result = await parser.run(parseArgsToAST(['item', 'false']))
 
-    expect(result.result.listArguments).toEqual([])
+    expect(result.result.additionalArguments).toEqual([])
   })
 
   it('parses primitive union list argument values', async () => {
@@ -1061,10 +1061,10 @@ describe('ProgramParser argument successes', () => {
       id: 'arg-10',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: {
+      additionalArguments: {
         name: 'list1',
         type: new TypePrimitiveUnionSchema({
           types: [new TypeBooleanSchema({}), new TypeNumberSchema({})],
@@ -1078,7 +1078,7 @@ describe('ProgramParser argument successes', () => {
       parseArgsToAST(['root', 'true', '3', 'false'])
     )
 
-    expect(result.result.listArguments).toEqual([true, 3, false])
+    expect(result.result.additionalArguments).toEqual([true, 3, false])
   })
 })
 
@@ -1088,10 +1088,10 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-1',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1106,13 +1106,13 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-2',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [
         { name: 'arg1', type: new TypeStringSchema({}) },
         { name: 'arg2', type: new TypeNumberSchema({}) },
       ],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1127,10 +1127,10 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-3',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeNumberSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1145,13 +1145,13 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-4',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [
         { name: 'arg1', type: new TypeNumberSchema({}) },
         { name: 'arg2', type: new TypeStringSchema({}) },
       ],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1166,12 +1166,12 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-5',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [
         { name: 'arg2', type: new TypeEnumSchema({ values: ['x', 'y'] }) },
       ],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1186,10 +1186,10 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-6',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeBooleanSchema({}) }],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1204,10 +1204,10 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-7',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: { name: 'list1', type: new TypeNumberSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeNumberSchema({}) },
       options: [],
       config: {},
     })
@@ -1222,10 +1222,10 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-8',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [{ name: 'arg2', type: new TypeNumberSchema({}) }],
-      listArguments: { name: 'list1', type: new TypeStringSchema({}) },
+      additionalArguments: { name: 'list1', type: new TypeStringSchema({}) },
       options: [],
       config: {},
     })
@@ -1240,13 +1240,13 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-9',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [
         { name: 'arg1', type: new TypeStringSchema({}) },
         { name: 'arg2', type: new TypeBooleanSchema({}) },
       ],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })
@@ -1261,10 +1261,10 @@ describe('ProgramParser argument errors', () => {
       id: 'arg-err-10',
       command: '#',
       description: undefined,
-      subPrograms: [],
+      childPrograms: [],
       primaryArguments: [{ name: 'arg1', type: new TypeStringSchema({}) }],
       optionalArguments: [],
-      listArguments: null,
+      additionalArguments: null,
       options: [],
       config: {},
     })

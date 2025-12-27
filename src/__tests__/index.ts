@@ -7,7 +7,6 @@ const program = na
     options: [
       na.option('silent', Boolean, {
         global: true,
-        minLength: 10,
       }),
     ],
   })
@@ -19,4 +18,4 @@ const p2 = program.create('commit', {}).on((result) => {
   console.log(result.name)
 })
 
-program.start(['commit', '--silent'])
+program.start(['commit', '--silent', 'true'])
