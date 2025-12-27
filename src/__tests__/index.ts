@@ -21,8 +21,17 @@ const program = na
     console.log(result.name)
   })
 
-const program2 = program.create('test2', {}).on((result) => {
+program.create('test2', {}).on((result) => {
   console.log(result.name)
 })
 
-const app = na.createProgram('test3', { description: 'Test program 3' })
+program.start([
+  'test',
+  'test1',
+  'test2',
+  'test3',
+  'test',
+  'test1',
+  'test2',
+  'test3',
+])

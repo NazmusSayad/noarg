@@ -5,18 +5,59 @@ import {
   ProgramOptionTypes,
 } from './create.type'
 import { ProgramOption } from './program'
-import { ProgramOptionOptions } from './program.type'
+import { ProgramOptionConfig, ProgramOptionOptions } from './program.type'
+import { mapToInternalOptionSchemaType } from './utils'
+
+function createOption<const TName extends string>(
+  name: TName
+): ProgramOption<
+  Prettify<{
+    readonly name: TName
+    readonly type: MapInternalOptionSchemaType<StringConstructor, {}>
+  }>
+>
 
 function createOption<
   const TName extends string,
   const TType extends ProgramOptionTypes,
-  const TOptions extends
-    | {}
-    | MergeTwoObjects<
-        GetInternalOptionSchemaOptions<TType>,
-        ProgramOptionOptions
-      >,
->(name: TName, type: TType, options: TOptions = {} as TOptions) {
+>(
+  name: TName,
+  type: TType
+): ProgramOption<
+  Prettify<{
+    readonly name: TName
+    readonly type: MapInternalOptionSchemaType<TType, {}>
+  }>
+>
+
+function createOption<
+  const TName extends string,
+  const TType extends ProgramOptionTypes,
+  const TOptions extends MergeTwoObjects<
+    GetInternalOptionSchemaOptions<TType>,
+    ProgramOptionOptions
+  >,
+>(
+  name: TName,
+  type: TType,
+  options: TOptions
+): ProgramOption<
+  Prettify<
+    ProgramOptionConfig & {
+      readonly name: TName
+      readonly type: MapInternalOptionSchemaType<TType, {}>
+    }
+  >
+>
+
+function createOption<
+  const TName extends string,
+  const TType extends ProgramOptionTypes,
+  const TOptions extends MergeTwoObjects<
+    GetInternalOptionSchemaOptions<TType>,
+    ProgramOptionOptions
+  >,
+>(name: TName, type?: TType, options?: TOptions) {
   type ProgramOptions = Omit<
     TOptions,
     Exclude<keyof TOptions, keyof ProgramOptionOptions>
@@ -31,10 +72,12 @@ function createOption<
     }
   >
 
+  const internalType = mapToInternalOptionSchemaType(type ?? String)
+
   return new ProgramOption<PrettifiedConfig>({
-    name,
-    type,
     ...options,
+    name,
+    type: internalType,
   } as unknown as PrettifiedConfig)
 }
 

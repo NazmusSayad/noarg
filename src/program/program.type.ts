@@ -24,7 +24,7 @@ export type ProgramHandler<T extends ProgramConfig> = (
 
 export type ProgramOptionOptions = {
   global?: boolean
-  optional?: boolean
+  required?: boolean
   aliases?: string[]
 
   description?: string

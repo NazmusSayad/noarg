@@ -5,24 +5,69 @@ import {
   ProgramArgumentTypes,
 } from './create.type'
 import { ProgramArgument } from './program'
-import { ProgramArgumentOptions } from './program.type'
+import {
+  ProgramArgumentConfig,
+  ProgramArgumentOptions,
+  ProgramOptionOptions,
+} from './program.type'
+import { mapToInternalArgumentSchemaType } from './utils'
+
+function createArgument<const TName extends string>(
+  name: TName
+): ProgramArgument<
+  Prettify<{
+    readonly name: TName
+    readonly type: MapInternalArgumentSchemaType<StringConstructor, {}>
+  }>
+>
 
 function createArgument<
   const TName extends string,
   const TType extends ProgramArgumentTypes,
-  const TOptions extends
-    | {}
-    | MergeTwoObjects<
-        GetInternalArgumentSchemaOptions<TType>,
-        ProgramArgumentOptions
-      >,
->(name: TName, type: TType, options: TOptions = {} as TOptions) {
+>(
+  name: TName,
+  type: TType
+): ProgramArgument<
+  Prettify<{
+    readonly name: TName
+    readonly type: MapInternalArgumentSchemaType<TType, {}>
+  }>
+>
+
+function createArgument<
+  const TName extends string,
+  const TType extends ProgramArgumentTypes,
+  const TOptions extends MergeTwoObjects<
+    GetInternalArgumentSchemaOptions<TType>,
+    ProgramArgumentOptions
+  >,
+>(
+  name: TName,
+  type: TType,
+  options: TOptions
+): ProgramArgument<
+  Prettify<
+    ProgramArgumentConfig & {
+      readonly name: TName
+      readonly type: MapInternalArgumentSchemaType<TType, {}>
+    }
+  >
+>
+
+function createArgument<
+  const TName extends string,
+  const TType extends ProgramArgumentTypes,
+  const TOptions extends MergeTwoObjects<
+    GetInternalArgumentSchemaOptions<TType>,
+    ProgramArgumentOptions
+  >,
+>(name: TName, type?: TType, options?: TOptions) {
   type ProgramOptions = Omit<
     TOptions,
     Exclude<keyof TOptions, keyof ProgramArgumentOptions>
   >
 
-  type TypeOptions = Omit<TOptions, keyof ProgramArgumentOptions>
+  type TypeOptions = Omit<TOptions, keyof ProgramOptionOptions>
 
   type PrettifiedConfig = Prettify<
     ProgramOptions & {
@@ -31,10 +76,12 @@ function createArgument<
     }
   >
 
+  const internalType = mapToInternalArgumentSchemaType(type ?? String)
+
   return new ProgramArgument<PrettifiedConfig>({
-    name,
-    type,
     ...options,
+    type: internalType,
+    name,
   } as unknown as PrettifiedConfig)
 }
 
