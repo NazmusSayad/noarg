@@ -1,7 +1,13 @@
-import { noarg } from './program'
+import { createArgument, createOption, createProgram } from './program'
 
-export default noarg
-export const na = noarg
+const noargCore = {
+  createProgram: createProgram,
+  argument: createArgument,
+  option: createOption,
+}
+
+export const na = noargCore
+export const noarg = noargCore
 
 export * from './program/extract.type'
 export * from './program/program.type'

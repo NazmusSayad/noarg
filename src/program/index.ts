@@ -1,9 +1,3 @@
-import { createArgument } from './create-argument'
-import { createOption } from './create-option'
-import { createProgram } from './create-program'
-
-export const noarg = {
-  createProgram: createProgram,
-  argument: createArgument,
-  option: createOption,
-}
+export * from './create-argument'
+export * from './create-option'
+export * from './create-program'
