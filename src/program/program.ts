@@ -5,13 +5,13 @@ import {
 } from '@/parser'
 import { Prettify } from '@/utils/utils.type'
 import {
-  MergeTwoProgramConfig,
   ProgramArgumentConfig,
   ProgramConfig,
   ProgramHandler,
   ProgramOptionConfig,
   ProgramRootConfig,
 } from './program.type'
+import { MergeTwoProgramConfig } from './utils.type'
 
 export class Program<const TRootConfig extends ProgramRootConfig> {
   private readonly entity = 'program' as const
