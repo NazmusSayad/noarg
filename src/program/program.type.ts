@@ -3,7 +3,7 @@ import { ConcatNullableArray, Prettify } from '@/utils/utils.type'
 import { ExtractProgramResult } from './extract.type'
 import { ProgramArgument, ProgramOption } from './program'
 
-export interface ProgramConfig {
+export type ProgramConfig = {
   name: string
   description?: string
 
@@ -13,13 +13,22 @@ export interface ProgramConfig {
   additionalArguments?: ProgramArgument<ProgramArgumentConfig>
 }
 
+export type ProgramRootConfig = ProgramConfig & {
+  trailingArguments?: boolean
+  doNotSplitArgumentsByComma?: boolean
+}
+
 export type ProgramHandler<T extends ProgramConfig> = (
   result: Prettify<ExtractProgramResult<T>>
 ) => void
 
 export type ProgramOptionOptions = {
   global?: boolean
+  optional?: boolean
+  aliases?: string[]
+
   description?: string
+  askQuestion?: string
 }
 
 export type ProgramOptionConfig = {

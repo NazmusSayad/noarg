@@ -1,4 +1,4 @@
-import { noarg } from './noarg/noarg'
+import { noarg } from './program'
 
 export default noarg
 export const na = noarg
