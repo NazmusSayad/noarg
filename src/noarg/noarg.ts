@@ -21,7 +21,7 @@ function createProgram<const TOptions extends Omit<ProgramConfig, 'handler'>>(
   options: TOptions,
   handler: ProgramHandler<TOptions>
 ) {
-  return new Program<Prettify<NoInfer<TOptions>>>({
+  return new Program<Prettify<TOptions>>({
     ...options,
     handler,
   })
@@ -36,10 +36,11 @@ function option<
   >,
 >(name: TName, type: TType, options: TOptions) {
   type ProgramOptions = Omit<
-    NoInfer<TOptions>,
-    keyof GetInternalOptionSchemaOptions<TType>
+    TOptions,
+    Exclude<keyof TOptions, keyof ProgramOptionOptions>
   >
-  type TypeOptions = Omit<NoInfer<TOptions>, keyof ProgramOptionOptions>
+
+  type TypeOptions = Omit<TOptions, keyof ProgramOptionOptions>
 
   type PrettifiedConfig = Prettify<
     ProgramOptions & {
@@ -64,11 +65,11 @@ function argument<
   >,
 >(name: TName, type: TType, options: TOptions) {
   type ProgramOptions = Omit<
-    NoInfer<TOptions>,
-    keyof GetInternalArgumentSchemaOptions<TType>
+    TOptions,
+    Exclude<keyof TOptions, keyof ProgramArgumentOptions>
   >
 
-  type TypeOptions = Omit<NoInfer<TOptions>, keyof ProgramArgumentOptions>
+  type TypeOptions = Omit<TOptions, keyof ProgramArgumentOptions>
 
   type PrettifiedConfig = Prettify<
     ProgramOptions & {
