@@ -1,8 +1,7 @@
 import { na } from '..'
 
-const program = na.createProgram(
-  {
-    name: 'test',
+const program = na
+  .createProgram('test', {
     description: 'Test program',
 
     options: [
@@ -17,26 +16,11 @@ const program = na.createProgram(
     ],
 
     arguments: [na.argument('test', String)],
-  },
-  (result) => {
-    console.log(result)
-  }
-)
+  })
+  .on((result) => {
+    console.log(result.name)
+  })
 
-const program2 = program.create(
-  {
-    name: 'test2',
-    description: 'Test program 2',
-
-    options: [
-      na.option('test4', String, {}),
-
-      na.option('test5', Number, {}),
-
-      na.option('test6', Boolean, {}),
-    ],
-  },
-  (result) => {
-    console.log(result)
-  }
-)
+const program2 = program.create('test2', {}).on((result) => {
+  console.log(result.name)
+})

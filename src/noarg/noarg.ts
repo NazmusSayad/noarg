@@ -17,14 +17,16 @@ import {
   ProgramOptionTypes,
 } from './noarg.type'
 
-function createProgram<const TOptions extends Omit<ProgramConfig, 'handler'>>(
+function createProgram<
+  const TName extends string,
+  const TOptions extends Omit<ProgramConfig, 'name'>,
+>(
+  name: TName,
   options: TOptions,
-  handler: ProgramHandler<TOptions>
+  handler?: ProgramHandler<{ readonly name: TName } & TOptions>
 ) {
-  return new Program<Prettify<TOptions>>({
-    ...options,
-    handler,
-  })
+  type PrettifiedConfig = Prettify<{ readonly name: TName } & TOptions>
+  return new Program<PrettifiedConfig>({ ...options, name, handler })
 }
 
 function option<
