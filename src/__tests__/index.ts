@@ -12,7 +12,7 @@ const program = na
 
       na.option('test2', Number, {}),
 
-      na.option('test3', Boolean),
+      na.option('test3'),
     ],
 
     arguments: [na.argument('test', String)],
@@ -21,7 +21,7 @@ const program = na
     console.log(result.name)
   })
 
-program.create('test2', {}).on((result) => {
+const p2 = program.create('test2', {}).on((result) => {
   console.log(result.name)
 })
 
