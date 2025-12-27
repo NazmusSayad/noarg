@@ -5,11 +5,7 @@ import {
   ProgramArgumentTypes,
 } from './create.type'
 import { ProgramArgument } from './program'
-import {
-  ProgramArgumentConfig,
-  ProgramArgumentOptions,
-  ProgramOptionOptions,
-} from './program.type'
+import { ProgramArgumentOptions, ProgramOptionOptions } from './program.type'
 import { mapToInternalArgumentSchemaType } from './utils'
 
 function createArgument<const TName extends string>(
@@ -47,9 +43,12 @@ function createArgument<
   options: TOptions
 ): ProgramArgument<
   Prettify<
-    ProgramArgumentConfig & {
+    Omit<TOptions, Exclude<keyof TOptions, keyof ProgramArgumentOptions>> & {
       readonly name: TName
-      readonly type: MapInternalArgumentSchemaType<TType, {}>
+      readonly type: MapInternalArgumentSchemaType<
+        TType,
+        Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
+      >
     }
   >
 >
@@ -62,17 +61,13 @@ function createArgument<
     ProgramArgumentOptions
   >,
 >(name: TName, type?: TType, options?: TOptions) {
-  type ProgramOptions = Omit<
-    TOptions,
-    Exclude<keyof TOptions, keyof ProgramArgumentOptions>
-  >
-
-  type TypeOptions = Omit<TOptions, keyof ProgramOptionOptions>
-
   type PrettifiedConfig = Prettify<
-    ProgramOptions & {
+    Omit<TOptions, Exclude<keyof TOptions, keyof ProgramArgumentOptions>> & {
       readonly name: TName
-      readonly type: MapInternalArgumentSchemaType<TType, Prettify<TypeOptions>>
+      readonly type: MapInternalArgumentSchemaType<
+        TType,
+        Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
+      >
     }
   >
 

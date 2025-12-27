@@ -5,7 +5,7 @@ import {
   ProgramOptionTypes,
 } from './create.type'
 import { ProgramOption } from './program'
-import { ProgramOptionConfig, ProgramOptionOptions } from './program.type'
+import { ProgramOptionOptions } from './program.type'
 import { mapToInternalOptionSchemaType } from './utils'
 
 function createOption<const TName extends string>(
@@ -43,9 +43,12 @@ function createOption<
   options: TOptions
 ): ProgramOption<
   Prettify<
-    ProgramOptionConfig & {
+    Omit<TOptions, Exclude<keyof TOptions, keyof ProgramOptionOptions>> & {
       readonly name: TName
-      readonly type: MapInternalOptionSchemaType<TType, {}>
+      readonly type: MapInternalOptionSchemaType<
+        TType,
+        Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
+      >
     }
   >
 >
@@ -58,17 +61,13 @@ function createOption<
     ProgramOptionOptions
   >,
 >(name: TName, type?: TType, options?: TOptions) {
-  type ProgramOptions = Omit<
-    TOptions,
-    Exclude<keyof TOptions, keyof ProgramOptionOptions>
-  >
-
-  type TypeOptions = Omit<TOptions, keyof ProgramOptionOptions>
-
   type PrettifiedConfig = Prettify<
-    ProgramOptions & {
+    Omit<TOptions, Exclude<keyof TOptions, keyof ProgramOptionOptions>> & {
       readonly name: TName
-      readonly type: MapInternalOptionSchemaType<TType, Prettify<TypeOptions>>
+      readonly type: MapInternalOptionSchemaType<
+        TType,
+        Prettify<Omit<TOptions, keyof ProgramOptionOptions>>
+      >
     }
   >
 

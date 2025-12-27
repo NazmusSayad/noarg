@@ -54,12 +54,30 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
     })
   }
 
+  public create<const TName extends string>(
+    name: TName
+  ): Program<
+    Prettify<MergeTwoProgramConfig<TRootConfig, { readonly name: TName }>>
+  >
+
   public create<
     const TName extends string,
     const TSubConfig extends Omit<ProgramConfig, 'name'>,
   >(
     name: TName,
-    options: TSubConfig,
+    options: TSubConfig
+  ): Program<
+    Prettify<
+      MergeTwoProgramConfig<TRootConfig, TSubConfig & { readonly name: TName }>
+    >
+  >
+
+  public create<
+    const TName extends string,
+    const TSubConfig extends Omit<ProgramConfig, 'name'>,
+  >(
+    name: TName,
+    options?: TSubConfig,
     handler?: ProgramHandler<
       MergeTwoProgramConfig<TRootConfig, TSubConfig & { readonly name: TName }>
     >
@@ -73,7 +91,7 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
       name,
       options: [
         ...(this.config.options ?? []).filter((option) => option.config.global),
-        ...(options.options ?? []),
+        ...(options?.options ?? []),
       ],
     } as unknown as PrettifiedConfig
 
