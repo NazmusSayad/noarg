@@ -3,7 +3,7 @@ import {
   GetInternalOptionSchemaOptions,
   MapInternalOptionSchemaType,
   ProgramOptionTypes,
-} from './noarg.type'
+} from './create.type'
 import { ProgramOption } from './program'
 import { ProgramOptionOptions } from './program.type'
 

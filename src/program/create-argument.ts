@@ -3,7 +3,7 @@ import {
   GetInternalArgumentSchemaOptions,
   MapInternalArgumentSchemaType,
   ProgramArgumentTypes,
-} from './noarg.type'
+} from './create.type'
 import { ProgramArgument } from './program'
 import { ProgramArgumentOptions } from './program.type'
 
