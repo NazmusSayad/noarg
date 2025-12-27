@@ -11,11 +11,15 @@ const program = na
     ],
   })
   .on((result) => {
-    console.log(result.name)
+    console.log('ROOT', result)
   })
 
-const p2 = program.create('commit', {}).on((result) => {
-  console.log(result.name)
-})
+const p2 = program
+  .create('commit', {
+    arguments: [na.argument('message', String)],
+  })
+  .on((result) => {
+    console.log('COMMIT', result)
+  })
 
-program.start(['commit', '--silent', 'true'])
+program.start(['commit', '--silent', 'true', 'Hello, world!'])

@@ -1,7 +1,8 @@
 import { InternalArgumentSchemaType, InternalOptionSchemaType } from '@/parser'
 import { Prettify } from '@/utils/utils.type'
+import { ProgramArgument } from './create-argument'
+import { ProgramOption } from './create-option'
 import { ExtractProgramResult } from './extract.type'
-import { ProgramArgument, ProgramOption } from './program'
 
 export type ProgramConfig = {
   name: string

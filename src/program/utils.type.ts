@@ -1,5 +1,5 @@
 import { ConcatNullableArray } from '@/utils/utils.type'
-import { ProgramOption } from './program'
+import { ProgramOption } from './create-option'
 import { ProgramConfig } from './program.type'
 
 export type ExtractGlobalOptions<T> = T extends readonly [infer H, ...infer R]

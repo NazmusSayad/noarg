@@ -1,33 +1,31 @@
 import {
-  InternalProgramParserArgumentEntry,
-  InternalProgramParserOptionEntry,
+  InternalProgramParserResult,
   parseArgsToAST,
   ProgramParser,
 } from '@/parser'
 import { Prettify } from '@/utils/utils.type'
 import { uuidv4 } from '@/utils/uuid'
+import { ExtractProgramResult } from './extract.type'
 import {
-  ProgramArgumentConfig,
   ProgramConfig,
   ProgramHandler,
-  ProgramOptionConfig,
   ProgramRootConfig,
 } from './program.type'
 import { MergeTwoProgramConfig } from './utils.type'
 
 export class Program<const TRootConfig extends ProgramRootConfig> {
   private readonly entity = 'program' as const
+  constructor(private readonly config: TRootConfig) {}
 
-  protected parser
-  protected rootProgram: RootProgram<ProgramRootConfig> | null = null
   protected parentProgram: Program<ProgramRootConfig> | null = null
-  protected handler: ProgramHandler<ProgramConfig> | undefined
+  protected childPrograms: Program<ProgramConfig>[] = []
 
-  constructor(private readonly config: TRootConfig) {
-    this.parser = new ProgramParser({
+  protected handler: ProgramHandler<ProgramConfig> | undefined
+  protected generateProgramParser(): ProgramParser {
+    return new ProgramParser({
       id: uuidv4(),
-      command: config.name,
-      description: config.description,
+      command: this.config.name,
+      description: this.config.description,
 
       config: {
         trailingArguments: false,
@@ -37,20 +35,21 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
       childPrograms: [],
 
       primaryArguments:
-        config.arguments?.map((argument) =>
+        this.config.arguments?.map((argument) =>
           argument.toInternalArgumentSchema()
         ) ?? [],
 
       optionalArguments:
-        config.optionalArguments?.map((argument) =>
+        this.config.optionalArguments?.map((argument) =>
           argument.toInternalArgumentSchema()
         ) ?? [],
 
       additionalArguments:
-        config.additionalArguments?.toInternalArgumentSchema() ?? null,
+        this.config.additionalArguments?.toInternalArgumentSchema() ?? null,
 
       options:
-        config.options?.map((option) => option.toInternalOptionSchema()) ?? [],
+        this.config.options?.map((option) => option.toInternalOptionSchema()) ??
+        [],
     })
   }
 
@@ -82,10 +81,6 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
       MergeTwoProgramConfig<TRootConfig, TSubConfig & { readonly name: TName }>
     >
   ) {
-    if (!this.rootProgram) {
-      throw new Error('Root program not found, NEVER SHOULD HAPPEN')
-    }
-
     if (!this.parentProgram && !(this instanceof RootProgram)) {
       throw new Error('Parent program not found, NEVER SHOULD HAPPEN')
     }
@@ -108,10 +103,8 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
     })
 
     childProgram.parentProgram = this
-    childProgram.rootProgram = this.rootProgram
     childProgram.handler = handler as ProgramHandler<ProgramConfig>
-
-    this.parser.config.childPrograms.push(childProgram.parser)
+    this.childPrograms.push(childProgram)
 
     return childProgram
   }
@@ -125,49 +118,47 @@ export class Program<const TRootConfig extends ProgramRootConfig> {
 export class RootProgram<
   const TRootConfig extends ProgramRootConfig,
 > extends Program<TRootConfig> {
-  constructor(config: TRootConfig) {
-    super(config)
-    this.rootProgram = this
-    this.parentProgram = null
+  private mapInternalResultToProgramResult(
+    result: InternalProgramParserResult
+  ): ExtractProgramResult<TRootConfig> {
+    return result as unknown as ExtractProgramResult<TRootConfig>
+  }
+
+  private async startCore(args: string[]): Promise<void> {
+    const programsMap = new Map<string, Program<ProgramConfig>>()
+    const rootParser = this.generateProgramParser()
+
+    function generateParsers(
+      parentProgram: RootProgram<ProgramConfig>,
+      parentParser: ProgramParser
+    ) {
+      for (const p of parentProgram.childPrograms) {
+        const parser = (p as RootProgram<ProgramConfig>).generateProgramParser()
+        parentParser.config.childPrograms.push(parser)
+        programsMap.set(parser.config.id, p)
+
+        generateParsers(p as RootProgram<ProgramConfig>, parser)
+      }
+    }
+
+    programsMap.set(rootParser.config.id, this)
+    generateParsers(this, rootParser)
+
+    const result = await rootParser.run(parseArgsToAST(args))
+    const program = programsMap.get(result.id)
+    if (!program) {
+      throw new Error('Program not found')
+    }
+
+    const handler = (program as RootProgram<ProgramConfig>).handler
+    if (!handler) {
+      throw new Error('Handler not found')
+    }
+
+    handler(this.mapInternalResultToProgramResult(result.result))
   }
 
   public start(args: string[]) {
-    this.parser
-      .run(parseArgsToAST(args))
-      .then((result) => {
-        console.log({ result })
-      })
-      .catch((error) => {
-        console.error({ error })
-      })
-  }
-}
-
-export class ProgramArgument<const T extends ProgramArgumentConfig> {
-  private readonly entity = 'argument' as const
-  constructor(public readonly config: T) {}
-
-  public toInternalArgumentSchema(): InternalProgramParserArgumentEntry {
-    return {
-      name: this.config.name,
-      type: this.config.type,
-      description: this.config.description,
-    }
-  }
-}
-
-export class ProgramOption<const T extends ProgramOptionConfig> {
-  private readonly entity = 'option' as const
-  constructor(public readonly config: T) {}
-
-  public toInternalOptionSchema(): InternalProgramParserOptionEntry {
-    return {
-      name: this.config.name,
-      type: this.config.type,
-      description: this.config.description,
-      askQuestion: this.config.askQuestion,
-      aliases: this.config.aliases ?? [],
-      required: this.config.required ?? false,
-    }
+    void this.startCore(args)
   }
 }

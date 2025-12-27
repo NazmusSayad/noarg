@@ -1,6 +1,10 @@
+import { InternalProgramParserArgumentEntry } from '@/parser'
 import { MergeTwoObjects, Prettify } from '@/utils/utils.type'
-import { ProgramArgument } from './program'
-import { ProgramArgumentOptions, ProgramOptionOptions } from './program.type'
+import {
+  ProgramArgumentConfig,
+  ProgramArgumentOptions,
+  ProgramOptionOptions,
+} from './program.type'
 import {
   GetLiteralToInternalSchemaOptions,
   LiteralBooleanType,
@@ -18,6 +22,19 @@ type ProgramArgumentTypes =
   | LiteralBooleanType
   | LiteralEnumType
   | LiteralPrimitiveUnionType
+
+export class ProgramArgument<const T extends ProgramArgumentConfig> {
+  private readonly entity = 'argument' as const
+  constructor(public readonly config: T) {}
+
+  public toInternalArgumentSchema(): InternalProgramParserArgumentEntry {
+    return {
+      name: this.config.name,
+      type: this.config.type,
+      description: this.config.description,
+    }
+  }
+}
 
 function createArgument<const TName extends string>(
   name: TName

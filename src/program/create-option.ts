@@ -1,6 +1,6 @@
+import { InternalProgramParserOptionEntry } from '@/parser'
 import { MergeTwoObjects, Prettify } from '@/utils/utils.type'
-import { ProgramOption } from './program'
-import { ProgramOptionOptions } from './program.type'
+import { ProgramOptionConfig, ProgramOptionOptions } from './program.type'
 import {
   GetLiteralToInternalSchemaOptions,
   LiteralArrayType,
@@ -24,6 +24,22 @@ type ProgramOptionTypes =
   | LiteralPrimitiveUnionType
   | LiteralArrayType
   | LiteralTupleType
+
+export class ProgramOption<const T extends ProgramOptionConfig> {
+  private readonly entity = 'option' as const
+  constructor(public readonly config: T) {}
+
+  public toInternalOptionSchema(): InternalProgramParserOptionEntry {
+    return {
+      name: this.config.name,
+      type: this.config.type,
+      description: this.config.description,
+      askQuestion: this.config.askQuestion,
+      aliases: this.config.aliases ?? [],
+      required: this.config.required ?? false,
+    }
+  }
+}
 
 function createOption<const TName extends string>(
   name: TName
