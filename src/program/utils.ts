@@ -1,5 +1,6 @@
 import { InternalSchemaType } from '@/parser'
 import {
+  TypeArraySchema,
   TypeBooleanSchema,
   TypeEnumSchema,
   TypeNoValueSchema,
@@ -49,18 +50,6 @@ export function mapLiteralToInternalSchema(
     return new TypeEnumSchema({ ...options, values: schema })
   }
 
-  if (
-    Array.isArray(schema) &&
-    schema.every(
-      (item) =>
-        typeof item === 'string' ||
-        typeof item === 'number' ||
-        typeof item === 'boolean'
-    )
-  ) {
-    return new TypeEnumSchema(options)
-  }
-
   if (Array.isArray(schema) && schema.length === 1) {
     const item = schema[0]
 
@@ -70,7 +59,17 @@ export function mapLiteralToInternalSchema(
         (item) => item === String || item === Number || item === Boolean
       )
     ) {
-      return new TypeTupleSchema(options)
+      return new TypeTupleSchema({
+        ...options,
+        schema: item.map((s) => mapLiteralToInternalSchema(s)),
+      })
+    }
+
+    if (item === String || item === Number || item === Boolean) {
+      return new TypeArraySchema({
+        ...options,
+        schema: mapLiteralToInternalSchema(item),
+      })
     }
   }
 

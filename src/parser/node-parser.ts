@@ -158,6 +158,12 @@ export class NodeParserAST {
   private splitAliasAndFindOptions(
     node: InternalASTOptionNode
   ): string | string[] {
+    if (node.value) {
+      throw new NoArgClientError(
+        `Expected no value for alias option ${node.key} but received ${node.value}`
+      )
+    }
+
     const splitted = node.key.split('')
     const splittedOptions: string[] = []
 

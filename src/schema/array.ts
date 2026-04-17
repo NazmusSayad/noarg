@@ -18,13 +18,15 @@ export class TypeArraySchema<
   constructor(private options: T) {}
 
   public parse(value: unknown) {
-    if (!Array.isArray(value)) {
-      throw new NoArgTypeError(`Expected array but received ${value}`)
-    }
+    const resolvedValue = (Array.isArray(value) ? value : [value]) as (
+      | string
+      | number
+      | boolean
+    )[]
 
     if (
       this.options.minLength !== undefined &&
-      value.length < this.options.minLength
+      resolvedValue.length < this.options.minLength
     ) {
       throw new NoArgTypeError(
         `Expected array to be at least ${this.options.minLength} items long`
@@ -33,13 +35,13 @@ export class TypeArraySchema<
 
     if (
       this.options.maxLength !== undefined &&
-      value.length > this.options.maxLength
+      resolvedValue.length > this.options.maxLength
     ) {
       throw new NoArgTypeError(
         `Expected array to be at most ${this.options.maxLength} items long`
       )
     }
 
-    return value.map((item) => this.options.schema.parse(item))
+    return resolvedValue.map((item) => this.options.schema.parse(item))
   }
 }

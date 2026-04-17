@@ -14,11 +14,11 @@ export class TypeEnumSchema<
 
   public parse(value: unknown): string {
     const matchedValue = this.options.values.find(
-      (v) =>
+      (v: unknown) =>
         v === value ||
-        String(v) === String(value) ||
-        Number(v) === Number(value) ||
-        Boolean(v) === Boolean(value)
+        v === String(value) ||
+        v === Number(value) ||
+        v === Boolean(value)
     )
 
     if (matchedValue !== undefined) {

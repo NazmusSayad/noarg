@@ -25,11 +25,10 @@ export type LiteralBooleanType = BooleanConstructor
 export type LiteralEnumType = (string | number | boolean)[]
 export type LiteralPrimitiveUnionType = typeof TypePrimitiveUnionSchema
 
-export type LiteralArrayType = (
-  | StringConstructor
-  | NumberConstructor
-  | BooleanConstructor
-)[]
+export type LiteralArrayType = [
+  StringConstructor | NumberConstructor | BooleanConstructor,
+]
+
 export type LiteralTupleType = [
   (StringConstructor | NumberConstructor | BooleanConstructor)[],
 ]
@@ -101,8 +100,8 @@ export type GetLiteralToInternalSchemaOptions<T extends LiteralTypes> =
               ? TypePrimitiveUnionSchemaOptions
               : // Array
                 T extends LiteralArrayType
-                ? TypeArraySchemaOptions
+                ? Omit<TypeArraySchemaOptions, 'schema'>
                 : // Tuple
                   T extends LiteralTupleType
-                  ? TypeTupleSchemaOptions
+                  ? Omit<TypeTupleSchemaOptions, 'schema'>
                   : never
