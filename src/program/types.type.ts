@@ -95,7 +95,7 @@ export type GetLiteralToInternalSchemaOptions<T extends LiteralTypes> =
           ? TypeBooleanSchemaOptions
           : // Enum
             T extends LiteralEnumType
-            ? TypeEnumSchemaOptions
+            ? Omit<TypeEnumSchemaOptions, 'values'>
             : // Primitive Union
               T extends LiteralPrimitiveUnionType
               ? TypePrimitiveUnionSchemaOptions

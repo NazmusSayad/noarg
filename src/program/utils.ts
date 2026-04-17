@@ -46,7 +46,7 @@ export function mapLiteralToInternalSchema(
         typeof item === 'boolean'
     )
   ) {
-    return new TypeEnumSchema(options)
+    return new TypeEnumSchema({ ...options, values: schema })
   }
 
   if (

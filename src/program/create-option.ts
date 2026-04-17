@@ -104,7 +104,10 @@ function createOption<
     }
   >
 
-  const internalType = mapLiteralToInternalSchema(type ?? String, options)
+  const internalType = mapLiteralToInternalSchema(
+    type === undefined ? String : type,
+    options
+  )
 
   return new ProgramOption<PrettifiedConfig>({
     ...options,

@@ -13,8 +13,16 @@ export class TypeEnumSchema<
   constructor(private options: T) {}
 
   public parse(value: unknown): string {
-    if (this.options.values.some((v) => v === value)) {
-      return value as string
+    const matchedValue = this.options.values.find(
+      (v) =>
+        v === value ||
+        String(v) === String(value) ||
+        Number(v) === Number(value) ||
+        Boolean(v) === Boolean(value)
+    )
+
+    if (matchedValue !== undefined) {
+      return matchedValue
     }
 
     throw new NoArgTypeError(
