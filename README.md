@@ -100,6 +100,8 @@ const app = NoArg.create('app', {
   console.log({ arg1, arg2, arg3, optArg4, optArg5, listArg, trailingArgs })
   console.log(flags)
 })
+
+app.start()
 ```
 
 ### Example: Command Structure
@@ -119,8 +121,6 @@ node app.js arg-1 arg-2 arg-3 optional-arg-1 listArg-1 listArg-2 --config config
 ### Use common config
 
 ```ts
-import NoArg from 'noarg'
-
 const app = NoArg.create('app', {})
 
 const listArguments = {
@@ -142,8 +142,6 @@ app.create('build', config)
 ### Disable cli colors
 
 ```ts
-import NoArg from 'noarg'
-
 NoArg.colors.enable()
 NoArg.colors.disable()
 
